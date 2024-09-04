@@ -1,0 +1,1 @@
+<img src="{{ asset('images/logoLogin.png') }}" id="logo-login" class="d-block" alt="...">
