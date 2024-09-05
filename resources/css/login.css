@@ -29,12 +29,12 @@ input[type='checkbox'] {
 }
 
 .valido {
-    border: 1px solid var(--color-sucess);
+    border: 1px solid var(--color-sucess) !important;
     box-shadow: 0 0 0 0.1rem var(--color-sucess) !important;
     transition: 0.3s ease !important;
 }
 .invalido {
-    border: 1px solid var(--color-danger);
+    border: 1px solid var(--color-danger) !important;
     box-shadow: 0 0 0 0.1rem var(--color-danger) !important;
     transition: 0.3s ease !important;
 }
