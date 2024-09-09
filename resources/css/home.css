@@ -43,7 +43,13 @@ ul {
 .carousel-inner {
     height: 37.5rem;
 }
-
+/*Logo */
+#logo-login {
+    width: 3rem;
+    height: 3rem;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 4px var(--color-secondary));
+}
 /*Card */
 .col-md-4.col-6:hover {
     transform: scale(1.1);

@@ -19,9 +19,12 @@
 <body>
     <nav class="navbar navbar-expand-lg shadow fixed-top">
         <div class="container-fluid align-items-center">
-            <a class="navbar-brand" href="#">
-                <img src="{{ asset('images/logo.png') }}" width="50vh" class="rounded" alt="Logo">
-            </a>
+            <!-- Logo -->
+            <div>
+                <a href="/">
+                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                </a>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -30,26 +33,33 @@
             <div class="navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
-                <form class="d-flex" role="search" method="POST" action="{{ url('/search') }}">
-                    @csrf
-                    <input class="form-control me-2" name="pesquisa" id="pesquisa" type="search" placeholder="Pesquise um produto"
-                        aria-label="Search">
-                    <button type="submit" id="search-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff"
-                            class="bi bi-search" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-                                stroke="#ffffff" stroke-width="1"/>
-                        </svg>
-                    </button>
-                </form>
+                @if (Route::has('home'))
+                    <form class="d-flex" role="search" method="POST" action="{{ url('/search') }}">
+                        @csrf
+                        <input class="form-control me-2" name="pesquisa" id="pesquisa" type="search"
+                            placeholder="Pesquise um produto" aria-label="Search">
+                        <button type="submit" id="search-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ffffff"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                                    stroke="#ffffff" stroke-width="1" />
+                            </svg>
+                        </button>
+                    </form>
+                @endif
                 <div class="ms-3">
                     @if (Route::has('login'))
                         <div class="d-flex">
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-warning ms-2">
-                                    Dashboard
-                                </a>
+                                <div>
+                                    <a href="{{ url('/dashboard') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                        </svg>
+                                    </a>
+                                </div>
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-warning ms-2">
                                     Entrar

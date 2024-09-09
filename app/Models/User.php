@@ -28,6 +28,24 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public function setCpfCnpjAttribute($value)
+    {
+        // Remove todos os caracteres que não são números
+        $this->attributes['cpf_cnpj'] = preg_replace('/\D/', '', $value);
+    }
+
+    public function getCpfCnpjFormattedAttribute()
+    {
+        $cpf_cnpj = $this->attributes['cpf_cnpj'];
+
+        if (strlen($cpf_cnpj) === 11) {
+            return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "$1.$2.$3-$4", $cpf_cnpj);
+        } elseif (strlen($cpf_cnpj) === 14) {
+            return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "$1.$2.$3/$4-$5", $cpf_cnpj);
+        }
+
+        return $cpf_cnpj;
+    }
     protected $hidden = [
         'password',
         'remember_token',

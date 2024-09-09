@@ -1,18 +1,19 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" id="form" action="{{ route('register') }}">
         @csrf
 
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Nome')" />
-            <x-text-input id="name" max="50" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
+            <x-text-input id="name" maxlength="40" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
                 required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <div id="erro-nome"></div>
         </div>
         <!-- CPF/CNPJ -->
         <div class="mt-4">
             <x-input-label for="cpf_cnpj" :value="__('CPF/CNPJ')" />
-            <x-text-input id="cpf_cnpj" max="14" class="block mt-1 w-full" type="text" name="cpf_cnpj"
+            <x-text-input id="cpf_cnpj" maxlength="18" class="block mt-1 w-full" type="text" name="cpf_cnpj"
                 :value="old('cpf_cnpj')" required autocomplete="cpf_cnpj" />
             <x-input-error :messages="$errors->get('cpf_cnpj')" class="mt-2" />
             <div id="erro-cpf-cnpj"></div>
@@ -21,7 +22,7 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" max="50" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+            <x-text-input id="email" maxlength="50" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
                 required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
             <div id="erro-email"></div>
@@ -32,9 +33,9 @@
             <x-input-label for="password" :value="__('Senha')" />
 
             <div class="input-group">
-                <x-text-input id="password" class="form-control focus:border-yellow-500" type="password" name="password" required
+                <x-text-input id="password" maxlength="15" class="block mt-1 w-full focus:border-yellow-500" type="password" name="password" required
                     autocomplete="new-password" />
-                <span class="input-group-text" id="ocultar">
+                <span class="input-group-text toggle-password" id="ocultar" style="display:none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-eye-fill" viewBox="0 0 16 16">
                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
@@ -51,9 +52,9 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" />
             <div class="input-group">
-                <x-text-input id="password_confirmation" class="form-control focus:border-yellow-500" type="password"
+                <x-text-input id="password_confirmation" maxlength="15" class="block mt-1 w-full focus:border-yellow-500" type="password"
                     name="password_confirmation" required autocomplete="new-password" />
-                <span class="input-group-text" id="confirmar-ocultar">
+                <span class="input-group-text toggle-password" id="confirmar-ocultar" style="display:none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-eye-fill" viewBox="0 0 16 16">
                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
@@ -72,7 +73,7 @@
                 {{ __('Ja possui seu acesso ?') }}
             </a>
 
-            <x-primary-button class="ms-4">
+            <x-primary-button id="registrar" class="ms-4">
                 {{ __('Registrar') }}
             </x-primary-button>
         </div>

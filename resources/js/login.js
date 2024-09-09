@@ -1,5 +1,20 @@
+import Swal from 'sweetalert2';
+let camposValidos = {
+    nome: true,
+    email: true,
+    cpfCnpj: true,
+    senha: true,
+    confirmarSenha: true,
+};
+
+
+// Função geral para verificar se o formulário é válido
+function verificarFormulario() {
+    return Object.values(camposValidos).every(Boolean); // Retorna true se todos os campos forem válidos
+}
+
 // VALIDACOES EMAIL
-document.getElementById('email').addEventListener('keyup', function () {
+document.getElementById('email').addEventListener('input', function () {
     const email = this;
     const emailDigitado = email.value;
     const mensagem = document.getElementById('erro-email');
@@ -8,12 +23,14 @@ document.getElementById('email').addEventListener('keyup', function () {
     if (validarEmailFormato(emailDigitado)) {
         email.classList.remove('invalido');
         email.classList.add('valido');
+        camposValidos.email = true;
         mensagem.textContent = '';
     } else {
         email.classList.remove('valido');
         email.classList.add('invalido');
         mensagem.style.color = 'red';
         mensagem.textContent = 'Email inválido';
+        camposValidos.email = false;
     }
 });
 
@@ -25,7 +42,7 @@ function validarEmailFormato(email) {
 
 
 // Formatação do CPF e CNPJ
-document.getElementById('cpf_cnpj').addEventListener('keyup', function () {
+document.getElementById('cpf_cnpj').addEventListener('input', function () {
     let cpf_cnpj = this.value.replace(/[^\d]+/g, ''); // Remove tudo que não for dígito
 
     if (cpf_cnpj.length <= 11) {
@@ -42,7 +59,7 @@ document.getElementById('cpf_cnpj').addEventListener('keyup', function () {
 });
 
 // Validação do CPF/CNPJ ao sair do campo
-document.getElementById('cpf_cnpj').addEventListener('blur', function () {
+document.getElementById('cpf_cnpj').addEventListener('change', function () {
     const mensagem = document.getElementById('erro-cpf-cnpj');
     this.classList.remove('valido', 'invalido');
     mensagem.textContent = '';
@@ -56,6 +73,7 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CPF inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
@@ -72,6 +90,7 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CPF inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
@@ -88,11 +107,13 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CPF inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
         this.classList.remove('invalido');
         this.classList.add('valido');
+        camposValidos.cpfCnpj = true;
         mensagem.textContent = '';
     } else if (cpf_cnpj.length === 14) {
         // Validação do CNPJ
@@ -101,6 +122,7 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CNPJ inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
@@ -124,6 +146,7 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CNPJ inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
@@ -146,22 +169,25 @@ document.getElementById('cpf_cnpj').addEventListener('blur', function () {
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'CNPJ inválido';
+            camposValidos.cpfCnpj = false;
             return;
         }
 
         this.classList.remove('invalido');
         this.classList.add('valido');
         mensagem.textContent = '';
+        camposValidos.cpfCnpj = true;
     } else {
         this.classList.remove('valido');
         this.classList.add('invalido');
         mensagem.style.color = 'red';
         mensagem.textContent = 'Número inválido';
+        camposValidos.cpfCnpj = false;
     }
 });
 
 // VALIDACOES SENHA
-document.getElementById('password').addEventListener('keyup', function () {
+document.getElementById('password').addEventListener('input', function () {
     const mensagem = document.getElementById('erro-senha');
     this.classList.remove('valido', 'invalido');
     mensagem.textContent = '';
@@ -170,6 +196,7 @@ document.getElementById('password').addEventListener('keyup', function () {
     if (password.length < 8) {
         this.classList.remove('valido');
         this.classList.add('invalido');
+        camposValidos.senha = false;
         mensagem.style.color = 'red';
         mensagem.textContent = 'Senha muito curta, informe uma senha com pelo menos 8 digitos';
         return;
@@ -179,6 +206,7 @@ document.getElementById('password').addEventListener('keyup', function () {
         this.classList.add('invalido');
         mensagem.style.color = 'red';
         mensagem.textContent = 'Informe pelo menos uma letra maiuscula';
+        camposValidos.senha = false;
         return;
     }
     if (!/[a-z]/.test(password)) {
@@ -186,15 +214,17 @@ document.getElementById('password').addEventListener('keyup', function () {
         this.classList.add('invalido');
         mensagem.style.color = 'red';
         mensagem.textContent = 'Informe pelo menos uma letra minuscula';
+        camposValidos.senha = false;
         return;
     }
 
     // Senha valida
     this.classList.remove('invalido');
     this.classList.add('valido');
+    camposValidos.senha = true;
     mensagem.textContent = '';
 });
-document.getElementById('password_confirmation').addEventListener('blur', function () {
+document.getElementById('password_confirmation').addEventListener('input', function () {
     const mensagem = document.getElementById('erro-confirmar-senha');
     let confirmarSenha = this.value;
     let senha = document.getElementById('password').value;
@@ -204,15 +234,52 @@ document.getElementById('password_confirmation').addEventListener('blur', functi
         this.classList.add('invalido');
         mensagem.style.color = 'red';
         mensagem.textContent = 'As senhas não coincidem';
+        camposValidos.confirmarSenha = false;
         return;
     }
     this.classList.remove('invalido');
     this.classList.add('valido');
+    camposValidos.confirmarSenha = true;
     mensagem.textContent = '';
 
 });
 
-
+//Validar se o nome é coerente
+document.getElementById('name').addEventListener('input', function () {
+    const mensagem = document.getElementById('erro-nome');
+    mensagem.textContent = '';
+    const nome = this;
+    let nomeDigitado = nome.value;
+    nome.classList.remove('invalido');
+    nomeDigitado = nomeDigitado.trim();
+    if (nomeDigitado.length < 3) {
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe um nome válido.';
+        nome.classList.add('invalido');
+        camposValidos.nome = false;
+        return;
+    }
+    const nomeValido = /^[A-Za-zÀ-ÿ\s]+$/.test(nomeDigitado);
+    if (!nomeValido) {
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'O nome deve conter apenas letras.';
+        nome.classList.add('invalido');
+        camposValidos.nome = false;
+        return;
+    }
+    const nomeRepetido = /(.)\1{2,}/.test(nomeDigitado);
+    if (nomeRepetido) {
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'O nome contém muitos caracteres repetidos.';
+        nome.classList.add('invalido');
+        camposValidos.nome = false;
+        return;
+    }
+    this.classList.remove('invalido');
+    this.classList.add('valido');
+    camposValidos.nome = true;
+    mensagem.textContent = '';
+});
 //funcao para alterar visibilidade da senha
 
 document.getElementById('ocultar').addEventListener('click', function () {
@@ -240,4 +307,103 @@ document.getElementById('confirmar-ocultar').addEventListener('click', function 
         passwordField.type = 'password';
         icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/></svg>`
     }
+});
+
+//Alternar quando o icone aparece para mostrar a senha (CAMPO SENHA)
+const campoSenha = document.getElementById('password');
+const iconeOcultar = document.getElementById('ocultar');
+campoSenha.addEventListener('input', function () {
+    if (campoSenha.value.length > 0) {
+        iconeOcultar.style.display = 'block';
+    } else {
+        iconeOcultar.style.display = 'none';
+    }
+});
+
+//Alternar quando o icone aparece para mostrar a senha (CAMPO CONFIRMAR SENHA)
+const campoConfirmarSenha = document.getElementById('password_confirmation');
+const iconeOcultar2 = document.getElementById('confirmar-ocultar');
+campoConfirmarSenha.addEventListener('input', function () {
+    if (campoConfirmarSenha.value.length > 0) {
+        iconeOcultar2.style.display = 'block';
+    } else {
+        iconeOcultar2.style.display = 'none';
+    }
+});
+
+//Validação para verificar se os requisitos do formulario foram atendidos
+const botao = document.getElementById('registrar');
+botao.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevenir o envio do formulário
+    const nome = document.getElementById('name');
+    const email = document.getElementById('email');
+    const cpf_cnpj = document.getElementById('cpf_cnpj');
+    const password = document.getElementById('password');
+    const password_confirmation = document.getElementById('password_confirmation');
+
+    // Validação de nome
+    if (nome.value.trim().length < 3) {
+        const mensagem = document.getElementById('erro-nome');
+        nome.classList.add('invalido');
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe seu nome';
+        nome.focus();
+        camposValidos.nome = false;
+    }
+    // Validação de email
+    if (email.value.length <= 0) {
+        const mensagem = document.getElementById('erro-email');
+        email.classList.add('invalido');
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe seu email';
+        email.focus();
+        camposValidos.email = false;
+    }
+
+    // Validação de CPF/CNPJ
+    if (cpf_cnpj.value.length <= 0) {
+        const mensagem = document.getElementById('erro-cpf-cnpj');
+        cpf_cnpj.classList.add('invalido');
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe seu CPF ou CNPJ';
+        cpf_cnpj.focus();
+        camposValidos.cpfCnpj = false;
+    }
+
+    // Validação de senha
+    if (password.value.length <= 0) {
+        const mensagem = document.getElementById('erro-senha');
+        password.classList.add('invalido');
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe uma senha e após isso confirme sua senha';
+        password.focus();
+        camposValidos.senha = false;
+    }
+
+    // Validação de confirmação de senha
+    if (password_confirmation.value.length <= 0) {
+        const mensagem = document.getElementById('erro-confirmar-senha');
+        password_confirmation.classList.add('invalido');
+        mensagem.style.color = 'red';
+        mensagem.textContent = 'Informe uma senha e após isso confirme sua senha';
+        password_confirmation.focus();
+        camposValidos.confirmarSenha = false;
+    }
+    console.log(verificarFormulario());
+    if (!verificarFormulario()) {
+        Swal.fire({
+            icon: "error",
+            title: "Nem todos os requisitos do cadastro foram atendidos!",
+            showClass: {
+                popup: 'animate__backInUp'
+            },
+            hideClass: {
+                popup: 'animate__fadeOutDown'
+            }
+        });
+        return;
+    } else if(verificarFormulario()){
+        document.getElementById('form').submit();
+    }
+
 });
