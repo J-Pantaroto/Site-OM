@@ -12,9 +12,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::paginate(10);
-        $grupos = Grupo::all();
-        return view('home', compact('grupos', 'produtos'));
+            $produtos = Produto::paginate(10);
+            $grupos = Grupo::all();
+            return view('home', compact('grupos', 'produtos'));
     }
 
     public function buscarProduto(Request $request)

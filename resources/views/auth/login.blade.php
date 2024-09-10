@@ -14,11 +14,11 @@
             @endif
             @if ($errors->has('password'))
                 <script>
-                    document.getElementById('password').classList.add('valido');
+                    document.getElementById('password').classList.add('invalido');
                 </script>
             @endif
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full {{ $errors->has('email') ? 'invalido' : 'valido' }}"
+            <x-text-input id="email" class="block mt-1 w-full"
                 type="email" name="email" :value="old('email')" max="50" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
             <div id="erro-email"></div>

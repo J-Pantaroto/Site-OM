@@ -24,6 +24,10 @@
     transform: scale(1.1);
     filter: drop-shadow(0 0 4px var(--color-secondary));
 }
+#logo-login:hover{
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 4px var(--color-danger));
+}
 #botao-usuario {
     background-color:var(--color-header-black) !important;
     border: none !important;
