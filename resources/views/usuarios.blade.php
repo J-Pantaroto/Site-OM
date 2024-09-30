@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Produtos') }}
+            {{ __('Usuarios') }}
         </h2>
     </x-slot>
 
@@ -9,13 +9,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="fs-3 font-semibold text-gray-800 text-center">
-                    {{ __("Produtos") }}
+                    {{ __("Usuarios") }}
                 </div>
             </div>
         </div>
     </div>
     <x-barra-pesquisa name="pesquisa">
-        {{ __('Digite para pesquisar um produto...') }}
+        {{ __('Digite para pesquisar um usuário...') }}
     </x-barra-pesquisa>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -23,38 +23,28 @@
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Descricao</th>
-                        <th scope="col">Quantidade</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">CPF/CNPJ</th>
                         <th scope="col">Acao</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($produtos->isEmpty())
+                    @if ($usuarios->isEmpty())
                         <tr>
-                            <td colspan="5"> Nenhum produto cadastrado.</td>
+                            <td colspan="5"> Nenhum usuário cadastrado.</td>
                         </tr>
                     @else
-                        @foreach ($produtos as $produto)
+                        @foreach ($usuarios as $usuario)
                             <tr>
-                                <th scope="row">{{ $produto->id }}</th>
-                                <td><img src="{{ $produto->imagem }}" alt="" style="width: 10vh"></img></td>
-                                <td>{{ $produto->nome }}</td>
-                                <td>@</td>
+                                <th scope="row">{{ $usuario->id }}</th>
+                                <td>{{ $usuario->name }}</td>
+                                <td>{{ $usuario->email }}</td>
+                                <td>{{ $usuario->cpf_cnpj }}</td>
                                 <td>
-                                    <a type="button" class="btn btn-outline-danger"
-                                        href="{{ route('produtos.edit', $produto->id) }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark"
-                                            class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                        </svg>
-                                    </a>
-                                    <form style="display:inline" action="{{ route('produtos.destroy', $produto->id) }}"
+                                    <form style="display:inline" action="{{ route('usuarios.destroy', $usuario->id) }}"
                                         method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                                        onsubmit="return confirm('Tem certeza que deseja excluir o acesso deste usuario?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger" id="excluir">
@@ -72,8 +62,8 @@
                     @endif
                 </tbody>
             </table>
-            <div id="paginacao" class="d-flex justify-content-end">
-                {{$produtos->links()}}
+            <div id= "paginacao" class="d-flex justify-content-end">
+                {{$usuarios->links()}}
             </div>
         </div>
     </div>

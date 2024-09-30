@@ -47,7 +47,11 @@ ul {
 #logo-login {
     width: 3rem;
     height: 3rem;
-    transform: scale(1.1);
+    filter: drop-shadow(0 0 4px var(--color-neutral-40));
+    transition: all 0.3s ease;
+}
+#logo-login:hover{
+    transform: scale(1.2);
     filter: drop-shadow(0 0 4px var(--color-danger));
 }
 /*Card */

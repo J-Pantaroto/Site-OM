@@ -11,16 +11,31 @@ class ProdutoController extends Controller
     public function index()
     {
         $totalProdutos = 20;
-        $produtos = Produto::paginate($totalProdutos);
+        $produtos = Produto::orderBy('nome', 'ASC')->paginate($totalProdutos);
         $grupos = Grupo::all();
-
-
-
-
 
         return view('produtos', compact('grupos', 'produtos'));
 
     }
+
+    public function pesquisarProdutos(Request $request)
+    {
+
+        $pesquisa = $request->input('pesquisa');
+        if($pesquisa===''){
+            $produtos = Produto::orderBy('nome', 'ASC')->paginate(20);
+        }else{
+            $produtos = Produto::where('nome', 'like', "%{$pesquisa}%")->paginate(20);
+        }
+        
+        return response()->json([
+            'status' => 'sucesso',
+            'quantidade' => $produtos->count(),
+            'produtos' => $produtos->items(),
+            'links' => $produtos->links()->render()
+        ]);
+    }
+
 
     /**
      * Show the form for creating a new resource.

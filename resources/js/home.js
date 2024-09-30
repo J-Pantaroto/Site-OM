@@ -121,7 +121,21 @@ listItems.forEach(item => {
 document.getElementById("verMais").addEventListener("click", function () {
     buscarProdutos('', escopo, escopo, 10, 'mais_produto')
 })
+//TESTE
 
+// Exemplo de como utilizar dentro do evento de adicionar ao carrinho
+document.querySelector('#produtos-container').addEventListener('click', function (event) {
+    if (event.target.classList.contains('adicionar-carrinho')) {
+        const produtoSelecionado = event.target.closest('.card-produto');
+        const produto = {
+            nome: produtoSelecionado.querySelector('.card-title').textContent,
+            imagem: produtoSelecionado.querySelector('img').src
+        };
+        adicionarProdutoCarrinho(produto);
+    }
+});
+
+//TESTE
 
 //CARRINHO FUNCTION
 document.addEventListener('DOMContentLoaded', () => {
@@ -211,7 +225,7 @@ const cartItems = document.getElementById('cartItems');
 cartItems.addEventListener('click', function (event) {
     const button = event.target;
     const inputGrupo = button.closest('.input-group');
-    const svg = document.getElementsByClassName('"bi bi-trash');
+    const svg = document.getElementsByClassName('bi bi-trash');
     if (inputGrupo) {
         const quantidadeSpan = inputGrupo.querySelector('.quantity-span');
 
@@ -220,6 +234,7 @@ cartItems.addEventListener('click', function (event) {
             if (value > 1) {
                 quantidadeSpan.textContent = value - 1;
                 atualizarProdutosCarrinho();
+                atualizarProdutoQuantidade(produtoNome, quantidade - 1);
             }
         }
 
@@ -227,6 +242,7 @@ cartItems.addEventListener('click', function (event) {
             let value = parseInt(quantidadeSpan.textContent);
             quantidadeSpan.textContent = value + 1;
             atualizarProdutosCarrinho();
+            atualizarProdutoQuantidade(produtoNome, quantidade + 1);
         }
     }
 
@@ -234,6 +250,7 @@ cartItems.addEventListener('click', function (event) {
         const item = button.closest('tr');
         item.remove();
         atualizarProdutosCarrinho();
+        atualizarCookiesCarrinho(produtosCarrinho);
     }
 });
 function atualizarProdutosCarrinho() {
@@ -246,25 +263,57 @@ function atualizarProdutosCarrinho() {
         const quantidadeProduto = parseInt(quantidadeSpan.textContent);
         quantidadeTotal += quantidadeProduto;
     }
-
     document.getElementById("cart-count").innerText = quantidadeTotal;
 }
 
+//TESTE
+function atualizarProdutoQuantidade(nomeProduto, quantidade) {
+    const produtosCarrinho = carregarProdutosCarrinho();
+    const produto = produtosCarrinho.find(p => p.nome === nomeProduto);
+    if (produto) {
+        produto.quantidade = quantidade;
+    }
+    atualizarCookiesCarrinho(produtosCarrinho);
+}
 
-/*async function produtoComprar(id_produto) {
-    try {
-        const resposta = await fetch(`http://192.168.1.78/site-mercado/funcoes/funcoes.php?`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: id_produto,
-                funcao: 'buscar_produtos'
-            })
+function atualizarCookiesCarrinho(produtos) {
+    fetch('/atualizar-carrinho', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            produtos: produtos
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'sucesso') {
+                console.log('Carrinho atualizado com sucesso!');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar o carrinho:', error);
+        });
+}
+function adicionarProdutoCarrinho(produto) {
+    const produtosCarrinho = carregarProdutosCarrinho(); // Função para carregar os produtos do carrinho
+
+    // Verifica se o produto já está no carrinho
+    const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
+
+    if (produtoExistente) {
+        produtoExistente.quantidade += 1; // Se o produto já existir, incrementa a quantidade
+    } else {
+        produtosCarrinho.push({
+            nome: produto.nome,
+            imagem: produto.imagem,
+            quantidade: 1 // Quantidade inicial
         });
     }
-    catch (error) {
-        console.error('Erro:', error);
-    }
-} */
+
+    // Atualiza o carrinho via backend
+    atualizarCookiesCarrinho(produtosCarrinho);
+}
+//TESTE

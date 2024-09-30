@@ -19,8 +19,12 @@
 #logo-login {
     width: 8rem;
     height: 8rem;
-    transform: scale(1.1);
     filter: drop-shadow(0 0 4px var(--color-secondary));
+    transition: all 0.3s ease;
+}
+#logo-login:hover{
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 4px var(--color-danger));
 }
 
 input[type='checkbox'] {

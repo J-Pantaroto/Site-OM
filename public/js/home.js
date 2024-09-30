@@ -4734,7 +4734,7 @@ function _buscarProdutos() {
       textoResposta,
       produtosContainer,
       botaoVerMais,
-      quantidade,
+      _quantidade,
       produtos,
       _args = arguments;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -4775,12 +4775,12 @@ function _buscarProdutos() {
           produtosContainer = document.getElementById('produtos-container');
           botaoVerMais = document.getElementById("verMais");
           if (textoResposta.status === 'sucesso') {
-            quantidade = textoResposta.quantidade;
+            _quantidade = textoResposta.quantidade;
             produtos = textoResposta.produtos;
             if (tipo_chamada != 'mais_produto') {
               produtosContainer.innerHTML = ''; // Limpa os produtos existentes ao realizar uma nova busca
             }
-            if (quantidade === 0) {
+            if (_quantidade === 0) {
               produtosContainer.innerHTML = '<p>Produto não encontrado!</p>';
               botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
             } else {
@@ -4873,6 +4873,21 @@ listItems.forEach(function (item) {
 document.getElementById("verMais").addEventListener("click", function () {
   buscarProdutos('', escopo, escopo, 10, 'mais_produto');
 });
+//TESTE
+
+// Exemplo de como utilizar dentro do evento de adicionar ao carrinho
+document.querySelector('#produtos-container').addEventListener('click', function (event) {
+  if (event.target.classList.contains('adicionar-carrinho')) {
+    var produtoSelecionado = event.target.closest('.card-produto');
+    var produto = {
+      nome: produtoSelecionado.querySelector('.card-title').textContent,
+      imagem: produtoSelecionado.querySelector('img').src
+    };
+    adicionarProdutoCarrinho(produto);
+  }
+});
+
+//TESTE
 
 //CARRINHO FUNCTION
 document.addEventListener('DOMContentLoaded', function () {
@@ -4959,7 +4974,7 @@ var cartItems = document.getElementById('cartItems');
 cartItems.addEventListener('click', function (event) {
   var button = event.target;
   var inputGrupo = button.closest('.input-group');
-  var svg = document.getElementsByClassName('"bi bi-trash');
+  var svg = document.getElementsByClassName('bi bi-trash');
   if (inputGrupo) {
     var quantidadeSpan = inputGrupo.querySelector('.quantity-span');
     if (button.classList.contains('button-minus')) {
@@ -4967,18 +4982,21 @@ cartItems.addEventListener('click', function (event) {
       if (value > 1) {
         quantidadeSpan.textContent = value - 1;
         atualizarProdutosCarrinho();
+        atualizarProdutoQuantidade(produtoNome, quantidade - 1);
       }
     }
     if (button.classList.contains('button-plus')) {
       var _value = parseInt(quantidadeSpan.textContent);
       quantidadeSpan.textContent = _value + 1;
       atualizarProdutosCarrinho();
+      atualizarProdutoQuantidade(produtoNome, quantidade + 1);
     }
   }
   if (button.classList.contains('remover-item')) {
     var item = button.closest('tr');
     item.remove();
     atualizarProdutosCarrinho();
+    atualizarCookiesCarrinho(produtosCarrinho);
   }
 });
 function atualizarProdutosCarrinho() {
@@ -4993,23 +5011,58 @@ function atualizarProdutosCarrinho() {
   document.getElementById("cart-count").innerText = quantidadeTotal;
 }
 
-/*async function produtoComprar(id_produto) {
-    try {
-        const resposta = await fetch(`http://192.168.1.78/site-mercado/funcoes/funcoes.php?`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: id_produto,
-                funcao: 'buscar_produtos'
-            })
-        });
+//TESTE
+function atualizarProdutoQuantidade(nomeProduto, quantidade) {
+  var produtosCarrinho = carregarProdutosCarrinho();
+  var produto = produtosCarrinho.find(function (p) {
+    return p.nome === nomeProduto;
+  });
+  if (produto) {
+    produto.quantidade = quantidade;
+  }
+  atualizarCookiesCarrinho(produtosCarrinho);
+}
+function atualizarCookiesCarrinho(produtos) {
+  fetch('/atualizar-carrinho', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({
+      produtos: produtos
+    })
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    if (data.status === 'sucesso') {
+      console.log('Carrinho atualizado com sucesso!');
     }
-    catch (error) {
-        console.error('Erro:', error);
-    }
-} */
+  })["catch"](function (error) {
+    console.error('Erro ao atualizar o carrinho:', error);
+  });
+}
+function adicionarProdutoCarrinho(produto) {
+  var produtosCarrinho = carregarProdutosCarrinho(); // Função para carregar os produtos do carrinho
+
+  // Verifica se o produto já está no carrinho
+  var produtoExistente = produtosCarrinho.find(function (p) {
+    return p.nome === produto.nome;
+  });
+  if (produtoExistente) {
+    produtoExistente.quantidade += 1; // Se o produto já existir, incrementa a quantidade
+  } else {
+    produtosCarrinho.push({
+      nome: produto.nome,
+      imagem: produto.imagem,
+      quantidade: 1 // Quantidade inicial
+    });
+  }
+
+  // Atualiza o carrinho via backend
+  atualizarCookiesCarrinho(produtosCarrinho);
+}
+//TESTE
 })();
 
 /******/ })()

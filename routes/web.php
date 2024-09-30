@@ -5,8 +5,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 Route::post('/buscar', [HomeController::class, 'buscarProduto']); //rota para fetch
+Route::post('/pesquisar.produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes');
+Route::post('/pesquisar.usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [ProdutoController::class, 'index'])->middleware(['auth', 'verified'])->name('produtos');
+Route::get('/usuarios', [ProfileController::class, 'index'])->middleware(['auth', 'verified'])->name('usuarios');
+Route::delete('/usuarios/{id}', [ProfileController::class, 'destroyUser'])->name('usuarios.destroy');
 Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
 Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
 Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
