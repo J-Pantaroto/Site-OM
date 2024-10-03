@@ -32,6 +32,5 @@
     </div>
     <script src="{{ mix('js/app.js') }}"></script>
     <script src="{{ mix('js/login.js') }}"></script>
-    <script src="{{ mix('js/bootstrap.min.js') }}"></script>
 </body>
 </html>

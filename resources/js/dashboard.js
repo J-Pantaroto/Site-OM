@@ -1,9 +1,9 @@
 async function buscar(pesquisa = '', escopo = '') {
     let url = '';
     if (escopo === 'usuarios') {
-        url = '/pesquisar.usuarios';
+        url = '/pesquisar/usuarios';
     } else if (escopo === 'produtos') {
-        url = '/pesquisar.produtos';
+        url = '/pesquisar/produtos';
     } else {
         console.error('Escopo Inválido!');
         return;

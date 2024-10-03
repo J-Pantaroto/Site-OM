@@ -1,12 +1,16 @@
 <?php
+use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 Route::post('/buscar', [HomeController::class, 'buscarProduto']); //rota para fetch
-Route::post('/pesquisar.produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes');
-Route::post('/pesquisar.usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes');
+Route::post('/limpar/carrinho', [CarrinhoController::class, 'limparCarrinho']);
+Route::post('/atualizar/carrinho', [CarrinhoController::class, 'atualizarCarrinho']);
+Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes');
+Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/');
+Route::post('/pesquisar/usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [ProdutoController::class, 'index'])->middleware(['auth', 'verified'])->name('produtos');
 Route::get('/usuarios', [ProfileController::class, 'index'])->middleware(['auth', 'verified'])->name('usuarios');

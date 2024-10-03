@@ -18,6 +18,12 @@ class ProdutoController extends Controller
 
     }
 
+    public function pesquisaProduto($produto)
+    {
+        $prod = Produto::where('nome', 'like', "%{$produto}%")->first();
+        return view('produto', compact('prod'));
+    }
+    
     public function pesquisarProdutos(Request $request)
     {
 

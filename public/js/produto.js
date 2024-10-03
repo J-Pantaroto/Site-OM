@@ -4570,200 +4570,14 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!******************************!*\
-  !*** ./resources/js/home.js ***!
-  \******************************/
+/*!*********************************!*\
+  !*** ./resources/js/produto.js ***!
+  \*********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
-var escopo = 'todos';
-var offset2 = 0;
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
-function buscarProdutos() {
-  return _buscarProdutos.apply(this, arguments);
-} //PESQUISA
-function _buscarProdutos() {
-  _buscarProdutos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var pesquisa,
-      escopo,
-      categoria,
-      limite,
-      tipo_chamada,
-      resposta,
-      textoResposta,
-      produtosContainer,
-      botaoVerMais,
-      quantidade,
-      produtos,
-      _args = arguments;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
-        case 0:
-          pesquisa = _args.length > 0 && _args[0] !== undefined ? _args[0] : '';
-          escopo = _args.length > 1 ? _args[1] : undefined;
-          categoria = _args.length > 2 && _args[2] !== undefined ? _args[2] : '';
-          limite = _args.length > 3 ? _args[3] : undefined;
-          tipo_chamada = _args.length > 4 ? _args[4] : undefined;
-          _context.prev = 5;
-          if (tipo_chamada == "mais_produto") {
-            offset2 += parseInt(limite);
-          } else {
-            offset2 = 0;
-          }
-          _context.next = 9;
-          return fetch("/buscar", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-              pesquisa: pesquisa,
-              categoria: categoria,
-              limite: limite,
-              offset: offset2,
-              escopo: escopo
-            })
-          });
-        case 9:
-          resposta = _context.sent;
-          _context.next = 12;
-          return resposta.json();
-        case 12:
-          textoResposta = _context.sent;
-          produtosContainer = document.getElementById('produtos-container');
-          botaoVerMais = document.getElementById("verMais");
-          if (textoResposta.status === 'sucesso') {
-            quantidade = textoResposta.quantidade;
-            produtos = textoResposta.produtos;
-            if (tipo_chamada != 'mais_produto') {
-              produtosContainer.innerHTML = ''; // Limpa os produtos existentes ao realizar uma nova busca
-            }
-            if (quantidade === 0) {
-              produtosContainer.innerHTML = '<p>Produto não encontrado!</p>';
-              botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
-            } else {
-              produtos.forEach(function (produto) {
-                var produtoDiv = document.createElement('div');
-                produtoDiv.className = 'col-md-4 col-6';
-                var a1 = document.createElement("a");
-                a1.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                a1.className = "text-decoration-none text-black";
-                var div = document.createElement("div");
-                div.className = "card m-4 card-produto";
-                var img = document.createElement("img");
-                img.src = produto.imagem;
-                img.className = "card-img-top";
-                img.setAttribute("alt", produto.nome);
-                div.appendChild(img);
-                var div2 = document.createElement("div");
-                div2.className = "card-body text-center";
-                var h5 = document.createElement("h5");
-                h5.className = "card-title";
-                h5.textContent = produto.nome;
-                var a2 = document.createElement("a");
-                a2.className = "btn btn-warning d-block adicionar-carrinho";
-                a2.textContent = "Adicionar ao carrinho";
-                div2.appendChild(h5);
-                div2.appendChild(a2);
-                a1.appendChild(div);
-                div.appendChild(div2);
-                produtoDiv.appendChild(a1);
-                produtosContainer.appendChild(produtoDiv);
-              });
-              if (textoResposta.totalProdutos > textoResposta.quantidade) {
-                botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
-              } else {
-                botaoVerMais.style.display = "none"; // Oculta o botão se houver 10 ou menos produtos
-              }
-            }
-          } else {
-            console.error('Erro:', textoResposta.mensagem);
-          }
-          _context.next = 21;
-          break;
-        case 18:
-          _context.prev = 18;
-          _context.t0 = _context["catch"](5);
-          console.error('Erro:', _context.t0);
-        case 21:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, null, [[5, 18]]);
-  }));
-  return _buscarProdutos.apply(this, arguments);
-}
-document.addEventListener('DOMContentLoaded', function () {
-  var searchBtn = document.getElementById('search-btn');
-  searchBtn.addEventListener('click', function (event) {
-    event.preventDefault();
-    escopo = "pesquisa";
-    var pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-    buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
-    var listItems = document.querySelectorAll('.lista');
-    listItems.forEach(function (li) {
-      return li.classList.remove('active');
-    });
-    var todosProdutos = document.querySelector('[data-grupo-id="todos"]');
-    todosProdutos.classList.add('active');
-  });
-  var inputPesquisa = document.getElementById("pesquisa");
-  inputPesquisa.addEventListener("keypress", function () {
-    if (window.event.keyCode == 13) {
-      escopo = "pesquisa";
-      var pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-      buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
-    }
-  });
-});
-
-//CATEGORIA
-var listItems = document.querySelectorAll('.lista');
-listItems.forEach(function (item) {
-  item.addEventListener('click', function (event) {
-    escopo = item.getAttribute('data-grupo-id');
-    event.preventDefault();
-    // Remover classe ativa de todos os itens
-    listItems.forEach(function (li) {
-      return li.classList.remove('active');
-    });
-    // Adicionar classe ativa ao item clicado
-    document.querySelector('input[name="pesquisa"]').value = '';
-    item.classList.add('active');
-    buscarProdutos('', escopo, escopo, 10, 'categoria_produto');
-  });
-});
-//VER MAIS
-document.getElementById("verMais").addEventListener("click", function () {
-  buscarProdutos('', escopo, escopo, 10, 'mais_produto');
-});
-
-//dropdown
-document.addEventListener('DOMContentLoaded', function () {
-  window.abrirFecharDropDown = function (escopo) {
-    var dropdown = document.getElementById('drop');
-    if (escopo == "enter") {
-      dropdown.setAttribute('data-bs-popper', 'static');
-      dropdown.classList.add('show');
-    } else if (escopo == "leave") {
-      dropdown.removeAttribute('data-bs-popper');
-      dropdown.classList.remove('show');
-    }
-  };
-});
 if (usuarioAutenticado) {
-  var atualizarContagemCarrinho = function atualizarContagemCarrinho() {
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
-      return total + (produto.quantidade || 0);
-    }, 0);
-    document.getElementById("cart-count").innerText = quantidadeTotal;
-  }; //CARRINHO FUNCTION
   var atualizarProdutosCarrinho = function atualizarProdutosCarrinho() {
     var tabela = document.getElementById("tabelaCarrinho");
     var linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
@@ -4818,7 +4632,6 @@ if (usuarioAutenticado) {
       produtosCarrinho.push(produto);
     }
     atualizarCookiesCarrinho(produtosCarrinho); // Atualiza o cookie com os produtos
-    atualizarContagemCarrinho();
   };
   var carregarProdutosCarrinho = function carregarProdutosCarrinho() {
     var produtos = JSON.parse(getCookie('carrinho')) || [];
@@ -4845,102 +4658,13 @@ if (usuarioAutenticado) {
       return console.error('Erro ao limpar o carrinho:', error);
     });
   };
-  // Exemplo de como utilizar dentro do evento de adicionar ao carrinho
-  document.querySelector('#produtos-container').addEventListener('click', function (event) {
-    if (event.target.classList.contains('adicionar-carrinho')) {
-      var produtoSelecionado = event.target.closest('.card-produto');
-      var produto = {
-        nome: produtoSelecionado.querySelector('.card-title').textContent,
-        imagem: produtoSelecionado.querySelector('img').src
-      };
-      adicionarProdutoCarrinho(produto);
-    }
-  });
-  document.addEventListener('DOMContentLoaded', function () {
-    atualizarContagemCarrinho();
-  });
-  document.addEventListener('DOMContentLoaded', function () {
-    var addCarrinho = document.querySelector('#produtos-container');
-    if (addCarrinho) {
-      addCarrinho.addEventListener('click', function (event) {
-        if (event.target.classList.contains('adicionar-carrinho')) {
-          var Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: function didOpen(toast) {
-              toast.onmouseenter = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.stopTimer;
-              toast.onmouseleave = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.resumeTimer;
-            }
-          });
-          Toast.fire({
-            icon: "success",
-            title: "Adicionado ao carrinho"
-          });
-          var produtoSelecionado = event.target.closest('.card-produto'); // Pega o card do produto e se baseia nele
-
-          // Imagem
-          var imagemCardAtual = produtoSelecionado.querySelector('img').src; // Pega o caminho da imagem com base no card
-          var produtoCarrinho = document.createElement('tr');
-          var imagemContainer = document.createElement('td');
-          var imagem = document.createElement('img');
-          imagem.src = imagemCardAtual;
-          imagem.style.width = "15vh";
-          imagemContainer.appendChild(imagem);
-          produtoCarrinho.appendChild(imagemContainer);
-
-          // Nome
-          var _nomeProduto = produtoSelecionado.querySelector('.card-title').textContent;
-          var nomeContainer = document.createElement('td');
-          nomeContainer.textContent = _nomeProduto;
-          produtoCarrinho.appendChild(nomeContainer);
-
-          // Quantidade
-          var qntProduto = document.createElement("td");
-          var div = document.createElement("div");
-          div.className = "input-group";
-          // -
-          var botaoMenos = document.createElement("button");
-          botaoMenos.type = "button";
-          botaoMenos.className = "button-minus";
-          botaoMenos.textContent = "-";
-          // quantidade (span)
-          var quantidadeSpan = document.createElement("span");
-          quantidadeSpan.className = "quantity-span";
-          quantidadeSpan.textContent = "1"; // Valor inicial
-          // +
-          var botaoMais = document.createElement("button");
-          botaoMais.type = "button";
-          botaoMais.className = "button-plus";
-          botaoMais.textContent = "+";
-          div.appendChild(botaoMenos);
-          div.appendChild(quantidadeSpan);
-          div.appendChild(botaoMais);
-          qntProduto.appendChild(div);
-          produtoCarrinho.appendChild(qntProduto);
-
-          // Ação
-          var acao = document.createElement('td');
-          var botaoRemover = document.createElement('button');
-          botaoRemover.className = 'remover-item btn btn-danger';
-          botaoRemover.type = 'button';
-          // Criação do elemento <svg>
-          var svg = document.createElement('svg');
-          svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
-          // Adiciona o SVG ao botão
-          botaoRemover.appendChild(svg);
-          acao.appendChild(botaoRemover);
-          produtoCarrinho.appendChild(acao);
-          // Adiciona o produto ao corpo da tabela
-          var _cartItems = document.querySelector('#cartItems');
-          _cartItems.appendChild(produtoCarrinho);
-          adicionarProdutoCarrinho(produtoCarrinho);
-        }
-      });
-    }
-  });
+  var atualizarContagemCarrinho = function atualizarContagemCarrinho() {
+    var produtosCarrinho = carregarProdutosCarrinho();
+    var quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
+      return total + produto.quantidade;
+    }, 0);
+    document.getElementById("cart-count").innerText = quantidadeTotal;
+  };
   var cartItems = document.getElementById('cartItems');
   cartItems.addEventListener('click', function (event) {
     var button = event.target;
@@ -4952,28 +4676,42 @@ if (usuarioAutenticado) {
         if (value > 1) {
           quantidadeSpan.textContent = value - 1;
           atualizarProdutosCarrinho();
-          atualizarProdutoQuantidade(nomeProduto, value - 1);
+          atualizarProdutoQuantidade(produtoNome, value - 1);
         }
       }
       if (button.classList.contains('button-plus')) {
         var _value = parseInt(quantidadeSpan.textContent);
         quantidadeSpan.textContent = _value + 1;
         atualizarProdutosCarrinho();
-        atualizarProdutoQuantidade(nomeProduto, _value + 1);
+        atualizarProdutoQuantidade(produtoNome, _value + 1);
       }
     }
     if (button.classList.contains('remover-item')) {
       var item = button.closest('tr');
-      var _nomeProduto2 = item.querySelector('td:nth-child(2)').textContent;
       item.remove();
       var produtosCarrinho = carregarProdutosCarrinho();
       produtosCarrinho = produtosCarrinho.filter(function (p) {
-        return p.nome !== _nomeProduto2;
-      }); // Filtra o nome do produto removido e não adiciona ele na variável.
+        return p.nome !== nomeProduto;
+      }); //  Filtra o nome do produto removido e não adiciona ele na variavel.
+      atualizarCookiesCarrinho(produtosCarrinho); //Atualiza os produtos do cookie sem o produto removido
       atualizarProdutosCarrinho();
-      atualizarCookiesCarrinho(produtosCarrinho);
-      atualizarContagemCarrinho(); // Atualiza o contador após remoção
     }
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    atualizarContagemCarrinho();
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    window.abrirFecharDropDown = function (escopo) {
+      var dropdown = document.getElementById('drop');
+      //var dropdownInstancia = new bootstrap.Dropdown(dropdown.querySelector('.dropdown-toggle'));
+      if (escopo == "enter") {
+        dropdown.setAttribute('data-bs-popper', 'static');
+        dropdown.classList.add('show');
+      } else if (escopo == "leave") {
+        dropdown.removeAttribute('data-bs-popper');
+        dropdown.classList.remove('show');
+      }
+    };
   });
 }
 })();

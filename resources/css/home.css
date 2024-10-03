@@ -15,6 +15,29 @@
     --color-yellow-primary: #ffc107;
     --color-yellow-secondary: #ffc107c9;
 }
+/** menu dropdown header*/
+#drop{
+    margin-top: 0;
+}
+/**botao do usuario no header */
+.user-button {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.user-button:hover {
+    background-color: var(--color-neutral-30); 
+    color: var(--color-yellow-primary); 
+}
+
+.user-button:hover svg {
+    fill: var(--color-yellow-secondary);
+}
+/**botao do usuario no header */
 
 .navbar.navbar-expand-lg.shadow.fixed-top {
     background-color: var(--color-primary);

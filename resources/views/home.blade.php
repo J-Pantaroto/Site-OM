@@ -48,10 +48,11 @@
                         <div class="alert alert-danger" role="alert">
                             Nenhum produto cadastrado
                         </div>
-                    @else 
+                    @else
                             @foreach ($produtos as $produto)
                                     <div class="col-md-4 col-6">
-                                        <a href="#" class="text-decoration-none text-black">
+                                        <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
+                                            class="text-decoration-none text-black">
                                             <div class="card m-4 card-produto">
                                                 <img src="{{ $produto->imagem }}" class="card-img-top" alt="...">
                                                 <div class="card-body text-center">
@@ -63,7 +64,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            @endforeach 
+                            @endforeach
                     @endif
             </div>
             <div class=" text-center mt-4">
@@ -73,49 +74,54 @@
 
     </div>
     </div>
-    <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal-lojaLabel">Carrinho</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <h2 class="text-center">Carrinho de Compras</h2>
-                <div class="modal-body">
+    @if (Route::has('login'))
+        @auth
 
-                    <div class="container mt-5">
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="tabelaCarrinho">
-                                <thead>
-                                    <tr>
-                                        <th>Imagem</th>
-                                        <th>Produto</th>
-                                        <th>Quantidade</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cartItems">
-                                </tbody>
-                            </table>
+            <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modal-lojaLabel">Carrinho</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="row justify-content-end">
-                            <div class="col-md-4">
-                                <h4>Total: R$ <span id="totalAmount">0.00</span></h4>
+                        <h2 class="text-center">Carrinho de Compras</h2>
+                        <div class="modal-body">
+
+                            <div class="container mt-5">
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tabelaCarrinho">
+                                        <thead>
+                                            <tr>
+                                                <th>Imagem</th>
+                                                <th>Produto</th>
+                                                <th>Quantidade</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cartItems">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row justify-content-end">
+                                    <div class="col-md-4">
+                                        <h4>Total: R$ <span id="totalAmount">0.00</span></h4>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-warning ">Finalizar compra</button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-outline-warning ">Finalizar compra</button>
-                </div>
             </div>
-        </div>
-    </div>
-    <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
-        <i class="fas fa-shopping-cart"></i>
-        <span id="cart-count">0</span>
+            <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+                @endauth
+            @endif
     </a>
     <script src="{{ mix('js/home.js') }}"></script>
 </x-main-layout>

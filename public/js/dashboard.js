@@ -50,7 +50,7 @@ function _buscar() {
             _context.next = 7;
             break;
           }
-          url = '/pesquisar.usuarios';
+          url = '/pesquisar/usuarios';
           _context.next = 13;
           break;
         case 7:
@@ -58,7 +58,7 @@ function _buscar() {
             _context.next = 11;
             break;
           }
-          url = '/pesquisar.produtos';
+          url = '/pesquisar/produtos';
           _context.next = 13;
           break;
         case 11:

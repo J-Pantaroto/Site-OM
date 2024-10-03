@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        setcookie('carrinho', json_encode([]), time() + 86400, '/');
         return redirect()->intended(route('home'));
     }
 
@@ -39,8 +39,8 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
+        setcookie('carrinho', '', time() - 3600, '/');
 
         return redirect('/');
     }
