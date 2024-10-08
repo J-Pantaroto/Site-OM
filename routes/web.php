@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 Route::post('/buscar', [HomeController::class, 'buscarProduto']); //rota para fetch
 Route::post('/limpar/carrinho', [CarrinhoController::class, 'limparCarrinho']);
+Route::post('/remover/produto/carrinho', [CarrinhoController::class, 'removerProdutoCookie']);
 Route::post('/atualizar/carrinho', [CarrinhoController::class, 'atualizarCarrinho']);
 Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes');
 Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/');

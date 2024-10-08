@@ -12,7 +12,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-            $produtos = Produto::paginate(10);
+            $produtos = Produto::paginate(12);
             $grupos = Grupo::all();
             return view('home', compact('grupos', 'produtos'));
     }
