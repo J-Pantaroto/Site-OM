@@ -49,30 +49,34 @@
                             Nenhum produto cadastrado
                         </div>
                     @else
-                            @foreach ($produtos as $produto)
-                                    <div class="col-md-4 col-6">
-                                        <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
-                                            class="text-decoration-none text-black">
-                                            <div class="card m-4 card-produto">
-                                                <img src="{{ $produto->imagem }}" class="card-img-top" alt="...">
-                                                <div class="card-body text-center">
-                                                    <h5 class="card-title">{{ $produto->nome }}</h5>
-                                                    <a class="btn btn-warning d-block adicionar-carrinho"
-                                                        data-id="{{ $produto->id }}">Adicionar
-                                                        ao carrinho</a>
-                                                </div>
-                                        </a>
+                        @foreach ($produtos as $produto)
+                            <div class="col-md-4 col-6">
+                                <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
+                                    class="{{ strlen($produto->nome) > 22 ? 'fs-6 text-decoration-none text-black' : 'text-decoration-none text-black' }}">
+                                    <div class="card m-4 card-produto">
+                                        <img src="{{ $produto->imagem }}" class="card-img-top img-fluid" alt="...">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
+                                            <div class="produto-descricao">
+                                                <p>{{ $produto->descricao }}</p>
+                                            </div>
+                                            <a class="btn btn-warning d-block adicionar-carrinho" data-id="{{ $produto->id }}">
+                                                Adicionar ao carrinho
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
-                    @endif
-            </div>
-            <div class=" text-center mt-4">
-                <button class="btn btn-warning" id="verMais">Ver mais produtos</button>
-            </div>
-        </div>
+                                </a>
+                            </div>
+                        @endforeach
 
-    </div>
+                    @endif
+                </div>
+                <div class=" text-center mt-4">
+                    <button class="btn btn-warning" id="verMais">Ver mais produtos</button>
+                </div>
+            </div>
+
+        </div>
     </div>
     @if (Route::has('login'))
         @auth
@@ -85,6 +89,12 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <h2 class="text-center">Carrinho de Compras</h2>
+                        <div class="mt-auto d-flex justify-content-end">
+                            <button id="limpar-tudo" type="button" class="btn btn-outline-danger mb-3 me-2">
+                                <i class="fas fa-eraser"></i> Limpar
+                            </button>
+                        </div>
+    
                         <div class="modal-body">
 
                             <div class="container mt-5">
@@ -103,16 +113,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="row justify-content-end">
-                                    <div class="col-md-4">
-                                        <h4>Total: R$ <span id="totalAmount">0.00</span></h4>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-outline-warning ">Finalizar compra</button>
+                            <button type="button" id="finalizar" class="btn btn-outline-warning ">Finalizar compra</button>
                         </div>
                     </div>
                 </div>
@@ -120,8 +125,8 @@
             <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cart-count">0</span>
-                @endauth
-            @endif
+        @endauth
+    @endif
     </a>
     <script src="{{ mix('js/home.js') }}"></script>
 </x-main-layout>

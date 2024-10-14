@@ -4648,31 +4648,71 @@ function _buscarProdutos() {
               botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
             } else {
               produtos.forEach(function (produto) {
+                // Cria o container do produto
                 var produtoDiv = document.createElement('div');
                 produtoDiv.className = 'col-md-4 col-6';
+
+                // Cria o link para o produto
                 var a1 = document.createElement("a");
                 a1.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
                 a1.className = "text-decoration-none text-black";
+
+                // Cria o card do produto
                 var div = document.createElement("div");
                 div.className = "card m-4 card-produto";
+
+                // Cria a imagem do produto
                 var img = document.createElement("img");
                 img.src = produto.imagem;
-                img.className = "card-img-top";
+                img.className = "card-img-top img-fluid";
                 img.setAttribute("alt", produto.nome);
+
+                // Adiciona a imagem ao card
                 div.appendChild(img);
+
+                // Cria a div do card-body
                 var div2 = document.createElement("div");
                 div2.className = "card-body text-center";
+
+                // Cria o título com o nome do produto
                 var h5 = document.createElement("h5");
-                h5.className = "card-title";
+                h5.className = "card-title produto-nome";
                 h5.textContent = produto.nome;
+                if (produto.nome.length > 22) {
+                  h5.classList.add("fs-6");
+                }
+                // Cria a descrição do produto
+                var div3 = document.createElement("div");
+                div3.className = "produto-descricao";
+                var paragrafo = document.createElement("p");
+                paragrafo.textContent = produto.descricao;
+
+                // Adiciona o parágrafo da descrição dentro da div de descrição
+                div3.appendChild(paragrafo);
+
+                // Cria o botão de "Adicionar ao carrinho"
                 var a2 = document.createElement("a");
                 a2.className = "btn btn-warning d-block adicionar-carrinho";
                 a2.textContent = "Adicionar ao carrinho";
+                a2.setAttribute('data-id', produto.id); // Adiciona o ID do produto
+
+                // Adiciona a descrição e o título dentro do card-body
                 div2.appendChild(h5);
+                div2.appendChild(div3);
+
+                // Adiciona o botão ao card-body
                 div2.appendChild(a2);
-                a1.appendChild(div);
+
+                // Adiciona o card-body dentro do card
                 div.appendChild(div2);
+
+                // Adiciona o card ao link
+                a1.appendChild(div);
+
+                // Adiciona o link ao container do produto
                 produtoDiv.appendChild(a1);
+
+                // Adiciona o container do produto ao container principal (produtosContainer)
                 produtosContainer.appendChild(produtoDiv);
               });
               if (textoResposta.totalProdutos > textoResposta.quantidade) {
@@ -4900,6 +4940,13 @@ if (usuarioAutenticado) {
     var parts = value.split("; ".concat(nome, "="));
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
+  var limparCarrinho = function limparCarrinho() {
+    // Limpa o conteúdo do cookie
+    document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+    var cartItems = document.querySelector('#cartItems');
+    cartItems.innerHTML = '';
+    atualizarContagemCarrinho();
+  }; //LIMPAR TODO O CARRINHO BOTAO
   document.querySelector('#produtos-container').addEventListener('click', function (event) {
     if (event.target.classList.contains('adicionar-carrinho')) {
       var produtoSelecionado = event.target.closest('.card-produto');
@@ -4916,7 +4963,6 @@ if (usuarioAutenticado) {
     atualizarCarrinho();
     atualizarContagemCarrinho();
   });
-
   //CARRINHO FUNCTION
   document.addEventListener('DOMContentLoaded', function () {
     var addCarrinho = document.querySelector('#produtos-container');
@@ -5052,6 +5098,72 @@ if (usuarioAutenticado) {
       });
     }
   });
+  document.addEventListener('DOMContentLoaded', function () {
+    var finalizarCompra = document.getElementById('finalizar');
+    finalizarCompra.addEventListener('click', function (event) {
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+        icon: "success",
+        title: "Compra finalizada!",
+        text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+        showClass: {
+          popup: "\n                        animate__rubberBand\n                        animate__backOutUp\n                      "
+        },
+        hideClass: {
+          popup: "\n                        animate__backOutDown\n                      "
+        }
+      });
+      limparCarrinho();
+      var carrinhoModal = document.getElementById('modal-loja');
+      carrinhoModal.classList.remove('show');
+      carrinhoModal.style.display = "none";
+      var modalBackdrop = document.querySelector('.modal-backdrop');
+      if (modalBackdrop) {
+        modalBackdrop.remove();
+      }
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('padding-right');
+    });
+  });
+  var limpaBotao = document.getElementById('limpar-tudo');
+  limpaBotao.addEventListener('click', function (event) {
+    limparCarrinho();
+  });
+} else if (!usuarioAutenticado) {
+  var containerProdutos = document.querySelector('#produtos-container'); // Contêiner que envolve os produtos
+
+  if (containerProdutos) {
+    containerProdutos.addEventListener('click', function (event) {
+      if (event.target.classList.contains('adicionar-carrinho')) {
+        event.preventDefault(); // Evita o comportamento padrão do link
+        event.stopPropagation(); // Impede que o clique no botão se propague para o link envolvente
+
+        var timerInterval;
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          title: "Você ainda não está logado!",
+          html: "Você será redirecionado para a página de login em <b></b> segundos.",
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: function didOpen() {
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
+            var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
+            var countdown = 3;
+            timerInterval = setInterval(function () {
+              countdown--;
+              timer.textContent = countdown;
+            }, 1000);
+          },
+          willClose: function willClose() {
+            clearInterval(timerInterval);
+            window.location = "/login";
+          }
+        }).then(function (result) {
+          if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.timer) {
+            console.log("Redirecionado pelo timer");
+          }
+        });
+      }
+    });
+  }
 }
 })();
 

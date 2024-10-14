@@ -13,6 +13,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/css/home.css',
+                'resources/css/produto.css',
                 'resources/bootstrap/bootstrap.min.css',
                 'resources/bootstrap/bundle.min.js',
                 'resources/js/app.js',

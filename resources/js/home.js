@@ -41,33 +41,74 @@ async function buscarProdutos(pesquisa = '', escopo, categoria = '', limite, tip
                 botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
             } else {
                 produtos.forEach(produto => {
+                    // Cria o container do produto
                     const produtoDiv = document.createElement('div');
                     produtoDiv.className = 'col-md-4 col-6';
+
+                    // Cria o link para o produto
                     const a1 = document.createElement("a");
                     a1.href = `/pesquisar/produto/${encodeURIComponent(produto.nome)}`;
                     a1.className = "text-decoration-none text-black";
+
+                    // Cria o card do produto
                     const div = document.createElement("div");
                     div.className = "card m-4 card-produto";
+
+                    // Cria a imagem do produto
                     const img = document.createElement("img");
                     img.src = produto.imagem;
-                    img.className = "card-img-top";
+                    img.className = "card-img-top img-fluid";
                     img.setAttribute("alt", produto.nome);
+
+                    // Adiciona a imagem ao card
                     div.appendChild(img);
+
+                    // Cria a div do card-body
                     const div2 = document.createElement("div");
                     div2.className = "card-body text-center";
+
+                    // Cria o título com o nome do produto
                     const h5 = document.createElement("h5");
-                    h5.className = "card-title";
+                    h5.className = "card-title produto-nome";
                     h5.textContent = produto.nome;
+                    if (produto.nome.length > 22) {
+                        h5.classList.add("fs-6");
+                    }
+                    // Cria a descrição do produto
+                    const div3 = document.createElement("div");
+                    div3.className = "produto-descricao";
+                    const paragrafo = document.createElement("p");
+                    paragrafo.textContent = produto.descricao;
+
+                    // Adiciona o parágrafo da descrição dentro da div de descrição
+                    div3.appendChild(paragrafo);
+
+                    // Cria o botão de "Adicionar ao carrinho"
                     const a2 = document.createElement("a");
                     a2.className = "btn btn-warning d-block adicionar-carrinho";
                     a2.textContent = "Adicionar ao carrinho";
+                    a2.setAttribute('data-id', produto.id);  // Adiciona o ID do produto
+
+                    // Adiciona a descrição e o título dentro do card-body
                     div2.appendChild(h5);
+                    div2.appendChild(div3);
+
+                    // Adiciona o botão ao card-body
                     div2.appendChild(a2);
-                    a1.appendChild(div);
+
+                    // Adiciona o card-body dentro do card
                     div.appendChild(div2);
+
+                    // Adiciona o card ao link
+                    a1.appendChild(div);
+
+                    // Adiciona o link ao container do produto
                     produtoDiv.appendChild(a1);
+
+                    // Adiciona o container do produto ao container principal (produtosContainer)
                     produtosContainer.appendChild(produtoDiv);
                 });
+
 
                 if (textoResposta.totalProdutos > textoResposta.quantidade) {
                     botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
@@ -212,12 +253,10 @@ if (usuarioAutenticado) {
             cartItems.appendChild(produtoCarrinho);
         });
     }
-
     document.addEventListener('DOMContentLoaded', function () {
         atualizarCarrinho();
         atualizarContagemCarrinho();
     });
-
     //CARRINHO FUNCTION
     document.addEventListener('DOMContentLoaded', () => {
         const addCarrinho = document.querySelector('#produtos-container');
@@ -443,4 +482,92 @@ if (usuarioAutenticado) {
         const parts = value.split(`; ${nome}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const finalizarCompra = document.getElementById('finalizar');
+        finalizarCompra.addEventListener('click', function (event) {
+            Swal.fire({
+                icon: "success",
+                title: "Compra finalizada!",
+                text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+                showClass: {
+                    popup: `
+                        animate__rubberBand
+                        animate__backOutUp
+                      `
+                },
+                hideClass: {
+                    popup: `
+                        animate__backOutDown
+                      `
+                }
+            });
+            limparCarrinho();
+            const carrinhoModal = document.getElementById('modal-loja');
+            carrinhoModal.classList.remove('show');
+            carrinhoModal.style.display = "none";
+
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            if (modalBackdrop) {
+                modalBackdrop.remove();
+            }
+            
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('padding-right');
+        });
+    });
+
+    function limparCarrinho() {
+        // Limpa o conteúdo do cookie
+        document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+
+        const cartItems = document.querySelector('#cartItems');
+        cartItems.innerHTML = '';
+
+        atualizarContagemCarrinho();
+    }
+
+//LIMPAR TODO O CARRINHO BOTAO
+const limpaBotao = document.getElementById('limpar-tudo');
+limpaBotao.addEventListener('click', function(event){
+    limparCarrinho();
+});
+
+} else if (!usuarioAutenticado) {
+    const containerProdutos = document.querySelector('#produtos-container'); // Contêiner que envolve os produtos
+
+    if (containerProdutos) {
+        containerProdutos.addEventListener('click', function (event) {
+            if (event.target.classList.contains('adicionar-carrinho')) {
+                event.preventDefault(); // Evita o comportamento padrão do link
+                event.stopPropagation(); // Impede que o clique no botão se propague para o link envolvente
+
+                let timerInterval;
+                Swal.fire({
+                    title: "Você ainda não está logado!",
+                    html: "Você será redirecionado para a página de login em <b></b> segundos.",
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        let countdown = 3;
+                        timerInterval = setInterval(() => {
+                            countdown--;
+                            timer.textContent = countdown;
+                        }, 1000);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        window.location = "/login";
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("Redirecionado pelo timer");
+                    }
+                });
+            }
+        });
+    }
 }
+

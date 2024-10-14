@@ -2,11 +2,12 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form id="form" method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email Address -->
         <div>
+            <div id="rota" data-id={{ (Route::currentRouteName()) }}></div>
             @if ($errors->has('email'))
                 <script>
                     document.getElementById('email').classList.add('invalido');
@@ -18,8 +19,8 @@
                 </script>
             @endif
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full"
-                type="email" name="email" :value="old('email')" max="50" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" max="50"
+                required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
             <div id="erro-email"></div>
         </div>
@@ -27,11 +28,19 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Senha')" />
 
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="current-password" />
+            <div class="input-group">
+                <x-text-input id="password" maxlength="15" class="block mt-1 w-full focus:border-yellow-500" type="password" name="password" required
+                    autocomplete="new-password" />
+                <span class="input-group-text toggle-password" id="ocultar" style="display:none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                        <path
+                            d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                    </svg>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                </span>
+            </div>
 
         <!-- Remember Me -->
         <div class="block mt-4">
@@ -51,7 +60,7 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button id="login" class="ms-3">
                 {{ __('Entrar') }}
             </x-primary-button>
         </div>

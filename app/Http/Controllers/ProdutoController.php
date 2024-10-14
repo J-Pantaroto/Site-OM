@@ -91,7 +91,7 @@ class ProdutoController extends Controller
 
         // Atualiza os dados do produto
         $produto->update($request->all());
-        return redirect()->route('produtos.edit')->with('success', 'Produto atualizado com sucesso.');
+        return redirect()->route('produtos')->with('success', 'Produto atualizado com sucesso.');
     }
 
     /**

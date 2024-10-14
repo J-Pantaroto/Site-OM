@@ -4,6 +4,7 @@
 
         <!-- Name -->
         <div>
+        <div id="rota" data-id={{ (Route::currentRouteName()) }}></div>
             <x-input-label for="name" :value="__('Nome')" />
             <x-text-input id="name" maxlength="40" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
                 required autofocus autocomplete="name" />

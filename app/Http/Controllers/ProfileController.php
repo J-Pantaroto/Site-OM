@@ -85,10 +85,14 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 //metodo para admin excluir usuarios
-    public function destroyUser($id)
-    {
-        $profile = User::findOrFail($id); // Encontra o produto pelo ID
-        $profile->delete(); // Exclui o produto
+public function destroyUser($id)
+{
+    try {
+        $profile = User::findOrFail($id);
+        $profile->delete();
         return redirect()->route('usuarios')->with('success', 'Usuário excluído com sucesso.');
+    } catch (\Exception $e) {
+        return redirect()->route('usuarios')->with('error', 'Erro ao excluir o usuário.');
     }
+}
 }
