@@ -5,7 +5,7 @@ use App\View\Components\MainLayout;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-
+use Illuminate\Support\Facades\Route;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -13,11 +13,18 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/middleware.php',
+            'middleware'
+        );
     }
-
+    protected $listen = [
+        Registered::class => [
+            SendCustomEmailVerification::class,
+        ],
+    ];
     /**
      * Bootstrap any application services.
      */

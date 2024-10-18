@@ -16,6 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                @if(auth()->check() && auth()->user()->isAdmin())
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('produtos')" :active="request()->routeIs('produtos')">
                         {{ __('Produtos') }}
@@ -26,6 +27,7 @@
                         {{ __('Usuarios') }}
                     </x-nav-link>
                 </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -79,12 +81,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(auth()->check() && auth()->user()->isAdmin())
             <x-responsive-nav-link :href="route('produtos')" :active="request()->routeIs('produtos')">
                 {{ __('Produtos') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('usuarios')" :active="request()->routeIs('dashboard')">
                 {{ __('Usuarios') }}
             </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

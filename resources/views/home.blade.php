@@ -52,7 +52,7 @@
                         @foreach ($produtos as $produto)
                             <div class="col-md-4 col-6">
                                 <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
-                                    class="{{ strlen($produto->nome) > 22 ? 'fs-6 text-decoration-none text-black' : 'text-decoration-none text-black' }}">
+                                    class="text-decoration-none text-black">
                                     <div class="card m-4 card-produto">
                                         <img src="{{ $produto->imagem }}" class="card-img-top img-fluid" alt="...">
                                         <div class="card-body text-center">

@@ -8,37 +8,44 @@ class VendaController extends Controller
 {
     public function registrarVenda(Request $request)
     {
-        //validacoes
-        $request->validate([
-            'produtos' => 'required|array',
-            'produtos.*.id' => 'required|exists:produtos,id',
-            'produtos.*.quantidade' => 'required|integer|min:1',
-        ]);
-
-        // Verificar se o usuário está autenticado
-        $user = auth()->user();
-
-        if ($user) {
-            // Criar a venda com cliente_id e data atual
-            $venda = Venda::create([
-                'cliente_id' => $user->id,
-                'data_venda' => now(),  // Data da venda (created_at será preenchido automaticamente)
+        try {
+            //validações
+            $request->validate([
+                'produtos' => 'required|array',
+                'produtos.*.id' => 'required|exists:produtos,id',
+                'produtos.*.quantidade' => 'required|integer|min:1',
             ]);
-
-            // Inserir os itens da venda
-            foreach ($request->produtos as $produto) {
-                ItensVenda::create([
-                    'venda_id' => $venda->id,
-                    'produto_id' => $produto['id'], // Supondo que o array de produtos tenha um campo 'id'
-                    'quantidade' => $produto['quantidade'], // Supondo um campo 'quantidade'
+            $produtos = $request->input('produtos');
+    
+            // Verificar se o usuário está autenticado  
+            $user = auth()->user();
+    
+            if ($user) {
+                // Criar a venda com cliente_id e data atual
+                $venda = Venda::create([
+                    'cliente_id' => $user->id,
+                    'data_venda' => now(),
                 ]);
+    
+                // Inserir os itens da venda
+                foreach ($produtos as $produto) {
+                    ItensVenda::create([
+                        'venda_id' => $venda->id,
+                        'produto_id' => $produto['id'],
+                        'quantidade' => $produto['quantidade'],
+                    ]);
+                }
+    
+                return response()->json(['message' => 'Venda registrada com sucesso!', 'venda_id' => $venda->id]);
             }
-
-            return response()->json(['message' => 'Venda registrada com sucesso!', 'venda_id' => $venda->id]);
+    
+            return response()->json(['message' => 'Usuário não autenticado'], 401);
+        } catch (\Exception $e) {
+            // Em caso de erro, retornar a mensagem de erro como JSON
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json(['message' => 'Usuário não autenticado'], 401);
     }
+    
     public function listarComprasCliente()
     {
         $user = auth()->user();

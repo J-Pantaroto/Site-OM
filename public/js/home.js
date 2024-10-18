@@ -4652,14 +4652,14 @@ function _buscarProdutos() {
                 var produtoDiv = document.createElement('div');
                 produtoDiv.className = 'col-md-4 col-6';
 
-                // Cria o link para o produto
-                var a1 = document.createElement("a");
-                a1.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                a1.className = "text-decoration-none text-black";
-
                 // Cria o card do produto
-                var div = document.createElement("div");
-                div.className = "card m-4 card-produto";
+                var divCard = document.createElement("div");
+                divCard.className = "card m-4 card-produto";
+
+                // Cria o link para o produto (só para imagem e título)
+                var linkProduto = document.createElement("a");
+                linkProduto.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
+                linkProduto.className = "text-decoration-none text-black";
 
                 // Cria a imagem do produto
                 var img = document.createElement("img");
@@ -4667,12 +4667,20 @@ function _buscarProdutos() {
                 img.className = "card-img-top img-fluid";
                 img.setAttribute("alt", produto.nome);
 
-                // Adiciona a imagem ao card
-                div.appendChild(img);
+                // Adiciona a imagem ao link
+                linkProduto.appendChild(img);
+
+                // Adiciona o link (com a imagem) ao card
+                divCard.appendChild(linkProduto);
 
                 // Cria a div do card-body
-                var div2 = document.createElement("div");
-                div2.className = "card-body text-center";
+                var divCardBody = document.createElement("div");
+                divCardBody.className = "card-body text-center";
+
+                // Cria o link para o nome do produto
+                var linkNome = document.createElement("a");
+                linkNome.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
+                linkNome.className = "text-decoration-none text-black";
 
                 // Cria o título com o nome do produto
                 var h5 = document.createElement("h5");
@@ -4681,39 +4689,41 @@ function _buscarProdutos() {
                 if (produto.nome.length > 22) {
                   h5.classList.add("fs-6");
                 }
+
+                // Adiciona o título ao link
+                linkNome.appendChild(h5);
+
+                // Adiciona o link do nome ao card-body
+                divCardBody.appendChild(linkNome);
+
                 // Cria a descrição do produto
-                var div3 = document.createElement("div");
-                div3.className = "produto-descricao";
+                var divDescricao = document.createElement("div");
+                divDescricao.className = "produto-descricao";
                 var paragrafo = document.createElement("p");
                 paragrafo.textContent = produto.descricao;
 
-                // Adiciona o parágrafo da descrição dentro da div de descrição
-                div3.appendChild(paragrafo);
+                // Adiciona a descrição ao card-body
+                divDescricao.appendChild(paragrafo);
+                divCardBody.appendChild(divDescricao);
 
                 // Cria o botão de "Adicionar ao carrinho"
-                var a2 = document.createElement("a");
-                a2.className = "btn btn-warning d-block adicionar-carrinho";
-                a2.textContent = "Adicionar ao carrinho";
-                a2.setAttribute('data-id', produto.id); // Adiciona o ID do produto
+                var botaoAdicionar = document.createElement("a");
+                botaoAdicionar.className = "btn btn-warning d-block adicionar-carrinho";
+                botaoAdicionar.textContent = "Adicionar ao carrinho";
+                botaoAdicionar.setAttribute('data-id', produto.id); // Adiciona o ID do produto
 
-                // Adiciona a descrição e o título dentro do card-body
-                div2.appendChild(h5);
-                div2.appendChild(div3);
+                // Adiciona o botão ao card-body (fora do link do produto)
+                divCardBody.appendChild(botaoAdicionar);
 
-                // Adiciona o botão ao card-body
-                div2.appendChild(a2);
+                // Adiciona o card-body ao card
+                divCard.appendChild(divCardBody);
 
-                // Adiciona o card-body dentro do card
-                div.appendChild(div2);
-
-                // Adiciona o card ao link
-                a1.appendChild(div);
-
-                // Adiciona o link ao container do produto
-                produtoDiv.appendChild(a1);
+                // Adiciona o card ao container do produto
+                produtoDiv.appendChild(divCard);
 
                 // Adiciona o container do produto ao container principal (produtosContainer)
                 produtosContainer.appendChild(produtoDiv);
+                window.dispatchEvent(new Event('resize'));
               });
               if (textoResposta.totalProdutos > textoResposta.quantidade) {
                 botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
@@ -4751,6 +4761,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     var todosProdutos = document.querySelector('[data-grupo-id="todos"]');
     todosProdutos.classList.add('active');
+    window.dispatchEvent(new Event('resize'));
   });
   var inputPesquisa = document.getElementById("pesquisa");
   inputPesquisa.addEventListener("keypress", function () {
@@ -4758,6 +4769,7 @@ document.addEventListener('DOMContentLoaded', function () {
       escopo = "pesquisa";
       var pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
       buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
+      window.dispatchEvent(new Event('resize'));
     }
   });
 });
@@ -4781,6 +4793,7 @@ listItems.forEach(function (item) {
 //VER MAIS
 document.getElementById("verMais").addEventListener("click", function () {
   buscarProdutos('', escopo, escopo, 10, 'mais_produto');
+  window.dispatchEvent(new Event('resize'));
 });
 
 //dropdown
@@ -5112,6 +5125,35 @@ if (usuarioAutenticado) {
           popup: "\n                        animate__backOutDown\n                      "
         }
       });
+      // Carregar os produtos do carrinho
+      var produtosCarrinho = carregarProdutosCarrinho();
+      console.log("PRODUTOSCARRINHO:");
+      console.log(produtosCarrinho);
+      var produtosFormatados = produtosCarrinho.map(function (produto) {
+        return {
+          id: produto.id,
+          quantidade: produto.quantidade
+        };
+      });
+
+      // Enviar a requisição POST para o servidor
+      fetch("/registrar/venda", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          produtos: produtosFormatados
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        console.log('Venda registrada com sucesso:', data);
+      })["catch"](function (error) {
+        console.error('Erro ao registrar venda:', error);
+      });
+      //fechar e limpar carrinho
       limparCarrinho();
       var carrinhoModal = document.getElementById('modal-loja');
       carrinhoModal.classList.remove('show');
@@ -5128,15 +5170,15 @@ if (usuarioAutenticado) {
   limpaBotao.addEventListener('click', function (event) {
     limparCarrinho();
   });
+  window.addEventListener('pageshow', function (event) {
+    atualizarCarrinho();
+    atualizarContagemCarrinho();
+  });
 } else if (!usuarioAutenticado) {
-  var containerProdutos = document.querySelector('#produtos-container'); // Contêiner que envolve os produtos
-
+  var containerProdutos = document.querySelector('#produtos-container');
   if (containerProdutos) {
     containerProdutos.addEventListener('click', function (event) {
       if (event.target.classList.contains('adicionar-carrinho')) {
-        event.preventDefault(); // Evita o comportamento padrão do link
-        event.stopPropagation(); // Impede que o clique no botão se propague para o link envolvente
-
         var timerInterval;
         sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
           title: "Você ainda não está logado!",
@@ -5165,6 +5207,43 @@ if (usuarioAutenticado) {
     });
   }
 }
+window.addEventListener('resize', function () {
+  var cards = document.querySelectorAll('.card-produto');
+  var botoesAdd = document.querySelectorAll('.adicionar-carrinho');
+  var linksAdd = document.querySelectorAll('.text-decoration-none.text-black');
+  var titulosAdd = document.querySelectorAll('.card-title.produto-nome');
+  cards.forEach(function (card) {
+    card.classList.remove('m-4', 'm-3', 'm-1');
+    if (window.innerWidth < 1000) {
+      card.classList.add('m-1');
+    } else if (window.innerWidth < 1400) {
+      card.classList.add('m-3');
+    } else {
+      card.classList.add('m-4');
+    }
+  });
+  botoesAdd.forEach(function (botaoAdd) {
+    botaoAdd.classList.remove('btn-sm');
+    if (window.innerWidth < 1000) {
+      botaoAdd.classList.add('btn-sm');
+    }
+  });
+  titulosAdd.forEach(function (tituloAdd) {
+    tituloAdd.classList.remove('fs-6');
+    if (window.innerWidth < 1000) {
+      tituloAdd.classList.add('fs-6');
+    }
+  });
+  linksAdd.forEach(function (linkAdd) {
+    linkAdd.classList.remove('fs-6');
+    if (window.innerWidth < 1000) {
+      linkAdd.classList.add('fs-6');
+    }
+  });
+});
+
+// Chamada inicial para ajustar o layout com base no tamanho da tela ao carregar
+window.dispatchEvent(new Event('resize'));
 })();
 
 /******/ })()

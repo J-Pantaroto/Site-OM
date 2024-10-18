@@ -15,6 +15,11 @@
     --color-yellow-primary: #ffc107;
     --color-yellow-secondary: #ffc107c9;
 }
+
+.navbar-collapse{
+    display: flex;
+}
+
 /** menu dropdown header*/
 #drop{
     margin-top: 0;

@@ -1,7 +1,41 @@
 import Swal from 'sweetalert2';
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 
+//dropdown
+document.addEventListener('DOMContentLoaded', function () {
+    window.abrirFecharDropDown = function (escopo) {
+        var dropdown = document.getElementById('drop');
+        if (escopo == "enter") {
+            dropdown.setAttribute('data-bs-popper', 'static');
+            dropdown.classList.add('show');
+        } else if (escopo == "leave") {
+            dropdown.removeAttribute('data-bs-popper');
+            dropdown.classList.remove('show');
+        }
+    }
+});
+
 if (usuarioAutenticado) {
+    function atualizarContagemCarrinho() {
+        const produtosCarrinho = carregarProdutosCarrinho();
+        let quantidadeTotal = 0;
+
+        if (produtosCarrinho.length === 0) {
+            const tabela = document.getElementById("tabelaCarrinho");
+            const linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+            for (let i = 0; i < linhas.length; i++) {
+                const quantidadeSpan = linhas[i].querySelector(".quantity-span");
+                const quantidadeProduto = parseInt(quantidadeSpan.textContent);
+                quantidadeTotal += quantidadeProduto;
+            }
+        } else {
+            quantidadeTotal = produtosCarrinho.reduce((total, produto) => total + produto.quantidade, 0);
+        }
+
+        document.getElementById("cart-count").textContent = quantidadeTotal;
+    }
+
     document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
         const produto = {
             nome: document.getElementById('nome-produto').textContent,
@@ -174,6 +208,7 @@ if (usuarioAutenticado) {
         }
     });
 
+
     const cartItems = document.getElementById('cartItems');
     cartItems.addEventListener('click', function (event) {
         const button = event.target;
@@ -250,26 +285,6 @@ if (usuarioAutenticado) {
         }
     }
 
-    function atualizarContagemCarrinho() {
-        const produtosCarrinho = carregarProdutosCarrinho();
-        let quantidadeTotal = 0;
-
-        if (produtosCarrinho.length === 0) {
-            const tabela = document.getElementById("tabelaCarrinho");
-            const linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-
-            for (let i = 0; i < linhas.length; i++) {
-                const quantidadeSpan = linhas[i].querySelector(".quantity-span");
-                const quantidadeProduto = parseInt(quantidadeSpan.textContent);
-                quantidadeTotal += quantidadeProduto;
-            }
-        } else {
-            quantidadeTotal = produtosCarrinho.reduce((total, produto) => total + produto.quantidade, 0);
-        }
-
-        document.getElementById("cart-count").textContent = quantidadeTotal;
-    }
-
     function adicionarProdutoCarrinho(produto) {
         const produtosCarrinho = carregarProdutosCarrinho();
         const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
@@ -296,34 +311,60 @@ if (usuarioAutenticado) {
         const parts = value.split(`; ${nome}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
-}
 
-//dropdown
-document.addEventListener('DOMContentLoaded', function () {
-    window.abrirFecharDropDown = function (escopo) {
-        var dropdown = document.getElementById('drop');
-        if (escopo == "enter") {
-            dropdown.setAttribute('data-bs-popper', 'static');
-            dropdown.classList.add('show');
-        } else if (escopo == "leave") {
-            dropdown.removeAttribute('data-bs-popper');
-            dropdown.classList.remove('show');
-        }
+
+
+    function limparCarrinho() {
+        // Limpa o conteúdo do cookie
+        document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+
+        const cartItems = document.querySelector('#cartItems');
+        cartItems.innerHTML = '';
+
+        atualizarContagemCarrinho();
     }
-});
 
-function limparCarrinho() {
-    // Limpa o conteúdo do cookie
-    document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+    //LIMPAR TODO O CARRINHO BOTAO
+    const limpaBotao = document.getElementById('limpar-tudo');
+    limpaBotao.addEventListener('click', function (event) {
+        limparCarrinho();
+    });
 
-    const cartItems = document.querySelector('#cartItems');
-    cartItems.innerHTML = '';
 
-    atualizarContagemCarrinho();
+    //ATUALIZAR CARRINHO AO CLICAR EM VOLTAR OU AVANÇAR (SETINHA DO NAVEGADOR)
+    window.addEventListener('pageshow', function (event) {
+        atualizarCarrinho();
+        atualizarContagemCarrinho();
+    });
+
+
+
+} else if (!usuarioAutenticado) {
+    const addCarrinho = document.getElementById('adicionar-carrinho');
+    addCarrinho.addEventListener('click', function (event) {
+        let timerInterval;
+        Swal.fire({
+            title: "Você ainda não está logado!",
+            html: "Você será redirecionado para a página de login em <b></b> segundos.",
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+                const timer = Swal.getPopup().querySelector("b");
+                let countdown = 3;
+                timerInterval = setInterval(() => {
+                    countdown--;
+                    timer.textContent = countdown;
+                }, 1000);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+                window.location = "/login";
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log("Redirecionado pelo timer");
+            }
+        });
+    });
 }
-
-//LIMPAR TODO O CARRINHO BOTAO
-const limpaBotao = document.getElementById('limpar-tudo');
-limpaBotao.addEventListener('click', function (event) {
-    limparCarrinho();
-});

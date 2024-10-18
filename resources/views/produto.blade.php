@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="mt-auto d-flex justify-content-end">
-                        <a class="btn btn-primary btn-lg" id="adicionar-carrinho" data-id="{{ $prod->id }}" type="submit">
+                        <a class="btn btn-warning btn-lg" id="adicionar-carrinho" data-id="{{ $prod->id }}" type="submit">
                             <i class="fas fa-shopping-cart"></i> Comprar
                         </a>
                     </div>
@@ -32,9 +32,9 @@
                         </div>
                         <h2 class="text-center">Carrinho de Compras</h2>
                         <div class="mt-auto d-flex justify-content-end">
-                            <a class="btn btn-outline-danger mb-3 me-2">
+                            <button id="limpar-tudo" type="button" class="btn btn-outline-danger mb-3 me-2">
                                 <i class="fas fa-eraser"></i> Limpar
-                            </a>
+                            </button>
                         </div>
     
                         <div class="modal-body">

@@ -4581,7 +4581,39 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+
+//dropdown
+document.addEventListener('DOMContentLoaded', function () {
+  window.abrirFecharDropDown = function (escopo) {
+    var dropdown = document.getElementById('drop');
+    if (escopo == "enter") {
+      dropdown.setAttribute('data-bs-popper', 'static');
+      dropdown.classList.add('show');
+    } else if (escopo == "leave") {
+      dropdown.removeAttribute('data-bs-popper');
+      dropdown.classList.remove('show');
+    }
+  };
+});
 if (usuarioAutenticado) {
+  var atualizarContagemCarrinho = function atualizarContagemCarrinho() {
+    var produtosCarrinho = carregarProdutosCarrinho();
+    var quantidadeTotal = 0;
+    if (produtosCarrinho.length === 0) {
+      var tabela = document.getElementById("tabelaCarrinho");
+      var linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+      for (var i = 0; i < linhas.length; i++) {
+        var quantidadeSpan = linhas[i].querySelector(".quantity-span");
+        var quantidadeProduto = parseInt(quantidadeSpan.textContent);
+        quantidadeTotal += quantidadeProduto;
+      }
+    } else {
+      quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
+        return total + produto.quantidade;
+      }, 0);
+    }
+    document.getElementById("cart-count").textContent = quantidadeTotal;
+  };
   var atualizarCarrinho = function atualizarCarrinho() {
     var produtosCarrinho = carregarProdutosCarrinho(); // Carrega os produtos do cookie
     var cartItems = document.querySelector('#cartItems');
@@ -4683,24 +4715,6 @@ if (usuarioAutenticado) {
       return _ref.apply(this, arguments);
     };
   }();
-  var _atualizarContagemCarrinho = function _atualizarContagemCarrinho() {
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var quantidadeTotal = 0;
-    if (produtosCarrinho.length === 0) {
-      var tabela = document.getElementById("tabelaCarrinho");
-      var linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-      for (var i = 0; i < linhas.length; i++) {
-        var quantidadeSpan = linhas[i].querySelector(".quantity-span");
-        var quantidadeProduto = parseInt(quantidadeSpan.textContent);
-        quantidadeTotal += quantidadeProduto;
-      }
-    } else {
-      quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
-        return total + produto.quantidade;
-      }, 0);
-    }
-    document.getElementById("cart-count").textContent = quantidadeTotal;
-  };
   var adicionarProdutoCarrinho = function adicionarProdutoCarrinho(produto) {
     var produtosCarrinho = carregarProdutosCarrinho();
     var produtoExistente = produtosCarrinho.find(function (p) {
@@ -4713,7 +4727,7 @@ if (usuarioAutenticado) {
       produtosCarrinho.push(produto);
     }
     atualizarCookiesCarrinho(produtosCarrinho).then(function () {
-      _atualizarContagemCarrinho();
+      atualizarContagemCarrinho();
     });
   };
   var carregarProdutosCarrinho = function carregarProdutosCarrinho() {
@@ -4725,6 +4739,13 @@ if (usuarioAutenticado) {
     var parts = value.split("; ".concat(nome, "="));
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
+  var limparCarrinho = function limparCarrinho() {
+    // Limpa o conteúdo do cookie
+    document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+    var cartItems = document.querySelector('#cartItems');
+    cartItems.innerHTML = '';
+    atualizarContagemCarrinho();
+  }; //LIMPAR TODO O CARRINHO BOTAO
   document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
     var produto = {
       nome: document.getElementById('nome-produto').textContent,
@@ -4732,11 +4753,11 @@ if (usuarioAutenticado) {
     };
     adicionarProdutoCarrinho(produto);
     atualizarCarrinho();
-    _atualizarContagemCarrinho();
+    atualizarContagemCarrinho();
   });
   document.addEventListener('DOMContentLoaded', function () {
     atualizarCarrinho();
-    _atualizarContagemCarrinho();
+    atualizarContagemCarrinho();
   });
 
   //CARRINHO FUNCTION
@@ -4838,7 +4859,7 @@ if (usuarioAutenticado) {
           value -= 1;
           quantidadeSpan.textContent = value;
           atualizarProdutoQuantidade(nomeProduto, value).then(function () {
-            _atualizarContagemCarrinho();
+            atualizarContagemCarrinho();
           });
         } else if (value === 1) {
           item.remove();
@@ -4847,7 +4868,7 @@ if (usuarioAutenticado) {
             return p.nome !== nomeProduto;
           });
           atualizarCookiesCarrinho(produtosCarrinho).then(function () {
-            _atualizarContagemCarrinho();
+            atualizarContagemCarrinho();
           });
         }
       }
@@ -4855,7 +4876,7 @@ if (usuarioAutenticado) {
         value += 1;
         quantidadeSpan.textContent = value;
         atualizarProdutoQuantidade(nomeProduto, value).then(function () {
-          _atualizarContagemCarrinho();
+          atualizarContagemCarrinho();
         });
       }
     }
@@ -4868,38 +4889,49 @@ if (usuarioAutenticado) {
         return p.nome !== _nomeProduto;
       });
       atualizarCookiesCarrinho(_produtosCarrinho).then(function () {
-        _atualizarContagemCarrinho();
+        atualizarContagemCarrinho();
       });
     }
   });
-}
+  var limpaBotao = document.getElementById('limpar-tudo');
+  limpaBotao.addEventListener('click', function (event) {
+    limparCarrinho();
+  });
 
-//dropdown
-document.addEventListener('DOMContentLoaded', function () {
-  window.abrirFecharDropDown = function (escopo) {
-    var dropdown = document.getElementById('drop');
-    if (escopo == "enter") {
-      dropdown.setAttribute('data-bs-popper', 'static');
-      dropdown.classList.add('show');
-    } else if (escopo == "leave") {
-      dropdown.removeAttribute('data-bs-popper');
-      dropdown.classList.remove('show');
-    }
-  };
-});
-function limparCarrinho() {
-  // Limpa o conteúdo do cookie
-  document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
-  var cartItems = document.querySelector('#cartItems');
-  cartItems.innerHTML = '';
-  atualizarContagemCarrinho();
+  //ATUALIZAR CARRINHO AO CLICAR EM VOLTAR OU AVANÇAR (SETINHA DO NAVEGADOR)
+  window.addEventListener('pageshow', function (event) {
+    atualizarCarrinho();
+    atualizarContagemCarrinho();
+  });
+} else if (!usuarioAutenticado) {
+  var addCarrinho = document.getElementById('adicionar-carrinho');
+  addCarrinho.addEventListener('click', function (event) {
+    var timerInterval;
+    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+      title: "Você ainda não está logado!",
+      html: "Você será redirecionado para a página de login em <b></b> segundos.",
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: function didOpen() {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
+        var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
+        var countdown = 3;
+        timerInterval = setInterval(function () {
+          countdown--;
+          timer.textContent = countdown;
+        }, 1000);
+      },
+      willClose: function willClose() {
+        clearInterval(timerInterval);
+        window.location = "/login";
+      }
+    }).then(function (result) {
+      if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.timer) {
+        console.log("Redirecionado pelo timer");
+      }
+    });
+  });
 }
-
-//LIMPAR TODO O CARRINHO BOTAO
-var limpaBotao = document.getElementById('limpar-tudo');
-limpaBotao.addEventListener('click', function (event) {
-  limparCarrinho();
-});
 })();
 
 /******/ })()

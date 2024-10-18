@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link rel="stylesheet" href="{{ mix('css/bootstrap.min.css') }}">
-    
+
     @if (Route::currentRouteName() === 'home')
         <link rel="stylesheet" href="{{ mix('css/home.css') }}">
     @elseif (Route::currentRouteName() === 'produto/')
@@ -22,21 +23,14 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-<div id="usuario-autenticado" data-autenticado="{{ auth()->check() ? 'true' : 'false' }}"></div>
+    <div id="usuario-autenticado" data-autenticado="{{ auth()->check() ? 'true' : 'false' }}"></div>
     <nav class="navbar navbar-expand-lg shadow fixed-top">
         <div class="container-fluid align-items-center">
-            <!-- Logo -->
-            <div>
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <!-- Logo -->
                 <a href="/">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                 </a>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
                 @if (Route::currentRouteName() === 'home')
@@ -76,8 +70,7 @@
                                                 <li>
                                                     <form method="POST" action="{{ route('logout') }}">
                                                         @csrf
-                                                        <button type="submit" class="dropdown-item"
-                                                            style="cursor: pointer;">
+                                                        <button type="submit" class="dropdown-item" style="cursor: pointer;">
                                                             Sair
                                                         </button>
                                                     </form>
@@ -86,27 +79,27 @@
 
                                         </div>
                                     </div>
-                        @else
-                                <div class="d-flex">
+                                @else
+                                    <div class="d-flex">
                                         <div class="dropdown d-flex align-items-center" onmouseenter="abrirFecharDropDown('enter')"
                                             onmouseleave="abrirFecharDropDown('leave')">
                                             <a class="dropdown-toggle d-flex align-items-center user-button" type="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white"
                                                     class="bi bi-person-circle ms-2" viewBox="0 0 16 16">
-                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                                     <path fill-rule="evenodd"
-                                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                                                 </svg>
                                             </a>
                                             <ul id="drop" class="dropdown-menu dropdown-menu-dark  dropdown-menu-end">
                                                 <li><a class="dropdown-item" href="{{ route('login') }}">Entrar</a></li>
                                                 <li>
-                                                @if (Route::has('register'))
-                                                     <a href="{{ route('register') }}" class="dropdown-item" style="cursor: pointer;">
-                                                        Solicitar acesso
-                                                    </a>
-                                                @endif
+                                                    @if (Route::has('register'))
+                                                        <a href="{{ route('register') }}" class="dropdown-item" style="cursor: pointer;">
+                                                            Solicitar acesso
+                                                        </a>
+                                                    @endif
                                                 </li>
                                             </ul>
 
@@ -117,7 +110,6 @@
                         </div>
                     @endif
             </div>
-        </div>
         </div>
     </nav>
     <main class="flex-fill">
@@ -147,4 +139,5 @@
     </footer>
     <script src="{{ mix('js/app.js') }}"></script>
 </body>
+
 </html>

@@ -45,3 +45,21 @@ svg:hover {
     transform: scale(1.1);
     filter: drop-shadow(0 0 4px var(--color-neutral-40));
 }
+
+@media (max-width: 768px) {
+    img{
+        width: 4rem;
+    }
+
+    .table {
+        font-size: 0.75rem; /* Diminui o tamanho da fonte em telas menores */
+    }
+    .table td:last-child {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+    }
+    
+}
+

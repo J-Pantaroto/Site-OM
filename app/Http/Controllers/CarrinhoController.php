@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Produto;
 use Illuminate\Http\Request;
 
 class CarrinhoController extends Controller
@@ -8,7 +8,21 @@ class CarrinhoController extends Controller
     function atualizarCarrinho(Request $request)
     {
         $produtos = $request->input('produtos');
-        $produtosSerializados = json_encode($produtos);
+        $produtosComId = [];
+
+        foreach ($produtos as $produto) {
+            $produtoExistente = Produto::where('nome', $produto['nome'])->first();
+            if ($produtoExistente) {
+                $produtosComId[] = [
+                    'id' => $produtoExistente->id,
+                    'nome' => $produto['nome'],
+                    'imagem' => $produto['imagem'],
+                    'quantidade' => $produto['quantidade']
+                ];
+            }
+        }
+
+        $produtosSerializados = json_encode($produtosComId);
         setcookie('carrinho', $produtosSerializados, time() + 86400, '/');
         return response()->json(['status' => 'sucesso']);
     }
