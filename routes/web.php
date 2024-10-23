@@ -44,9 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
+
 
 
 

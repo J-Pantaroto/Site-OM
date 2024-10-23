@@ -4933,6 +4933,14 @@ if (rotaAtual === "register") {
       password_confirmation.focus();
       camposValidos.confirmarSenha = false;
     }
+    if (password_confirmation.value != password.value) {
+      var _mensagem5 = document.getElementById('erro-confirmar-senha');
+      password_confirmation.classList.add('invalido');
+      _mensagem5.style.color = 'red';
+      _mensagem5.textContent = 'As senhas não coincidem';
+      password_confirmation.focus();
+      camposValidos.confirmarSenha = false;
+    }
     console.log(verificarFormulario());
     if (!verificarFormulario()) {
       sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
@@ -4968,10 +4976,10 @@ if (rotaAtual === "register") {
 
     // Validação de senha
     if (password.value.length <= 0) {
-      var _mensagem5 = document.getElementById('erro-senha');
+      var _mensagem6 = document.getElementById('erro-senha');
       password.classList.add('invalido');
-      _mensagem5.style.color = 'red';
-      _mensagem5.textContent = 'Informe uma senha e após isso confirme sua senha';
+      _mensagem6.style.color = 'red';
+      _mensagem6.textContent = 'Informe uma senha e após isso confirme sua senha';
       password.focus();
       camposValidos.senha = false;
     }

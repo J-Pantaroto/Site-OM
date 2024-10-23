@@ -1,20 +1,20 @@
 <x-guest-layout>
     <div id="rota" data-id={{ (Route::currentRouteName()) }}></div>
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-    <!-- Exibir mensagem de reenvio de e-mail de verificação -->
+    <!--reenvio de e-mail de verificação -->
     @if (session('resentLink'))
         <div class="alert alert-info">
             <p>Não recebeu o e-mail de verificação?</p>
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
                 <button type="submit" class="btn btn-link">Clique aqui para reenviar o e-mail de verificação</button>
+                <input type="hidden" name="emailValor" value="{{session('email')}}">
             </form>
         </div>
     @endif
 
     <!-- Mensagem de sucesso após o reenvio -->
-    @if (session('status') === 'verification-link-sent')
+    @if (session('status') === 'Sucesso')
         <div class="alert alert-success">
             O link de verificação foi reenviado para seu endereço de e-mail.
         </div>

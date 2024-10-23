@@ -43,6 +43,20 @@ class AuthenticatedSessionController extends Controller
                 ->with('email', $user->email); // Adiciona o email à sessão
         }
 
+        // Verifica se o usuário foi aprovado pelo administrador
+        $verificacao = \App\Models\VerifyAdmin::where('user_id', $user->id)->first();
+
+        if (is_null($verificacao) || is_null($verificacao->user_verified_at)) {
+            Auth::logout();
+
+            // Redireciona para a página de login com uma mensagem de erro
+            return redirect()->route('login')
+                ->withErrors([
+                    'email' => 'Seu cadastro ainda não foi aprovado pelo administrador.'
+                ]);
+
+        }
+
         // Regenera a sessão e define o cookie do carrinho
         $request->session()->regenerate();
         setcookie('carrinho', json_encode([]), time() + 86400, '/');

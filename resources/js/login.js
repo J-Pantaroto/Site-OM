@@ -377,6 +377,14 @@ if (rotaAtual === "register") {
             password_confirmation.focus();
             camposValidos.confirmarSenha = false;
         }
+        if(password_confirmation.value != password.value){
+            const mensagem = document.getElementById('erro-confirmar-senha');
+            password_confirmation.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'As senhas não coincidem';
+            password_confirmation.focus();
+            camposValidos.confirmarSenha = false;
+        }
         console.log(verificarFormulario());
         if (!verificarFormulario()) {
             Swal.fire({

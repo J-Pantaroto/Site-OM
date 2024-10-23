@@ -32,17 +32,21 @@
     </div>
     <div class="container pt-5">
         <div class="dropdown row gx-0">
-            <div class="col-3 text-center menu_lateral">
-                <ul class="list-group list-group-flush w-75 m-4">
-                    <a href="" class="list-group-item active list-group-item-action m-0 lista"
-                        data-grupo-id="todos">Todos os Produtos</a>
+            <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto">Mostrar Grupos</button>
+            <div class="col-lg-3 col-12 text-center menu_lateral" id="gruposList">
+                <ul class="list-group list-group-flush w-75 mx-auto">
+                    <li class="list-group-item active list-group-item-action m-0 lista" data-grupo-id="todos">
+                        Todos os Produtos
+                    </li>
                     @foreach ($grupos as $grupo)
                         <a href="" class="list-group-item list-group-item-action m-0 lista"
-                            data-grupo-id="{{ $grupo->id }}">{{$grupo->descricao}}</a>
+                            data-grupo-id="{{ $grupo->id }}">
+                            {{$grupo->descricao}}
+                        </a>
                     @endforeach
                 </ul>
             </div>
-            <div class="col-9">
+            <div class="col-lg-9 col-12">
                 <div id="produtos-container" class="row gx-0">
                     @if (empty($produtos))
                         <div class="alert alert-danger" role="alert">
@@ -68,19 +72,17 @@
                                 </a>
                             </div>
                         @endforeach
-
                     @endif
                 </div>
-                <div class=" text-center mt-4">
+                <div class="text-center mt-4">
                     <button class="btn btn-warning" id="verMais">Ver mais produtos</button>
                 </div>
             </div>
-
         </div>
     </div>
+
     @if (Route::has('login'))
         @auth
-
             <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -94,11 +96,8 @@
                                 <i class="fas fa-eraser"></i> Limpar
                             </button>
                         </div>
-    
                         <div class="modal-body">
-
                             <div class="container mt-5">
-
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="tabelaCarrinho">
                                         <thead>
@@ -125,8 +124,8 @@
             <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cart-count">0</span>
+            </a>
         @endauth
     @endif
-    </a>
     <script src="{{ mix('js/home.js') }}"></script>
 </x-main-layout>

@@ -54,9 +54,15 @@ ul {
     padding-left: 0;
     list-style: none;
 }
-.carousel-inner {
-    height: 37.5rem;
+.carousel-inner img {
+    width: 100%;
+    height: auto; /* Mantém a proporção */
 }
+.carousel {
+    max-width: 100%; /* Limita o tamanho máximo do carrossel */
+    margin: 0 auto; /* Centraliza o carrossel */
+}
+
 #logo-login {
     width: 3rem;
     height: 3rem;
@@ -468,4 +474,27 @@ input[type=number] {
         font-size: 0.625rem;
     }
 }
+
+
+
+#toggleGrupos {
+    background-color:var(--color-yellow-secondary);
+    color: var(--color-black);
+    border-radius: 1.25rem;
+    padding: 0.625rem 1.25rem;
+    margin: 0.625rem;
+    transition: background-color 0.3s ease;
+}
+
+#toggleGrupos:hover {
+    background-color:var(--color-neutral-10);
+    color: var(--color-neutral-40);
+}
+
+.menu_lateral {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.938rem;
+}
+
 

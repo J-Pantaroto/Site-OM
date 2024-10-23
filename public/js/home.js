@@ -5207,7 +5207,23 @@ if (usuarioAutenticado) {
     });
   }
 }
-window.addEventListener('resize', function () {
+var toggleButton = document.getElementById('toggleGrupos');
+var gruposList = document.getElementById('gruposList');
+function checkScreenSize() {
+  if (window.innerWidth < 990) {
+    gruposList.classList.add('d-none');
+    toggleButton.classList.remove('d-none');
+    toggleButton.textContent = 'Mostrar Grupos'; // Sempre inicia como 'Mostrar Grupos' em telas pequenas
+  } else {
+    gruposList.classList.remove('d-none');
+    toggleButton.classList.add('d-none');
+  }
+}
+toggleButton.addEventListener('click', function () {
+  gruposList.classList.toggle('d-none');
+  toggleButton.textContent = gruposList.classList.contains('d-none') ? 'Mostrar Grupos' : 'Ocultar Grupos';
+});
+function adjustLayout() {
   var cards = document.querySelectorAll('.card-produto');
   var botoesAdd = document.querySelectorAll('.adicionar-carrinho');
   var linksAdd = document.querySelectorAll('.text-decoration-none.text-black');
@@ -5240,9 +5256,18 @@ window.addEventListener('resize', function () {
       linkAdd.classList.add('fs-6');
     }
   });
+}
+// Adicionando eventos de resize e load de forma independente
+window.addEventListener('resize', function () {
+  checkScreenSize();
+  adjustLayout();
+});
+window.addEventListener('load', function () {
+  checkScreenSize();
+  adjustLayout();
 });
 
-// Chamada inicial para ajustar o layout com base no tamanho da tela ao carregar
+// Forçando o evento de resize para ajustar a interface ao carregar
 window.dispatchEvent(new Event('resize'));
 })();
 

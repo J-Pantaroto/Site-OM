@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,12 +13,17 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
+
+        $dados = $request->all();
+        $user = User::where('email', $dados['emailValor'])->first();
+        if ($user && $user->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false));
+        } else if ($user) {
+            $user->sendEmailVerificationNotification();
+            return back()->with('status', 'Sucesso');
         }
 
-        $request->user()->sendEmailVerificationNotification();
-
-        return back()->with('status', 'verification-link-sent');
+        return back()->with('email', 'Usuário não encontrado');
     }
+
 }

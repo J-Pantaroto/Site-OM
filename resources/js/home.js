@@ -559,7 +559,6 @@ if (usuarioAutenticado) {
     });
 
     function limparCarrinho() {
-        // Limpa o conteúdo do cookie
         document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
 
         const cartItems = document.querySelector('#cartItems');
@@ -568,7 +567,6 @@ if (usuarioAutenticado) {
         atualizarContagemCarrinho();
     }
 
-    //LIMPAR TODO O CARRINHO BOTAO
     const limpaBotao = document.getElementById('limpar-tudo');
     limpaBotao.addEventListener('click', function (event) {
         limparCarrinho();
@@ -613,8 +611,24 @@ if (usuarioAutenticado) {
         });
     }
 }
+const toggleButton = document.getElementById('toggleGrupos');
+const gruposList = document.getElementById('gruposList');
+function checkScreenSize() {
+    if (window.innerWidth < 990) {
+        gruposList.classList.add('d-none');
+        toggleButton.classList.remove('d-none');
+        toggleButton.textContent = 'Mostrar Grupos';
+    } else {
+        gruposList.classList.remove('d-none');
+        toggleButton.classList.add('d-none');
+    }
+}
 
-window.addEventListener('resize', function () {
+toggleButton.addEventListener('click', () => {
+    gruposList.classList.toggle('d-none');
+    toggleButton.textContent = gruposList.classList.contains('d-none') ? 'Mostrar Grupos' : 'Ocultar Grupos';
+});
+function adjustLayout() {
     const cards = document.querySelectorAll('.card-produto');
     const botoesAdd = document.querySelectorAll('.adicionar-carrinho');
     const linksAdd = document.querySelectorAll('.text-decoration-none.text-black');
@@ -651,9 +665,15 @@ window.addEventListener('resize', function () {
             linkAdd.classList.add('fs-6');
         }
     });
+}
+window.addEventListener('resize', () => {
+    checkScreenSize();
+    adjustLayout();
 });
 
+window.addEventListener('load', () => {
+    checkScreenSize();
+    adjustLayout();
+});
 
-// Chamada inicial para ajustar o layout com base no tamanho da tela ao carregar
 window.dispatchEvent(new Event('resize'));
-

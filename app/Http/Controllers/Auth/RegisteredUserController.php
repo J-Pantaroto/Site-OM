@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Rules\CnpjCpf;
@@ -44,10 +44,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'cpf_cnpj' => preg_replace('/\D/', '', $request->cpf_cnpj), // Processa o CPF/CNPJ
         ]);
-
+        Session::flash('email', $request->email);
         event(new Registered($user));
         Auth::login($user);
-        return redirect(route('dashboard'));
+        return redirect(route('login'));
 
     }
 }
