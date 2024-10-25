@@ -478,12 +478,13 @@ input[type=number] {
 
 
 #toggleGrupos {
-    background-color:var(--color-yellow-secondary);
+    background-color:var(--color-yellow-primary);
     color: var(--color-black);
     border-radius: 1.25rem;
     padding: 0.625rem 1.25rem;
     margin: 0.625rem;
     transition: background-color 0.3s ease;
+    border: none;
 }
 
 #toggleGrupos:hover {
@@ -496,5 +497,4 @@ input[type=number] {
     border-radius: 10px;
     padding: 0.938rem;
 }
-
 

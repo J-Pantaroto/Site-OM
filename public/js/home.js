@@ -4954,12 +4954,11 @@ if (usuarioAutenticado) {
     if (parts.length === 2) return parts.pop().split(';').shift();
   };
   var limparCarrinho = function limparCarrinho() {
-    // Limpa o conteúdo do cookie
     document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
     var cartItems = document.querySelector('#cartItems');
     cartItems.innerHTML = '';
     atualizarContagemCarrinho();
-  }; //LIMPAR TODO O CARRINHO BOTAO
+  };
   document.querySelector('#produtos-container').addEventListener('click', function (event) {
     if (event.target.classList.contains('adicionar-carrinho')) {
       var produtoSelecionado = event.target.closest('.card-produto');
@@ -5213,7 +5212,7 @@ function checkScreenSize() {
   if (window.innerWidth < 990) {
     gruposList.classList.add('d-none');
     toggleButton.classList.remove('d-none');
-    toggleButton.textContent = 'Mostrar Grupos'; // Sempre inicia como 'Mostrar Grupos' em telas pequenas
+    toggleButton.textContent = 'Mostrar Grupos';
   } else {
     gruposList.classList.remove('d-none');
     toggleButton.classList.add('d-none');
@@ -5257,7 +5256,6 @@ function adjustLayout() {
     }
   });
 }
-// Adicionando eventos de resize e load de forma independente
 window.addEventListener('resize', function () {
   checkScreenSize();
   adjustLayout();
@@ -5266,8 +5264,6 @@ window.addEventListener('load', function () {
   checkScreenSize();
   adjustLayout();
 });
-
-// Forçando o evento de resize para ajustar a interface ao carregar
 window.dispatchEvent(new Event('resize'));
 })();
 

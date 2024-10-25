@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('cpf_cnpj', 14)->unique()->nullable()->after('email');
+            $table->string('cpf_cnpj', 14)->unique()->after('email');
         });
     }
 

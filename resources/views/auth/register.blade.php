@@ -77,6 +77,7 @@
             <x-primary-button id="registrar" class="ms-4">
                 {{ __('Registrar') }}
             </x-primary-button>
+            <input type="hidden" name="emailValor" value="{{session('email')}}">
         </div>
     </form>
 </x-guest-layout>

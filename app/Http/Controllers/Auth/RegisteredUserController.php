@@ -12,9 +12,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Rules\CnpjCpf;
 use Illuminate\View\View;
+use App\Services\CnpjCpfService;
 
 class RegisteredUserController extends Controller
 {
+    protected $cnpjCpfService;
+
+    public function __construct(CnpjCpfService $cnpjCpfService)
+    {
+        $this->cnpjCpfService = $cnpjCpfService;
+    }
     /**
      * Display the registration view.
      */
@@ -31,23 +38,37 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'cpf_cnpj' => preg_replace('/\D/', '', $request->cpf_cnpj)
+        ]);
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'cpf_cnpj' => ['required', 'string', 'min:11', 'max:14', new CnpjCpf()],
+            'cpf_cnpj' => ['required', 'string', 'min:11', 'max:14', 'unique:' . User::class, new CnpjCpf()],
         ]);
+        if (strlen($request->cpf_cnpj) === 14) {
+            $cnpjData = $this->cnpjCpfService->verificarCnpj($request->cpf_cnpj);
+
+            if (!$cnpjData || isset($cnpjData['message']) && $cnpjData['message'] === 'CNPJ inválido ou inativo.') {
+                return redirect()->back()->withErrors(['cpf_cnpj' => 'CNPJ inválido ou inativo.']);
+            }
+        }
+/*          elseif (strlen($request->cpf_cnpj) === 11) {
+            echo "teste";
+        } */
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'cpf_cnpj' => preg_replace('/\D/', '', $request->cpf_cnpj), // Processa o CPF/CNPJ
+            'cpf_cnpj' => $request->cpf_cnpj,
         ]);
-        Session::flash('email', $request->email);
+        Session::put('email', $request->email);
         event(new Registered($user));
         Auth::login($user);
-        return redirect(route('login'));
+        return redirect(route('verification.notice'))->with('email', $user->email); // Adiciona o email à sessão;
 
     }
 }
