@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Mercado das Latas'),
+    'name' => env('APP_NAME', 'Definir no config!'),
 
     /*
     |--------------------------------------------------------------------------

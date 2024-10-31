@@ -11,21 +11,18 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="fs-3 font-semibold text-gray-800 text-center">
-                    {{ __("Usuários") }}
-                </div>
+            <div class="p-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <x-barra-pesquisa name="pesquisa">
+                    {{ __('Digite para pesquisar um usuário...') }}
+                </x-barra-pesquisa>
             </div>
         </div>
     </div>
 
-    <x-barra-pesquisa name="pesquisa">
-        {{ __('Digite para pesquisar um usuário...') }}
-    </x-barra-pesquisa>
+
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Adicionando a classe table-responsive -->
             <div class="table-responsive">
                 <table class="table">
                     <thead class="table-dark">

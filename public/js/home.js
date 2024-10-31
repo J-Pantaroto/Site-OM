@@ -4659,7 +4659,7 @@ function _buscarProdutos() {
                 // Cria o link para o produto (só para imagem e título)
                 var linkProduto = document.createElement("a");
                 linkProduto.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                linkProduto.className = "text-decoration-none text-black";
+                linkProduto.className = "text-decoration-none a-text";
 
                 // Cria a imagem do produto
                 var img = document.createElement("img");
@@ -4680,7 +4680,7 @@ function _buscarProdutos() {
                 // Cria o link para o nome do produto
                 var linkNome = document.createElement("a");
                 linkNome.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                linkNome.className = "text-decoration-none text-black";
+                linkNome.className = "text-decoration-none a-text";
 
                 // Cria o título com o nome do produto
                 var h5 = document.createElement("h5");
@@ -4708,7 +4708,7 @@ function _buscarProdutos() {
 
                 // Cria o botão de "Adicionar ao carrinho"
                 var botaoAdicionar = document.createElement("a");
-                botaoAdicionar.className = "btn btn-warning d-block adicionar-carrinho";
+                botaoAdicionar.className = "btn btn-primary d-block adicionar-carrinho button-primary";
                 botaoAdicionar.textContent = "Adicionar ao carrinho";
                 botaoAdicionar.setAttribute('data-id', produto.id); // Adiciona o ID do produto
 
@@ -4729,6 +4729,12 @@ function _buscarProdutos() {
                 botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
               } else {
                 botaoVerMais.style.display = "none"; // Oculta o botão se houver 10 ou menos produtos
+              }
+              if (textoResposta.totalProdutos > offset2 + quantidade) {
+                //verifica sempre se a quantidade do limite mais a quantidade é maior q o total de produtos q eu retorno
+                botaoVerMais.removeAttribute("style");
+              } else {
+                botaoVerMais.style.display = "none";
               }
             }
           } else {
@@ -4851,7 +4857,7 @@ if (usuarioAutenticado) {
       botaoRemover.className = 'remover-item btn btn-danger';
       botaoRemover.type = 'button';
       var svg = document.createElement('svg');
-      svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
+      svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path class="remover-item"  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path class="remover-item" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
       botaoRemover.appendChild(svg);
       acao.appendChild(botaoRemover);
       produtoCarrinho.appendChild(acao);
@@ -5047,7 +5053,7 @@ if (usuarioAutenticado) {
             botaoRemover.className = 'remover-item btn btn-danger';
             botaoRemover.type = 'button';
             var svg = document.createElement('svg');
-            svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
+            svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path class="remover-item"  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path class="remover-item"  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
             botaoRemover.appendChild(svg);
             acao.appendChild(botaoRemover);
             produtoCarrinho.appendChild(acao);
@@ -5259,12 +5265,27 @@ function adjustLayout() {
 window.addEventListener('resize', function () {
   checkScreenSize();
   adjustLayout();
+  footerResponse();
 });
 window.addEventListener('load', function () {
   checkScreenSize();
   adjustLayout();
+  footerResponse();
 });
 window.dispatchEvent(new Event('resize'));
+function footerResponse() {
+  var img = document.getElementById('imagemTelaMaior');
+  var texto = document.getElementById('textoTelaMenor');
+  if (img && texto) {
+    if (window.innerWidth < 604) {
+      img.classList.add('d-none');
+      texto.classList.remove('d-none');
+    } else {
+      img.classList.remove('d-none');
+      texto.classList.add('d-none');
+    }
+  }
+}
 })();
 
 /******/ })()

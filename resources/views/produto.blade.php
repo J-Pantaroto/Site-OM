@@ -14,7 +14,7 @@
 
                     <div class="mt-auto d-flex justify-content-end">
                         <a class="btn btn-warning btn-lg" id="adicionar-carrinho" data-id="{{ $prod->id }}" type="submit">
-                            <i class="fas fa-shopping-cart"></i> Comprar
+                            <i class="fas fa-shopping-cart"></i> Adicionar ao carrinho
                         </a>
                     </div>
                 </div>
