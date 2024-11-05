@@ -4932,6 +4932,28 @@ if (usuarioAutenticado) {
     });
   });
 }
+
+// TEXT FOOTER FUNCTION
+
+function footerResponse() {
+  var img = document.getElementById('imagemTelaMaior');
+  var texto = document.getElementById('textoTelaMenor');
+  if (img && texto) {
+    if (window.innerWidth < 604) {
+      img.classList.add('d-none');
+      texto.classList.remove('d-none');
+    } else {
+      img.classList.remove('d-none');
+      texto.classList.add('d-none');
+    }
+  }
+}
+window.addEventListener('resize', function () {
+  footerResponse();
+});
+window.addEventListener('load', function () {
+  footerResponse();
+});
 })();
 
 /******/ })()

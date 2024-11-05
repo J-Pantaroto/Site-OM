@@ -636,7 +636,7 @@ toggleButton.addEventListener('click', () => {
 function adjustLayout() {
     const cards = document.querySelectorAll('.card-produto');
     const botoesAdd = document.querySelectorAll('.adicionar-carrinho');
-    const linksAdd = document.querySelectorAll('.text-decoration-none.text-black');
+    const linksAdd = document.querySelectorAll('.text-decoration-none a-text');
     const titulosAdd = document.querySelectorAll('.card-title.produto-nome');
 
     cards.forEach(card => {

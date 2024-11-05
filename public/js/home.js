@@ -5231,7 +5231,7 @@ toggleButton.addEventListener('click', function () {
 function adjustLayout() {
   var cards = document.querySelectorAll('.card-produto');
   var botoesAdd = document.querySelectorAll('.adicionar-carrinho');
-  var linksAdd = document.querySelectorAll('.text-decoration-none.text-black');
+  var linksAdd = document.querySelectorAll('.text-decoration-none a-text');
   var titulosAdd = document.querySelectorAll('.card-title.produto-nome');
   cards.forEach(function (card) {
     card.classList.remove('m-4', 'm-3', 'm-1');

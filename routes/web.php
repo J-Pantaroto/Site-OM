@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\ConfiguracoesController;
 use App\Http\Middleware\IsAdmin;
 
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,12 @@ Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
 Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('produtos.destroy');
 Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
 Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
+
+Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->name('configuracoes');
+Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->name('configuracoes.edit');
+Route::put('/configuracoes/{configuracao}', [ConfiguracoesController::class, 'update'])->name('configuracoes.update');
+
+
 Route::post('/registrar/venda', [VendaController::class, 'registrarVenda'])->name('registrar.venda');
 Route::get('/dashboard', [VendaController::class, 'listarComprasCliente'])
     ->middleware(['auth', 'verified'])

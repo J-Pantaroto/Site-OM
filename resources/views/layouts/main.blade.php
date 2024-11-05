@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{{ mix('css/bootstrap.min.css') }}">
 
     @if (Route::currentRouteName() === 'home')
-        <link rel="stylesheet" href="{{ mix('css/home.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     @elseif (Route::currentRouteName() === 'produto/')
         <link rel="stylesheet" href="{{ asset('css/produto.css') }}">
     @endif
-
+    @include('colors')
     <link rel="shortcut icon" href="imgs/login24.jpg" type="">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
@@ -31,7 +31,7 @@
             <div class="navbar-collapse" id="navbarSupportedContent">
                 <!-- Logo -->
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current"/>
+                    <x-application-logo class="w-20 h-20 fill-current" />
                 </a>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
@@ -52,65 +52,66 @@
                 @endif
                 <div class="ms-3">
                     @if (Route::has('login'))
-                            <div class="d-flex">
-                                @auth
-                                        <div class="dropdown d-flex align-items-center" onmouseenter="abrirFecharDropDown('enter')"
-                                            onmouseleave="abrirFecharDropDown('leave')">
-                                            <a class="dropdown-toggle d-flex align-items-center user-button" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false"
-                                                title="Olá! {{ explode(' ', Auth::user()->name)[0] }}">
-                                                <p class="mb-0">{{ __("Olá! " . explode(' ', Auth::user()->name)[0]) }}</p>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white"
-                                                    class="bi bi-person-circle ms-2" viewBox="0 0 16 16">
-                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                    <path fill-rule="evenodd"
-                                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                                </svg>
-                                            </a>
-                                            <ul id="drop" class="dropdown-menu dropdown-menu">
-                                                <li><a class="dropdown-item" href="{{ url('/dashboard') }}">DashBoard</a></li>
-                                                <li>
-                                                    <form method="POST" action="{{ route('logout') }}">
-                                                        @csrf
-                                                        <button type="submit" class="dropdown-item" style="cursor: pointer;">
-                                                            Sair
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
-                                @else
-                                    <div class="d-flex">
-                                        <div class="dropdown d-flex align-items-center" onmouseenter="abrirFecharDropDown('enter')"
-                                            onmouseleave="abrirFecharDropDown('leave')">
-                                            <a class="dropdown-toggle d-flex align-items-center user-button" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white"
-                                                    class="bi bi-person-circle ms-2" viewBox="0 0 16 16">
-                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                    <path fill-rule="evenodd"
-                                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                                </svg>
-                                            </a>
-                                            <ul id="drop" class="dropdown-menu dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="{{ route('login') }}">Entrar</a></li>
-                                                <li>
-                                                    @if (Route::has('register'))
-                                                        <a href="{{ route('register') }}" class="dropdown-item" style="cursor: pointer;">
-                                                            Solicitar acesso
-                                                        </a>
-                                                    @endif
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
+                        <div class="d-flex">
+                            @auth
+                                <div class="dropdown d-flex align-items-center" onmouseenter="abrirFecharDropDown('enter')"
+                                    onmouseleave="abrirFecharDropDown('leave')">
+                                    <a class="dropdown-toggle d-flex align-items-center user-button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        title="Olá! {{ explode(' ', Auth::user()->name)[0] }}">
+                                        <p class="mb-0">{{ __('Olá! ' . explode(' ', Auth::user()->name)[0]) }}</p>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white"
+                                            class="bi bi-person-circle ms-2" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                            <path fill-rule="evenodd"
+                                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                        </svg>
                                     </a>
-                                @endauth
-                        </div>
-                    @endif
+                                    <ul id="drop" class="dropdown-menu dropdown-menu">
+                                        <li><a class="dropdown-item" href="{{ url('/dashboard') }}">DashBoard</a></li>
+                                        <li>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item" style="cursor: pointer;">
+                                                    Sair
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex">
+                                <div class="dropdown d-flex align-items-center" onmouseenter="abrirFecharDropDown('enter')"
+                                    onmouseleave="abrirFecharDropDown('leave')">
+                                    <a class="dropdown-toggle d-flex align-items-center user-button" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white"
+                                            class="bi bi-person-circle ms-2" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                            <path fill-rule="evenodd"
+                                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                        </svg>
+                                    </a>
+                                    <ul id="drop" class="dropdown-menu dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="{{ route('login') }}">Entrar</a></li>
+                                        <li>
+                                            @if (Route::has('register'))
+                                                <a href="{{ route('register') }}" class="dropdown-item"
+                                                    style="cursor: pointer;">
+                                                    Solicitar acesso
+                                                </a>
+                                            @endif
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            </a>
+                        @endauth
+                </div>
+                @endif
             </div>
         </div>
     </nav>
@@ -126,8 +127,7 @@
                 <a href="{{ config('social.facebook') }}" target="_blank" class="footer-link" id="facebook">
                     <i class="fa-brands fa-facebook-f"></i>
                 </a>
-                <a href="{{ config('social.whatsapp') }}" target="_blank" class="footer-link"
-                    id="whatsapp">
+                <a href="{{ config('social.whatsapp') }}" target="_blank" class="footer-link" id="whatsapp">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
             </div>

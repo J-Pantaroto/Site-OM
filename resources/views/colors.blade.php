@@ -1,51 +1,67 @@
 <style>
-:root {
-    /* HEADER */
-    --color-header: #24252a;
-    --color-header-hover: #a8a29e;
-    --color-header-text: #ffffff;
-    /* IMG HEADER */
-    --color-banner-background: rgba(0, 0, 0, 0.5);
-    --color-banner-text: #ffffff;
+    :root {
+        /* HEADER */
+        --color-header: {{ config('config.header') }};
+        --color-header-hover: {{ config('config.header_hover') }};
+        --color-header-text: {{ config('config.header_text') }};
 
-    /* CARD PRODUTO */
-    --color-card-produto-text: #000000;
-    --color-card-produto-background: rgba(255, 255, 255, 0.9);
+        /* IMG HEADER */
+        --color-banner-background: {{ config('config.banner_background') }};
+        --color-banner-text: {{ config('config.banner_text') }};
 
-    /* MENU LATERAL */
-    --color-menu-lateral-text: #000000;
-    --color-menu-lateral-background: #f5f5f5;
-    --color-menu-lateral-background-hover: #a8a29e;
-    --color-menu-lateral-border: rgba(0, 0, 0, 0.1);
+        /* CARD PRODUTO */
+        --color-card-produto-text: {{ config('config.card_produto_text') }};
+        --color-card-produto-background: {{ config('config.card_produto_background') }};
+
+        /* MENU LATERAL */
+        --color-menu-lateral-text: {{ config('config.menu_lateral_text') }};
+        --color-menu-lateral-background: {{ config('config.menu_lateral_background') }};
+        --color-menu-lateral-background-hover: {{ config('config.menu_lateral_background_hover') }};
+        --color-menu-lateral-border: {{ config('config.menu_lateral_border') }};
 
 
-    /* CARRINHO FLOATING */
-    --color-cart-floating-background: #000000;
-    --color-cart-floating-icon: #ffffff;
-    --color-cart-floating-background-hover: #ffc107;
-    --color-cart-floating-icon-hover: #000000;
-    --color-cart-floating-counter-background: red;
-    --color-cart-floating-counter: #ffffff;
+        /* CARRINHO FLOATING */
+        --color-cart-floating-background: {{ config('config.cart_floating_background') }};
+        --color-cart-floating-icon: {{ config('config.cart_floating_icon') }};
+        --color-cart-floating-background-hover: {{ config('config.cart_floating_background_hover') }};
+        --color-cart-floating-icon-hover: {{ config('config.cart_floating_icon_hover') }};
+        --color-cart-floating-counter-background: {{ config('config.cart_floating_counter_background') }};
+        --color-cart-floating-counter: {{ config('config.cart_floating_counter') }};
 
-    /* CARRINHO MODAL OPEN */
-    --color-cart-modal-plus-minus-background: #ffffff;
-    --color-cart-modal-plus-minus-border: #DDD;
+        /* CARRINHO MODAL OPEN */
+        --color-cart-modal-plus-minus-background: {{ config('config.cart_modal_plus_minus_background') }};
+        --color-cart-modal-plus-minus-border: {{ config('config.cart_modal_plus_minus_border') }};
 
-    /* FOOTER */
-    --color-footer-background:#24252a;
+        /* FOOTER */
+        --color-footer-background: {{ config('config.footer_background') }};
 
-    /* CORES GERAIS */
-    --color-black-90: #171717;
-    --color-gray-30: #a8a29e;
-    --color-white-90: #f5f5f5;
-    --color-black-70: #24252a;
-    --color-yellow: yellow;
-    --color-danger: #dc3545;
-    --color-danger-hover: #c82333;
-    --color-white: #ffffff;
-    --color-white-gray: #DDD;
-    --color-black: #000000;
-    --color-button-primary: #ffc107;
-    --color-button-primary-hover: #e0a800;
-}
+        /* CORES GERAIS */
+        --color-black-90: {{ config('config.black_90') }};
+        --color-gray-30: {{ config('config.gray_30') }};
+        --color-white-90: {{ config('config.white_90') }};
+        --color-black-70: {{ config('config.black_70') }};
+        --color-yellow: {{ config('config.yellow') }};
+        --color-danger: {{ config('config.danger') }};
+        --color-danger-hover: {{ config('config.danger_hover') }};
+        --color-white: {{ config('config.white') }};
+        --color-white-gray: {{ config('config.white_gray') }};
+        --color-black: {{ config('config.black') }};
+        --color-button-primary: {{ config('config.button_primary') }};
+        --color-button-primary-hover: {{ config('config.button_primary_hover') }};
+
+        /* DASHBOARD:HEADER */
+        --color-dashboard-header-background: {{ config('config.dashboard_header_background') }};
+        --color-dashboard-header-user_button_background: {{ config('config.dashboard_header_user_background') }};
+        --color-dashboard-header-text: {{ config('config.dashboard_header_text') }};
+        --color-dashboard-header-background: {{ config('config.dashboard_header_background') }};
+        --color-dashboard-header-background: {{ config('config.dashboard_header_background') }};
+
+        /* DASHBOARD:TABLE */
+        --color-dashboard-table-backgrund: {{ config('config.dashboard_table_background') }};
+        --color-dashboard-table-backgrund-text: {{ config('config.dashboard_table_background') }};
+        /*DASHBOARD:BANNERS */
+        --color-dashboard-banners-background: {{ config('config.dashboard_banners_background') }};
+        --color-dashboard-banners-text: {{ config('config.dashboard_banners_text') }};
+
+    }
 </style>

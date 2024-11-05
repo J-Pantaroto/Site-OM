@@ -1,65 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap');
 
-:root {
-    --color-neutral-0: #0e0c0c;
-    --color-neutral-10: #171717;
-    --color-neutral-30: #a8a29e;
-    --color-neutral-40: #f5f5f5;
-    --color-primary: #24252a;
-    --color-secondary: #fafd23;
-    --color-accent: yellow;
-    --color-danger: red;
-    --color-sucess: green;
-    --color-white: #ffffff;
-    --color-white-gray: #DDD;
-    --color-black: #000000;
-    --color-header-black: #212529;
-    --color-yellow-primary: #ffc107;
-    --color-yellow-secondary: #ffc107c9;
-}
+/* HEADER */
 
 #logo-login {
     width: 3rem;
     height: 3rem;
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 4px var(--color-neutral-40));
+    filter: drop-shadow(0 0 4px var(--color-white-90));
     transition: all 0.3s ease;
 }
-#logo-login:hover{
+
+#logo-login:hover {
     transform: scale(1.2);
     filter: drop-shadow(0 0 4px var(--color-danger));
 }
-#botao-usuario {
-    background-color:var(--color-header-black) !important;
-    border: none !important;
-    color: var(--color-white);
-}
-#botao-usuario:hover{
-    color: var(--color-yellow-primary) !important;
-}
 
-svg {
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-svg:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 4px var(--color-neutral-40));
-}
-
-@media (max-width: 768px) {
-    img{
-        width: 4rem;
+@media (max-width: 970px) {
+    #logo-login:hover {
+        width: 2.9rem;
+        height: 2.9rem;
+        transform: scale(1.0);
+        filter: drop-shadow(0 0 4px var(--color-white-90));
     }
+}
 
-    .table {
-        font-size: 0.75rem; /* Diminui o tamanho da fonte em telas menores */
-    }
-    .table td:last-child {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: center;
-        align-items: center;
-    }
+#navbar-dashboard {
+    background-color: var(--color-dashboard-header-background) !important;
+    color: var(--color-dashboard-header-background) !important;
+    border: none;
+
+}
+
+#navbar-dropdown{
+    background-color: var(--color-dashboard-header-background) !important;
+}
+#link-header{
+    color:var( --color-dashboard-header-text) !important; 
+}
+#botao-usuario{
+    color: var(--color-dashboard-header-text) !important; 
+    background-color: var(--color-dashboard-header-background) !important; 
+    border-color : var(--color-dashboard-header-background) !important; 
+}
+/* HEADER */
+
+/* BANNER */
+#banner{
+    background-color: var(--color-dashboard-banners-background) !important;
     
 }
+#banner-text{
+    color: var(--color-dashboard-banners-text) !important;
+}
+/* BANNER */

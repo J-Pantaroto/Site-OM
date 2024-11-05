@@ -11,7 +11,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        @include('colors')
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -21,7 +21,7 @@
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
+                <header id="banner" class="bg-white dark:bg-gray-800 shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
