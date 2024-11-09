@@ -4,43 +4,42 @@
             {{ __('Painel') }}
         </h2>
     </x-slot>
-
-    <!-- Painel de Boas Vindas -->
-
-    <!-- Tabela de Compras -->
+    
     <div class="py-12">
-        <div class="container">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4 text-center">
-                <h3 class="fs-3 font-semibold text-gray-800">Minhas compras</h3>
-                <div class="text-gray-900 dark:text-gray-100">
-                    {{ __('Bem vindo! ' . explode(' ', Auth::user()->name)[0]) }}
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div id="banner" class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+
+                <div class="text-center mb-4"> 
+                    <h3 id="banner-text" class="fs-3 font-semibold text-gray-800">Minhas compras</h3>
+                    <div id="banner-text" class="text-gray-900 dark:text-gray-100">
+                        {{ __('Bem-vindo! ' . explode(' ', Auth::user()->name)[0]) }}
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">Compra</th>
-                            <th scope="col">Produto</th>
-                            <th scope="col">Quantidade</th>
-                            <th scope="col">Data da Compra</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($vendas as $venda)
-                            @foreach ($venda->itensVenda as $item)
-                                <tr>
-                                    <th scope="row">{{ $venda->id }}</th>
-                                    <td>{{ $item->produto->nome }}</td>
-                                    <td>{{ $item->quantidade }}</td>
-                                    <td>{{ $venda->data_venda }}</td>
-                                </tr>
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="tablebackground" scope="col">Compra</th>
+                                <th class="tablebackground" scope="col">Produto</th>
+                                <th class="tablebackground" scope="col">Quantidade</th>
+                                <th class="tablebackground" scope="col">Data da Compra</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($vendas as $venda)
+                                @foreach ($venda->itensVenda as $item)
+                                    <tr>
+                                        <th scope="row">{{ $venda->id }}</th>
+                                        <td>{{ $item->produto->nome }}</td>
+                                        <td>{{ $item->quantidade }}</td>
+                                        <td>{{ $venda->data_venda }}</td>
+                                    </tr>
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>

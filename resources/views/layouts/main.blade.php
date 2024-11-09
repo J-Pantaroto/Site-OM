@@ -115,7 +115,7 @@
             </div>
         </div>
     </nav>
-    <main class="flex-fill">
+    <main class="flex-fill" id="background">
         {{ $slot }}
     </main>
     <footer class="mt-auto">

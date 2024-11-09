@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h2 id="banner-text" class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Informações do Perfil') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p id="banner-text" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __("Atualize as informações de perfil e endereço de e-mail da sua conta.") }}
         </p>
     </header>
@@ -18,18 +18,18 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Nome')" />
+            <x-input-label id="banner-text"  for="name" :value="__('Nome')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
         <div>
-            <x-input-label for="cpfCnpj" :value="__('CPF/CNPJ')" />
+            <x-input-label id="banner-text" for="cpfCnpj" :value="__('CPF/CNPJ')" />
             <x-text-input class="mt-1 block w-full bg-gray-100 text-gray-500 cursor-not-allowed" disabled readonly id="cpfCnpj" name="cpfCnpj" type="text" :value="old('cpfCnpj', $user->cpf_cnpj)" required autofocus autocomplete="cpfCnpj" />
             <x-input-error class="mt-2" :messages="$errors->get('cpfCnpj')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label id="banner-text" for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 

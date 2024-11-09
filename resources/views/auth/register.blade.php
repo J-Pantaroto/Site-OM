@@ -34,7 +34,7 @@
             <x-input-label for="password" :value="__('Senha')" />
 
             <div class="input-group">
-                <x-text-input id="password" maxlength="15" class="block mt-1 w-full focus:border-yellow-500" type="password" name="password" required
+                <x-text-input id="password" maxlength="15" class="block mt-1 w-full" type="password" name="password" required
                     autocomplete="new-password" />
                 <span class="input-group-text toggle-password" id="ocultar" style="display:none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -53,7 +53,7 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" />
             <div class="input-group">
-                <x-text-input id="password_confirmation" maxlength="15" class="block mt-1 w-full focus:border-yellow-500" type="password"
+                <x-text-input id="password_confirmation" maxlength="15" class="block mt-1 w-full" type="password"
                     name="password_confirmation" required autocomplete="new-password" />
                 <span class="input-group-text toggle-password" id="confirmar-ocultar" style="display:none">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

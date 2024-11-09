@@ -35,12 +35,6 @@
     background-color: var(--color-gray-30);
 }
 
-input.form-control:focus {
-    box-shadow: 0 0 0 0.1rem var(--color-gray-30);
-    outline: none;
-    transition: box-shadow 0.3s ease;
-}
-
 #logo-login {
     width: 3rem;
     height: 3rem;
@@ -164,6 +158,7 @@ input.form-control:focus {
 .col-lg-3.col-12.text-center.menu_lateral .list-group.list-group-flush.w-75.mx-auto .list-group-item.list-group-item-action {
     transition: 0.3s ease;
 }
+
 .menu_lateral {
     border: 1px solid var(--color-white-gray);
     border-radius: 10px;
@@ -183,6 +178,7 @@ input.form-control:focus {
     padding: 0.5rem;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.1);
     border: 0;
+    background: var(--color-card-produto-background) !important;
 }
 
 .card {
@@ -190,19 +186,18 @@ input.form-control:focus {
     overflow: hidden;
     transition: transform 0.3s ease;
     height: auto;
-    /* Deixa o card com altura automática */
     min-height: 25rem;
-    /* Mantém um mínimo para evitar cards muito pequenos */
 }
 
 .card-img-top {
     width: 100%;
     height: auto;
-    /* Ajusta a altura proporcionalmente à largura */
 }
-.a-text{
+
+.a-text {
     color: var(--color-card-produto-text);
 }
+
 .card-body {
     position: absolute;
     bottom: 0;
@@ -272,6 +267,7 @@ input.form-control:focus {
 .adicionar-carrinho {
     text-align: center;
 }
+
 @media (max-width: 576px) {
     .card-body h5 {
         font-size: 1rem;
@@ -285,6 +281,10 @@ input.form-control:focus {
 /* CARD PRODUTO */
 
 /* GERAIS */
+#background {
+    background-color: var(--color-background);
+}
+
 .form-floating {
     margin-bottom: 1em;
 }
@@ -320,6 +320,7 @@ ul {
     padding-left: 0;
     list-style: none;
 }
+
 /* GERAIS */
 
 
@@ -449,6 +450,7 @@ ul {
         max-height: 1.5rem;
     }
 }
+
 @media (max-width: 480px) {
     .floating-cart {
         bottom: 1rem;
@@ -467,6 +469,7 @@ ul {
         font-size: 0.625rem;
     }
 }
+
 /* CARRINHO MODAL OPEN */
 
 /* FOOTER */
@@ -484,11 +487,13 @@ ul {
         padding: 3rem 2rem;
     }
 }
+
 @media (max-width: 604px) {
     #link-footer {
         color: var(--color-white-90);
     }
 }
+
 #footer_copyright {
     background-color: var(--color-black-70);
     padding: 1em 0;

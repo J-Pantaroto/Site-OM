@@ -7,15 +7,13 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+  public function index()
     {
-            $produtos = Produto::paginate(12);
-            $grupos = Grupo::all();
-            return view('home', compact('grupos', 'produtos'));
+        $produtos = Produto::paginate(12);
+        $grupos = Grupo::all();
+        return view('home', compact('grupos', 'produtos'));
     }
+
 
     public function buscarProduto(Request $request)
     {
@@ -24,7 +22,9 @@ class HomeController extends Controller
         $limite = $request->input('limite');
         $offset = $request->input('offset');
         $escopo = $request->input('escopo');
+        
         $query = Produto::query();
+        
         if ($escopo != "todos") {
             if ($pesquisa) {
                 $query->where('nome', 'like', '%' . $pesquisa . '%');
@@ -33,11 +33,17 @@ class HomeController extends Controller
                 $query->where('grupo_id', $categoria);
             }
         }
+
         $totalProdutos = $query->count();
 
         $produtos = $query->offset($offset)
             ->limit($limite)
             ->get();
+
+        $produtos->transform(function ($produto) {
+            $produto->imagem = asset('storage/' . $produto->imagem);
+            return $produto;
+        });
 
         return response()->json([
             'status' => 'sucesso',
@@ -45,7 +51,6 @@ class HomeController extends Controller
             'totalProdutos' => $totalProdutos,
             'produtos' => $produtos
         ]);
-
     }
     public function adicionarProdutoCarrinho(Request $request){
         $id = $request->input('produto_id');
@@ -53,46 +58,28 @@ class HomeController extends Controller
     }
     public function create()
     {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
-        //
     }
 
-    /**
-     * Display the specified resource.
-     */
+ 
     public function show(string $id)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
-        //
     }
 }

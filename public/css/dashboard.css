@@ -52,3 +52,43 @@
 }
 /* BANNER */
 
+
+
+/* BOTOES */
+.btn.button-primary {
+    background-color: var(--color-button-primary) !important;
+    border-color: var(--color-button-primary) !important;
+    color: var(--color-black-90) !important;
+}
+
+.btn.button-primary:hover {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+
+.btn.button-danger {
+    background-color: var(--color-danger) !important;
+    border-color: var(--color-danger) !important;
+    color: var(--color-white-90) !important;
+}
+
+.btn.button-danger:hover {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+/* BOTOES */
+
+#background{
+background-color: var(--color-background) !important;
+}
+
+/* TABLE */
+.tablebackground{
+    background-color: var(--color-dashboard-table-background) !important;
+    border-color: var(--color-dashboard-table-background) !important;
+    color: var(--color-dashboard-table-background-text) !important;
+}
+
+/* TABLE */

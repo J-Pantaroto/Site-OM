@@ -13,9 +13,17 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-4">
+                    <div class="mb-4 flex items-center space-x-2">
                         <label for="value" class="form-label">Valor</label>
-                        <input type="text" name="value" id="value" class="form-control" value="{{ old('value', $value) }}" required>
+                        <div class="flex items-center w-full">
+                            <!-- Input de texto -->
+                            <input type="text" name="value" id="value" class="form-control flex-grow" 
+                                value="{{ old('value', $value) }}" required>
+
+                            <!-- Input de cor -->
+                            <input style="border-color: #6b7280;" type="color" class="form-control form-control-color ml-2" 
+                                id="colorPicker" value="{{ old('value', $value) }}">
+                        </div>
                     </div>
 
                     <x-primary-button>{{ __('Salvar') }}</x-primary-button>

@@ -4,14 +4,14 @@
             {{ __('Configurações') }}
         </h2>
     </x-slot>
-    
+
     @if (session('success'))
         <div id="success-message" style="display: none;">{{ session('success') }}</div>
     @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+            <div id="banner" class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 @if (session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -21,7 +21,7 @@
                     <div class="input-group">
                         <input type="text" name="search" placeholder="Buscar configuração..."
                             value="{{ request('search') }}" class="form-control">
-                        <button type="submit" class="btn btn-outline-primary">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary button-primary">Pesquisar</button>
                     </div>
                 </form>
 
@@ -38,9 +38,10 @@
                         @forelse ($configuracoes as $configuracao)
                             <tr>
                                 <td>{{ $configuracao['key'] }}</td>
-                                <td
-                                    style="background-color: {{ $configuracao['value'] }}; color: {{ $configuracao['value'] == '#ffffff' ? '#000' : '#fff' }}">
-                                    {{ $configuracao['value'] }}</td>
+                                <td class="color-cell" data-color="{{ $configuracao['value'] }}" 
+                                    style="background-color: {{ $configuracao['value'] }}">
+                                    {{ $configuracao['value'] }}
+                                </td>
                                 <td>
                                     <a href="{{ route('configuracoes.edit', $configuracao['key']) }}"
                                         class="btn btn-outline-dark">Editar</a>

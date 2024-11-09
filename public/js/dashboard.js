@@ -4580,6 +4580,7 @@ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyri
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
+var rotaAtual = document.getElementById('rota').getAttribute('data-id');
 function buscar() {
   return _buscar.apply(this, arguments);
 } // Pesquisa
@@ -4649,32 +4650,34 @@ function _buscar() {
             tabelaContainer.innerHTML = '';
             if (quantidade < 20) {
               pagination.classList.remove('d-flex');
-              pagination.style.display = 'none';
+              pagination.classList.add('d-none');
+            } else {
+              pagination.classList.remove('d-none');
+              pagination.classList.add('d-flex');
             }
             if (quantidade === 0) {
-              escopo;
               tabelaContainer.innerHTML = "<tr><td colspan=\"5\">".concat(escopo.charAt(0).toUpperCase() + escopo.slice(1, -1), " n\xE3o encontrado!</td></tr>");
             } else {
-              tabelaContainer.innerHTML = '';
               itens.forEach(function (item) {
                 var row = document.createElement('tr');
+                row.classList.add('table-row');
                 if (escopo === 'usuarios') {
                   row.innerHTML = "\n                        <td>".concat(item.id, "</td>\n                        <td>").concat(item.name, "</td>\n                        <td>").concat(item.email, "</td>\n                        <td>").concat(item.cpf_cnpj, "</td>\n                        <td>\n                            <form style=\"display:inline\" action=\"/usuarios/").concat(item.id, "\" method=\"POST\" onsubmit=\"return confirm('Tem certeza que deseja excluir o acesso deste usu\xE1rio?');\">\n                                <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                                <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                                <button type=\"submit\" class=\"btn btn-outline-danger\" id=\"excluir\">\n                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-trash3\" viewBox=\"0 0 16 16\">\n                                        <path d=\"M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5\"/>\n                                    </svg>\n                                </button>\n                            </form>\n                        </td>\n                    ");
                 } else if (escopo === 'produtos') {
                   var img = document.createElement('img');
                   img.src = item.imagem;
                   img.style.width = "10vh";
-                  row.innerHTML = "\n                        <td>".concat(item.id, "</td>\n                        <td><img src=\"").concat(item.imagem, "\" style=\"width:10vh;\"></td>\n                        <td>").concat(item.nome, "</td>\n                        <td>").concat(item.quantidade, "</td>\n                        <td>\n                            <a href=\"/produtos/").concat(item.id, "/edit\" class=\"btn btn-outline-danger\" type=\"button\">\n                                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n                                    <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n                                    <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n                                </svg>\n                            </a>\n                            <form style=\"display:inline\" action=\"/produtos/").concat(item.id, "\" method=\"POST\" onsubmit=\"return confirm('Tem certeza que deseja excluir este produto?');\">\n                                <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                                <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                                <button type=\"submit\" class=\"btn btn-outline-danger\" id=\"excluir\">\n                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-trash3\" viewBox=\"0 0 16 16\">\n                                        <path d=\"M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5\" />\n                                    </svg>\n                                </button>\n                            </form>\n                        </td>\n                    ");
-                } else {
-                  tabelaContainer.innerHTML = "<tr><td colspan=\"5\">Escopo inv\xE1lido!</td></tr>";
+                  row.innerHTML = "\n                        <td>".concat(item.id, "</td>\n                        <td><img src=\"").concat(item.imagem, "\" style=\"width: 8rem; height: auto;\"></td>\n                        <td>").concat(item.nome, "</td>\n                        <td>").concat(item.quantidade, "</td>\n                        <td>\n                            <a href=\"/produtos/").concat(item.id, "/edit\" class=\"btn btn-outline-dark\" type=\"button\">\n                                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n                                    <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n                                    <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n                                </svg>\n                            </a>\n                            <form style=\"display:inline\" action=\"/produtos/").concat(item.id, "\" method=\"POST\" onsubmit=\"return confirm('Tem certeza que deseja excluir este produto?');\">\n                                <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                                <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                                <button type=\"submit\" class=\"btn btn-outline-danger\" id=\"excluir\">\n                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-trash3\" viewBox=\"0 0 16 16\">\n                                        <path d=\"M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5\"/>\n                                    </svg>\n                                </button>\n                            </form>\n                        </td>\n                    ");
                 }
                 tabelaContainer.appendChild(row);
               });
-              pagination.innerHTML = textoResposta.links;
-              pagination.classList.add('justify-content-end');
             }
           } else {
-            console.error('Erro:', textoResposta.mensagem);
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              title: textoResposta.message,
+              icon: 'error',
+              confirmButtonText: 'Fechar'
+            });
           }
         case 22:
         case "end":
@@ -4706,6 +4709,63 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+//COLOR PICKER
+if (rotaAtual === 'configuracoes.edit') {
+  var colorToHex = function colorToHex(color) {
+    var ctx = document.createElement("canvas").getContext("2d");
+    ctx.fillStyle = color;
+    var hexColor = ctx.fillStyle;
+    if (hexColor.startsWith('#')) {
+      return hexColor;
+    }
+    return null;
+  };
+  var colorPicker = document.getElementById('colorPicker');
+  var textInput = document.getElementById('value');
+  colorPicker.addEventListener('input', function () {
+    textInput.value = colorPicker.value;
+  });
+  textInput.addEventListener('input', function () {
+    var hexColor = colorToHex(textInput.value);
+    if (hexColor) {
+      colorPicker.value = hexColor;
+    }
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    var hexColor = colorToHex(textInput.value);
+    if (hexColor) {
+      colorPicker.value = hexColor;
+    }
+  });
+} else if (rotaAtual === 'configuracoes') {
+  var parseColor = function parseColor(color) {
+    var ctx = document.createElement("canvas").getContext("2d");
+    ctx.fillStyle = color;
+    var computedColor = ctx.fillStyle;
+    if (color.startsWith("rgba")) {
+      var rgbaValues = color.match(/\d+/g);
+      return "rgb(".concat(rgbaValues[0], ", ").concat(rgbaValues[1], ", ").concat(rgbaValues[2], ")");
+    }
+    return computedColor;
+  };
+  var calculateLuminance = function calculateLuminance(color) {
+    var rgbColor = parseColor(color).substring(1);
+    var r = parseInt(rgbColor.substring(0, 2), 16) / 255;
+    var g = parseInt(rgbColor.substring(2, 4), 16) / 255;
+    var b = parseInt(rgbColor.substring(4, 6), 16) / 255;
+    var luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luminance;
+  };
+  var setContrastingTextColor = function setContrastingTextColor() {
+    document.querySelectorAll('.color-cell').forEach(function (cell) {
+      var bgColor = cell.getAttribute('data-color');
+      var luminance = calculateLuminance(bgColor);
+      cell.style.color = luminance > 0.5 ? '#000000' : '#ffffff';
+    });
+  };
+  document.addEventListener('DOMContentLoaded', setContrastingTextColor);
+}
 })();
 
 /******/ })()

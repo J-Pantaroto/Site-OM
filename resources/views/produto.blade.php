@@ -3,7 +3,7 @@
     <div class="container mt-5">
         <div class="row gx-0 shadow-lg mt-3 p-4">
             <div class="col-4">
-                <img id="imagem" src="{{$prod->imagem}}" class="card-img-top" alt="{{ $prod->nome }}">
+                <img id="imagem" src="{{ asset('storage/' . $prod->imagem) }}" class="card-img-top" alt="{{ $prod->nome }}">
             </div>
             <div class="col">
                 <div class="d-flex flex-column h-100">

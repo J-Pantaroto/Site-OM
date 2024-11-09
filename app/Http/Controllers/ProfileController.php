@@ -25,7 +25,7 @@ class ProfileController extends Controller
     public function pesquisarUsuarios(Request $request)
     {
         $pesquisa = $request->input('pesquisa');
-        if($pesquisa===''){
+        if($pesquisa==='' || $pesquisa===null){
             $usuarios = User::orderBy('name','ASC')->paginate(20);
         }else{
             $usuarios = User::where('name', 'like', "%{$pesquisa}%")->paginate(20);

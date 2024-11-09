@@ -1,21 +1,4 @@
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap);
-:root {
-    --color-neutral-0: #0e0c0c;
-    --color-neutral-10: #171717;
-    --color-neutral-30: #a8a29e;
-    --color-neutral-40: #f5f5f5;
-    --color-primary: #24252a;
-    --color-secondary: #fafd23;
-    --color-accent: yellow;
-    --color-danger: red;
-    --color-sucess: green;
-    --color-white: #ffffff;
-    --color-white-gray: #DDD;
-    --color-black: #000000;
-    --color-yellow-primary: #ffc107;
-    --color-yellow-secondary: #ffc107c9;
-}
-
 #logo-login {
     width: 8rem;
     height: 8rem;
@@ -67,4 +50,30 @@ input[type='checkbox'] {
     opacity: 1;
 }
 
+/*BOTOES */
+
+#registrar {
+    background-color: var(--color-button-primary) !important;
+    border-color: var(--color-button-primary) !important;
+    color: var(--color-black-90) !important;
+}
+
+#registrar:hover {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#login {
+    background-color: var(--color-button-primary) !important;
+    border-color: var(--color-button-primary) !important;
+    color: var(--color-black-90) !important;
+}
+
+#login:hover {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+
+/*BOTOES */
 

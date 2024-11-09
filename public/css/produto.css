@@ -98,15 +98,16 @@ ul {
     padding-left: 0;
     list-style: none;
 }
+#background {
+    background-color: var(--color-background);
+}
 /* GERAIS */
 
 
 /*Card */
-.col-md-4.col-6:hover {
-    transform: scale(1.1);
-    transition: 0.6s ease;
+.row.gx-0.shadow-lg.mt-3.p-4{
+    background: var(--color-card-produto-background) !important;
 }
-
 /*Card */
 
 /* CARRINHO FLOATING */

@@ -1,10 +1,10 @@
 <section class="space-y-6">
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h2 id="banner-text" class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Deletar Conta') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p id="banner-text" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __('Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Antes de excluir sua conta, baixe todos os dados ou informações que deseja reter.') }}
         </p>
     </header>

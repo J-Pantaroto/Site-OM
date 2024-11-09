@@ -48,6 +48,7 @@
         --color-black: {{ config('config.black') }};
         --color-button-primary: {{ config('config.button_primary') }};
         --color-button-primary-hover: {{ config('config.button_primary_hover') }};
+        --color-background: {{ config('config.background') }};
 
         /* DASHBOARD:HEADER */
         --color-dashboard-header-background: {{ config('config.dashboard_header_background') }};
@@ -57,11 +58,13 @@
         --color-dashboard-header-background: {{ config('config.dashboard_header_background') }};
 
         /* DASHBOARD:TABLE */
-        --color-dashboard-table-backgrund: {{ config('config.dashboard_table_background') }};
-        --color-dashboard-table-backgrund-text: {{ config('config.dashboard_table_background') }};
+        --color-dashboard-table-background: {{ config('config.dashboard_table_background') }};
+        --color-dashboard-table-background-text: {{ config('config.dashboard_table_background_text') }};
+        
         /*DASHBOARD:BANNERS */
         --color-dashboard-banners-background: {{ config('config.dashboard_banners_background') }};
         --color-dashboard-banners-text: {{ config('config.dashboard_banners_text') }};
-
+        
+        
     }
 </style>

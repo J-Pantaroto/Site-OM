@@ -34,7 +34,7 @@
                                 <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
                                     class="text-decoration-none a-text">
                                     <div class="card m-4 card-produto">
-                                        <img src="{{ $produto->imagem }}" class="card-img-top img-fluid" alt="...">
+                                        <img src="{{ asset('storage/' . $produto->imagem) }}" class="card-img-top img-fluid" alt="...">
                                         <div class="card-body text-center">
                                             <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
                                             <div class="produto-descricao">

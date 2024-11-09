@@ -34,6 +34,7 @@ Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
 Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('produtos.destroy');
 Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
 Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
+Route::delete('/produtos/imagens/{imagem}', [ProdutoController::class, 'destroyImagem'])->name('produtos.imagens.destroy');
 
 Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->name('configuracoes');
 Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->name('configuracoes.edit');

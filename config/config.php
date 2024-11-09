@@ -42,6 +42,6 @@ return [
     #DASHBOARD:BANNERS
     'dashboard_banners_background' => env('COLOR_DASHBOARD_BANNERS_BACKGROUND', '#FFFFFF'),
     'dashboard_banners_text' => env('COLOR_DASHBOARD_BANNERS_TEXT', '#000000'),
-
-
+    #DASHBOARD:GERAL
+    'background' => env('COLOR_BACKGROUND', '#F3F4F6'),
 ];
