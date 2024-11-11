@@ -67,6 +67,16 @@
     border-color: var(--color-button-primary-hover) !important;
     color: var(--color-black) !important;
 }
+.btn.button-primary:active {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-primary:focus {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
 
 .btn.button-danger {
     background-color: var(--color-danger) !important;
@@ -75,6 +85,16 @@
 }
 
 .btn.button-danger:hover {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-danger:active {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-danger:focus {
     background-color: var(--color-danger-hover) !important;
     border-color: var(--color-danger-hover) !important;
     color: var(--color-white) !important;

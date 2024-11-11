@@ -26,6 +26,7 @@
                 </form>
 
                 <!-- Tabela de config -->
+                <div class="table-responsive mt-4">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
@@ -56,5 +57,6 @@
                 </table>
             </div>
         </div>
+    </div>
     </div>
 </x-app-layout>

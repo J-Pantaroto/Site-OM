@@ -65,6 +65,16 @@ input[type='checkbox'] {
     border-color: var(--color-button-primary-hover) !important;
     color: var(--color-black) !important;
 }
+#registrar:active {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#registrar:focus {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
 #login {
     background-color: var(--color-button-primary) !important;
     border-color: var(--color-button-primary) !important;
@@ -72,6 +82,16 @@ input[type='checkbox'] {
 }
 
 #login:hover {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#login:active {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#login:focus {
     background-color: var(--color-button-primary-hover) !important;
     border-color: var(--color-button-primary-hover) !important;
     color: var(--color-black) !important;

@@ -21,6 +21,12 @@
     display: flex;
 }
 
+@media (max-width: 480px) {
+    .dropdown-toggle.d-flex.align-items-center.user-button {
+        font-size: 0.7rem !important;
+    }
+}
+
 .user-button {
     text-decoration: none;
     color: var(--color-header-text);
@@ -59,6 +65,12 @@ input.form-control:focus {
         transform: scale(1.0);
         filter: drop-shadow(0 0 4px var(--color-white-90));
     }
+    #logo-login {
+        width: 2.9rem;
+        height: 2.9rem;
+        transform: scale(1.0);
+        filter: drop-shadow(0 0 4px var(--color-white-90));
+    }
 }
 
 /* HEADER */
@@ -86,6 +98,7 @@ svg:hover {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
 * {
     padding: 0;
     margin: 0;
@@ -98,16 +111,19 @@ ul {
     padding-left: 0;
     list-style: none;
 }
+
 #background {
     background-color: var(--color-background);
 }
+
 /* GERAIS */
 
 
 /*Card */
-.row.gx-0.shadow-lg.mt-3.p-4{
+.row.gx-0.shadow-lg.mt-3.p-4 {
     background: var(--color-card-produto-background) !important;
 }
+
 /*Card */
 
 /* CARRINHO FLOATING */
@@ -236,6 +252,7 @@ ul {
         max-height: 1.5rem;
     }
 }
+
 @media (max-width: 480px) {
     .floating-cart {
         bottom: 1rem;
@@ -254,6 +271,7 @@ ul {
         font-size: 0.625rem;
     }
 }
+
 /* CARRINHO MODAL OPEN */
 
 /* FOOTER */
@@ -271,11 +289,13 @@ ul {
         padding: 3rem 2rem;
     }
 }
+
 @media (max-width: 604px) {
     #link-footer {
         color: var(--color-white-90);
     }
 }
+
 #footer_copyright {
     background-color: var(--color-black-70);
     padding: 1em 0;
@@ -368,19 +388,23 @@ ul {
         gap: 1rem;
     }
 }
-
+/* FOOTER */
 
 /* MINI CARDS */
 .thumbnail-container {
     display: flex;
     gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
 }
 
 .thumbnail {
-    width: 60px;
-    height: 60px;
+    width: 5rem;
+    height: 3.75rem;
     cursor: pointer;
     border: 1px solid #ddd;
+    -o-object-fit: cover;
+       object-fit: cover;
 }
 
 .thumbnail:hover {
@@ -393,5 +417,102 @@ ul {
     border: 1px solid #ddd;
 }
 
+@media (max-width: 767px) {
+    .thumbnail-container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .thumbnail {
+        width: 4rem;
+        height: 3.125rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    #nome-produto {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .thumbnail {
+        width: 3rem;
+        height: 2.5rem;
+    }
+
+    #nome-produto {
+        font-size: 1.2rem;
+    }
+}
+
 /* MINI CARDS */
 
+/* BOTOES */
+.btn.button-primary {
+    background-color: var(--color-button-primary);
+    border-color: var(--color-button-primary);
+    color: var(--color-black-90);
+}
+
+.btn.button-primary:hover {
+    background-color: var(--color-button-primary-hover);
+    border-color: var(--color-button-primary-hover);
+    color: var(--color-black);
+}
+.btn.button-primary:focus{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-primary:active{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+
+.btn.button-danger {
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+    color: var(--color-white-90);
+}
+
+.btn.button-danger:hover {
+    background-color: var(--color-danger-hover);
+    border-color: var(--color-danger-hover);
+    color: var(--color-white);
+}
+.btn.button-danger:active {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-danger:focus {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+
+@media (max-width: 576px) {
+    #adicionar-carrinho {
+        font-size: 0.55rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+    #adicionar-carrinho {
+        font-size: 1rem;  
+        padding: 0.75rem 1.5rem; 
+    }
+}
+
+@media (min-width: 992px) {
+    #adicionar-carrinho {
+        font-size: 1.15rem;
+        padding: 1rem 2rem; 
+    }
+}
+/* BOTOES */

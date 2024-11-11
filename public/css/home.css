@@ -21,6 +21,12 @@
     display: flex;
 }
 
+@media (max-width: 480px) {
+    .dropdown-toggle.d-flex.align-items-center.user-button{
+        font-size: 0.7rem !important;
+    }
+}
+
 .user-button {
     text-decoration: none;
     color: var(--color-header-text);
@@ -48,6 +54,12 @@
 
 @media (max-width: 970px) {
     #logo-login:hover {
+        width: 2.9rem;
+        height: 2.9rem;
+        transform: scale(1.0);
+        filter: drop-shadow(0 0 4px var(--color-white-90));
+    }
+    #logo-login{
         width: 2.9rem;
         height: 2.9rem;
         transform: scale(1.0);
@@ -94,6 +106,16 @@
     border-color: var(--color-danger-hover);
     color: var(--color-white);
 }
+.btn.button-danger:active {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-danger:focus {
+    background-color: var(--color-danger-hover) !important;
+    border-color: var(--color-danger-hover) !important;
+    color: var(--color-white) !important;
+}
 
 .btn.button-primary {
     background-color: var(--color-button-primary);
@@ -105,6 +127,16 @@
     background-color: var(--color-button-primary-hover);
     border-color: var(--color-button-primary-hover);
     color: var(--color-black);
+}
+.btn.button-primary:focus{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-primary:active{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
 }
 
 .botao-mostrar-grupos {
