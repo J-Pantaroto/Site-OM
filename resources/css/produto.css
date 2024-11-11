@@ -369,3 +369,29 @@ ul {
         gap: 1rem;
     }
 }
+
+
+/* MINI CARDS */
+.thumbnail-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+.thumbnail:hover {
+    border-color: #333;
+}
+
+.main-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+}
+
+/* MINI CARDS */

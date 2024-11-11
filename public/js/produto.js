@@ -4954,6 +4954,16 @@ window.addEventListener('resize', function () {
 window.addEventListener('load', function () {
   footerResponse();
 });
+document.addEventListener("DOMContentLoaded", function () {
+  var imagemPrincipal = document.getElementById("imagem");
+  var miniaturas = document.querySelectorAll(".thumbnail");
+  miniaturas.forEach(function (thumbnail) {
+    thumbnail.addEventListener("mouseover", function () {
+      var novaImagem = thumbnail.src;
+      imagemPrincipal.src = novaImagem;
+    });
+  });
+});
 })();
 
 /******/ })()

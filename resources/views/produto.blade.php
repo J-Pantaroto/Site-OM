@@ -4,6 +4,11 @@
         <div class="row gx-0 shadow-lg mt-3 p-4">
             <div class="col-4">
                 <img id="imagem" src="{{ asset('storage/' . $prod->imagem) }}" class="card-img-top" alt="{{ $prod->nome }}">
+                <div class="thumbnail-container mt-3 d-flex justify-content-center">
+                    @foreach ($prod->imagens as $imagem)
+                        <img src="{{ asset('storage/' . $imagem->imagem) }}" class="img-thumbnail thumbnail" alt="Miniatura {{ $loop->index }}">
+                    @endforeach
+                </div>
             </div>
             <div class="col">
                 <div class="d-flex flex-column h-100">

@@ -393,3 +393,15 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
     footerResponse()
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const imagemPrincipal = document.getElementById("imagem");
+    const miniaturas = document.querySelectorAll(".thumbnail");
+
+    miniaturas.forEach(thumbnail => {
+        thumbnail.addEventListener("mouseover", function() {
+            const novaImagem = thumbnail.src;
+            imagemPrincipal.src = novaImagem;
+        });
+    });
+});
