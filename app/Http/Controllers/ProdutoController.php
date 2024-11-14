@@ -51,49 +51,73 @@ class ProdutoController extends Controller
     public function show(string $id) {}
     public function edit($id)
     {
-        $produto = Produto::with('imagens')->findOrFail($id);
+        $produto = Produto::with(['imagens' => function($query) {
+            $query->where('imagem', '!=', 'produtos/placeholder.png');
+        }])->findOrFail($id);
+    
         return view('produto.editproduto', compact('produto'));
     }
 
     public function update(Request $request, $id)
     {
         $produto = Produto::findOrFail($id);
-
+    
         $request->validate([
-            'nome' => 'required',
-            'descricao' => 'required',
-            'imagens.*' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'imagens.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nome' => 'required|string|max:255',
+            'descricao' => 'required|string',
         ]);
+    
+        // Se o produto está com o placeholder como imagem principal, remove-o
+        if ($produto->imagem === 'produtos/placeholder.png') {
+            $produto->imagens()->where('imagem', 'produtos/placeholder.png')->delete();
+        }
+    
+        $novaImagemPrincipal = null;
+    
         if ($request->hasFile('imagens')) {
             foreach ($request->file('imagens') as $imagem) {
-                $imagemPath = $imagem->store('produtos', 'public'); // Guarda a imagem na pasta 'produtos'
-                $produto->imagens()->create([
-                    'imagem' => $imagemPath,
-                ]);
-            }
-        }
-        $produto->update($request->only(['nome', 'descricao']));
-
-        $imagemSelecionada = $request->input('imagem_principal');
-        
-        if ($imagemSelecionada) {
-            $produto->imagem = $imagemSelecionada;
-        } elseif (empty($produto->imagem)) {
-            $primeiraImagem = ImagemProduto::where('produto_id', $id)->first();
-            if ($primeiraImagem) {
-                $produto->imagem = $primeiraImagem->imagem;
+                $path = $imagem->store('produtos', 'public');
+                $novaImagem = $produto->imagens()->create(['imagem' => $path]);
+    
+                // Defina a primeira imagem carregada como principal se não houver outra principal
+                if (!$produto->imagens()->where('principal', true)->exists() && !$novaImagemPrincipal) {
+                    $novaImagemPrincipal = $novaImagem->imagem;
+                    $novaImagem->update(['principal' => true]);
+                    $produto->imagem = $novaImagemPrincipal; // Atualiza o campo `imagem` do produto diretamente
+                }
             }
         }
     
+        // Atualizar nome, descrição e imagem do produto, garantindo que a imagem principal seja atualizada
+        $produto->nome = $request->input('nome');
+        $produto->descricao = $request->input('descricao');
         $produto->save();
-
-        return redirect()->route('produtos')->with('success', 'Produto atualizado com sucesso.');
+    
+        // Caso o usuário selecione manualmente uma imagem como principal
+        if ($request->filled('imagem_principal')) {
+            $produto->imagens()->update(['principal' => false]);
+            $imagemPrincipal = $produto->imagens()->where('imagem', $request->input('imagem_principal'))->first();
+            if ($imagemPrincipal) {
+                $imagemPrincipal->update(['principal' => true]);
+                $produto->imagem = $imagemPrincipal->imagem;
+                $produto->save();
+            }
+        }
+    
+        // Se ainda não houver imagem principal após o upload, definir o placeholder como imagem padrão
+        if (!$produto->imagens()->where('principal', true)->exists()) {
+            $produto->imagem = 'produtos/placeholder.png';
+            $produto->save();
+        }
+    
+        return redirect()->route('produtos')->with('success', 'Produto atualizado com sucesso!');
     }
-
+    
     public function destroy($id)
     {
-        $produto = Produto::findOrFail($id); // Encontra o produto pelo ID
-        $produto->delete(); // Exclui o produto
+        $produto = Produto::findOrFail($id);
+        $produto->delete();
         return redirect()->route('produtos')->with('success', 'Produto excluído com sucesso.');
     }
 
@@ -101,12 +125,24 @@ class ProdutoController extends Controller
     {
         $imagem = ImagemProduto::findOrFail($id);
         $produtoId = $imagem->produto_id;
-        // Verifica se o arquivo existe e o deleta
+    
         if (Storage::disk('public')->exists($imagem->imagem)) {
             Storage::disk('public')->delete($imagem->imagem);
         }
-        // Remove o registro do banco de dados
+    
         $imagem->delete();
+    
+        if ($imagem->principal) {
+            $novaImagemPrincipal = ImagemProduto::where('produto_id', $produtoId)->first();
+    
+            if ($novaImagemPrincipal) {
+                $novaImagemPrincipal->update(['principal' => true]);
+                Produto::where('id', $produtoId)->update(['imagem' => $novaImagemPrincipal->imagem]);
+            } else {
+                Produto::where('id', $produtoId)->update(['imagem' => 'produtos/placeholder.png']);
+            }
+        }
+    
         return redirect()->route('produtos.edit', $produtoId)->with('success', 'Imagem removida com sucesso.');
     }
 }

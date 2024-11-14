@@ -9,7 +9,7 @@ class Produto extends Model
 {
   protected $table = 'produtos';
   use HasFactory;
-  protected $fillable = ['nome', 'descricao'];
+  protected $fillable = ['nome', 'descricao','imagem'];
   public function imagens()
   {
     return $this->hasMany(ImagemProduto::class);

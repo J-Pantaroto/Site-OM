@@ -8,7 +8,7 @@ class ImagemProduto extends Model
 {
     use HasFactory;
 protected $table = 'imagens_produtos';
-    protected $fillable = ['produto_id', 'imagem'];
+    protected $fillable = ['produto_id', 'imagem','principal'];
 
     public function produto()
     {

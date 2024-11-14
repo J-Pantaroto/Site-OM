@@ -1769,10 +1769,6 @@ select {
     margin-inline-start: 2.5rem;
   }
 
-  .sm\:ms-6 {
-    margin-inline-start: 1.5rem;
-  }
-
   .sm\:mt-10 {
     margin-top: 2.5rem;
   }
@@ -1887,6 +1883,10 @@ select {
   }
 }
 @media (min-width: 768px) {
+
+  .md\:ms-6 {
+    margin-inline-start: 1.5rem;
+  }
 
   .md\:block {
     display: block;
