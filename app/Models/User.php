@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,7 +20,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'cpf_cnpj'
+        'cpf_cnpj',
+        'state_id',
+        'city_id',
     ];
 
     /**
@@ -33,6 +36,14 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['cpf_cnpj'] = preg_replace('/\D/', '', $value);
     }
 
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
     public function getCpfCnpjFormattedAttribute()
     {
         $cpf_cnpj = $this->attributes['cpf_cnpj'];
@@ -63,12 +74,11 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
     public function isAdmin()
-{
-    return $this->admin;
-}
-public function vendas()
-{
-    return $this->hasMany(Venda::class, 'cliente_id');
-}
-
+    {
+        return $this->admin;
+    }
+    public function vendas()
+    {
+        return $this->hasMany(Venda::class, 'cliente_id');
+    }
 }

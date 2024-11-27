@@ -196,4 +196,35 @@ if (rotaAtual === 'configuracoes.edit') {
         });
     }
     document.addEventListener('DOMContentLoaded', setContrastingTextColor);
+}else if(rotaAtual==='profile.edit'){
+
+document.addEventListener("DOMContentLoaded", function () {
+    const stateSelect = document.getElementById("state");
+    const citySelect = document.getElementById("city");
+
+    stateSelect.addEventListener("change", function () {
+        const stateId = this.value;
+
+        citySelect.disabled = true;
+        citySelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
+
+        fetch(`/cities/${stateId}`)
+            .then((response) => response.json())
+            .then((data) => {
+                citySelect.innerHTML = '<option value="" disabled selected>Selecione uma cidade</option>';
+                data.forEach((city) => {
+                    const option = document.createElement("option");
+                    option.value = city.id;
+                    option.textContent = city.name;
+                    citySelect.appendChild(option);
+                });
+
+                citySelect.disabled = false;
+            })
+            .catch((error) => {
+                console.error("Erro ao carregar cidades:", error);
+                citySelect.innerHTML = '<option value="" disabled selected>Erro ao carregar cidades</option>';
+            });
+    });
+});
 }
