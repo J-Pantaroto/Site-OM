@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('states')) {
             Schema::create('cities', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
                 $table->foreignId('state_id')->constrained()->onDelete('cascade');
                 $table->timestamps();
             });
-        }
     }
     /**
      * Run the migrations.

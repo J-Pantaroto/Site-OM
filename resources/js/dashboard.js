@@ -68,7 +68,7 @@ async function buscar(pesquisa = '', escopo = '') {
                             </form>
                         </td>
                     `;
-                } else if (escopo === 'produtos'){
+                } else if (escopo === 'produtos') {
                     // Verificar se a imagem do produto está disponível ou usar o placeholder
                     const imagemProduto = item.imagem;
 
@@ -169,7 +169,7 @@ if (rotaAtual === 'configuracoes.edit') {
             colorPicker.value = hexColor;
         }
     });
-}else if(rotaAtual==='configuracoes'){
+} else if (rotaAtual === 'configuracoes') {
     function parseColor(color) {
         const ctx = document.createElement("canvas").getContext("2d");
         ctx.fillStyle = color;
@@ -196,35 +196,188 @@ if (rotaAtual === 'configuracoes.edit') {
         });
     }
     document.addEventListener('DOMContentLoaded', setContrastingTextColor);
-}else if(rotaAtual==='profile.edit'){
+} else if (rotaAtual === 'profile.edit') {
 
-document.addEventListener("DOMContentLoaded", function () {
-    const stateSelect = document.getElementById("state");
-    const citySelect = document.getElementById("city");
+    document.addEventListener("DOMContentLoaded", function () {
+        const stateSelect = document.getElementById("state");
+        const citySelect = document.getElementById("city");
 
-    stateSelect.addEventListener("change", function () {
-        const stateId = this.value;
+        stateSelect.addEventListener("change", function () {
+            const ibgeCode = this.value;
 
-        citySelect.disabled = true;
-        citySelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
+            citySelect.disabled = true;
+            citySelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
 
-        fetch(`/cities/${stateId}`)
-            .then((response) => response.json())
-            .then((data) => {
-                citySelect.innerHTML = '<option value="" disabled selected>Selecione uma cidade</option>';
-                data.forEach((city) => {
-                    const option = document.createElement("option");
-                    option.value = city.id;
-                    option.textContent = city.name;
-                    citySelect.appendChild(option);
+            fetch(`/cities/${ibgeCode}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    citySelect.innerHTML = '<option value="" disabled selected>Selecione uma cidade</option>';
+                    data.forEach((city) => {
+                        const option = document.createElement("option");
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+
+                    citySelect.disabled = false;
+                })
+                .catch((error) => {
+                    console.error("Erro ao carregar cidades:", error);
+                    citySelect.innerHTML = '<option value="" disabled selected>Erro ao carregar cidades</option>';
                 });
-
-                citySelect.disabled = false;
-            })
-            .catch((error) => {
-                console.error("Erro ao carregar cidades:", error);
-                citySelect.innerHTML = '<option value="" disabled selected>Erro ao carregar cidades</option>';
-            });
+        });
     });
-});
-}
+    document.addEventListener("DOMContentLoaded", function () {
+        const stateSelect = document.getElementById("state"); // Dropdown de estado
+        const citySelect = document.getElementById("city");   // Dropdown de cidade
+        const zipInput = document.getElementById("zip_code"); // Campo de CEP
+        const userState = stateSelect.getAttribute("data-selected-state"); // Estado pré-selecionado
+        const userCity = citySelect.getAttribute("data-selected-city");   // Cidade pré-selecionada
+    
+        // Preencher estado e cidade do usuário (se já estiver no cadastro)
+        if (userState) {
+            stateSelect.value = userState;
+            loadCities(userState, userCity);
+        }
+    
+        // Carregar cidades ao selecionar um estado
+        stateSelect.addEventListener("change", function () {
+            const stateAbbreviation = this.value;
+            if (stateAbbreviation) {
+                loadCities(stateAbbreviation);
+            }
+        });
+    
+        // Função para carregar as cidades com base no estado
+        function loadCities(stateAbbreviation, preselectedCity = null) {
+            citySelect.disabled = true;
+            citySelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
+            
+            fetch(`/cities/${stateAbbreviation}`) // Chamada para buscar cidades
+                .then(response => response.json())
+                .then(data => {
+                    citySelect.innerHTML = '<option value="" disabled selected>Selecione uma cidade</option>';
+                    data.forEach(city => {
+                        const option = document.createElement("option");
+                        option.value = city.ibge_code; // Código IBGE
+                        option.textContent = city.name; // Nome da cidade
+                        if (preselectedCity && city.ibge_code === preselectedCity) {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar cidades:", error);
+                    citySelect.innerHTML = '<option value="" disabled selected>Erro ao carregar cidades</option>';
+                });
+        }
+    
+        // Buscar endereço pelo CEP e preencher automaticamente os campos de estado e cidade
+        zipInput.addEventListener("blur", function () {
+            const zipCode = zipInput.value.replace(/\D/g, ""); // Remover caracteres não numéricos
+            if (zipCode.length === 8) {
+                fetch(`https://viacep.com.br/ws/${zipCode}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            // Preencher endereço e bairro
+                            document.getElementById("address").value = data.logradouro || '';
+                            document.getElementById("neighborhood").value = data.bairro || '';
+    
+                            // Preencher estado e carregar cidades
+                            const stateAbbreviation = data.uf.toUpperCase();
+                            stateSelect.value = stateAbbreviation;
+                            stateSelect.dispatchEvent(new Event("change"));
+    
+                            // Selecionar cidade após carregar
+                            setTimeout(() => {
+                                const cityOption = Array.from(citySelect.options).find(option => option.textContent === data.localidade);
+                                if (cityOption) {
+                                    citySelect.value = cityOption.value;
+                                } else {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Cidade não encontrada",
+                                        text: "A cidade retornada pelo CEP não está disponível.",
+                                    });
+                                }
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "CEP inválido",
+                                text: "Por favor, insira um CEP válido.",
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erro ao buscar CEP:", error);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro",
+                            text: "Não foi possível buscar o CEP. Tente novamente mais tarde.",
+                        });
+                    });
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form#profile-form");
+    
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do formulário
+    
+            const formData = new FormData(form);
+    
+            fetch(form.action, {
+                method: form.method,
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    Accept: "application/json"
+                },
+                body: formData
+            })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        const data = await response.json();
+                        if (data.errors) throw data;
+                        throw { message: "Erro desconhecido." }; // Caso erros não sejam retornados
+                    }
+                    return response.json(); // Sucesso
+                })
+                .then((data) => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Sucesso",
+                        text: "Perfil atualizado com sucesso!"
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                })
+                .catch((error) => {
+                    if (error.errors) {
+                        form.querySelectorAll("input, select, textarea").forEach((el) =>
+                            el.classList.remove("border-red-500")
+                        );
+                            Object.keys(error.errors).forEach((field, index) => {
+                            const input = document.querySelector(`[name="${field}"]`);
+                            if (input) {
+                                input.classList.add("border-red-500");
+                                if (index === 0) input.focus(); 
+                            }
+                        });
+    
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro no formulário",
+                            html: Object.entries(error.errors)
+                                .map(([field, messages]) => `<p>${field}: ${messages.join(", ")}</p>`)
+                                .join("")
+                        });
+                    } 
+                });
+        });
+    });
+}    

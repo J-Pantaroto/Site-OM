@@ -55,23 +55,38 @@ class ProfileController extends Controller
         }
     }
 
-
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
         $user = Auth::user();
-        $request->validate([
-            'state' => 'required|exists:states,id',
-            'city' => 'required|exists:cities,id',
+
+        $validatedData = $request->validate([
+            'state' => 'required|string|exists:states,abbreviation',
+            'city' => 'required|string|exists:cities,ibge_code',
+            'address' => 'required|string|max:255',
+            'house_number' => 'required|string|max:10',
+            'neighborhood' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:9|regex:/^\d{5}-\d{3}$/',
         ]);
 
+        $state = State::where('abbreviation', $validatedData['state'])->first();
+        $city = City::where('ibge_code', $validatedData['city'])
+            ->where('state_id', $state->id)
+            ->first();
         /** @var User $user */
         $user->update([
-            'state_id' => $request->state,
-            'city_id' => $request->city,
+            'state_id' => $state->id,
+            'city_id' => $city->id,
+            'address' => $validatedData['address'],
+            'house_number' => $validatedData['house_number'],
+            'neighborhood' => $validatedData['neighborhood'],
+            'zip_code' => $validatedData['zip_code'],
         ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+        return response()->json(['message' => 'Perfil atualizado com sucesso!'], 200);
     }
+
+
+
     /**
      * Delete the user's account.
      */

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -16,8 +15,6 @@ class ConfiguracoesController extends Controller
         $cores = collect(Config::get('config.colors'))->mapWithKeys(fn($value, $key) => [$key => $value]);
             $configuracoes = collect(Config::get('config.config'))->mapWithKeys(fn($value, $key) => [$key => $value]);
             $imagens = collect(is_array(Config::get('config.imgs')) ? Config::get('config.imgs') : []);
-
-
         if ($search) {
             $cores = $cores->filter(fn($value, $key) => Str::contains(Str::lower($key), Str::lower($search)));
             $configuracoes = $configuracoes->filter(fn($value, $key) => Str::contains(Str::lower($key), Str::lower($search)));
@@ -26,7 +23,6 @@ class ConfiguracoesController extends Controller
         $cores = $this->paginateCollection($cores, 12, $request);
         $configuracoes = $this->paginateCollection($configuracoes, 12, $request);
         $imagens = $this->paginateCollection($imagens, 12, $request);
-
         return view('configuracoes', [
             'cores' => $cores,
             'configuracoes' => $configuracoes,

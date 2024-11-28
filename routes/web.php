@@ -7,7 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\ConfiguracoesController;
-use App\Http\Controllers\LocationController;
+use App\Http\Controllers\CitiesStatesController;
 use App\Http\Middleware\IsAdmin;
 
 use Illuminate\Support\Facades\Route;
@@ -54,10 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-Route::get('/cities/{state}', [LocationController::class, 'getCities'])
-    ->middleware(['auth', 'verified', IsAdmin::class]);
-
+Route::get('/cities/{stateAbbreviation}', [CitiesStatesController::class, 'getCitiesByState']);
 
 Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
     ->middleware(['auth', 'verified', IsAdmin::class])
