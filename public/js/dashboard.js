@@ -4802,6 +4802,15 @@ if (rotaAtual === 'configuracoes.edit') {
     var userState = stateSelect.getAttribute("data-selected-state"); // Estado pré-selecionado
     var userCity = citySelect.getAttribute("data-selected-city"); // Cidade pré-selecionada
 
+    if (zipInput) {
+      zipInput.addEventListener("input", function (e) {
+        var cep = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+        if (cep.length > 5) {
+          cep = cep.replace(/(\d{5})(\d{1,3})/, "$1-$2"); // Adiciona o hífen após o quinto dígito
+        }
+        e.target.value = cep;
+      });
+    }
     // Preencher estado e cidade do usuário (se já estiver no cadastro)
     if (userState) {
       stateSelect.value = userState;

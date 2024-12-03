@@ -8,6 +8,7 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\ConfiguracoesController;
 use App\Http\Controllers\CitiesStatesController;
+use App\Http\Middleware\CheckAddressComplete;
 use App\Http\Middleware\IsAdmin;
 
 use Illuminate\Support\Facades\Route;
@@ -19,30 +20,31 @@ Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos
 Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/');
 Route::post('/pesquisar/usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes');
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
 Route::get('/produtos', [ProdutoController::class, 'index'])
-    ->middleware(['auth', 'verified', IsAdmin::class])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('produtos');
 
 Route::get('/usuarios', [ProfileController::class, 'index'])
-    ->middleware(['auth', 'verified', IsAdmin::class])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('usuarios');
 
 Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
-    ->middleware(['auth', 'verified', IsAdmin::class])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('usuarios.destroy');
 
-Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->middleware(['auth', 'verified'])->name('produtos.destroy');
-Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
-Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
-Route::delete('/produtos/imagens/{imagem}', [ProdutoController::class, 'destroyImagem'])->name('produtos.imagens.destroy');
+Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->middleware(['auth', 'verified', 'admin'])->name('produtos.destroy');
+Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->middleware(['auth', 'verified', 'admin'])->name('produtos.edit');
+Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('produtos.update');
+Route::delete('/produtos/imagens/{imagem}', [ProdutoController::class, 'destroyImagem'])->middleware(['auth', 'verified', 'admin'])->name('produtos.imagens.destroy');
 
-Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->name('configuracoes');
-Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->name('configuracoes.edit');
-Route::put('/configuracoes/{configuracao}', [ConfiguracoesController::class, 'update'])->name('configuracoes.update');
+Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes');
+Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes.edit');
+Route::put('/configuracoes/{configuracao}', [ConfiguracoesController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes.update');
 
 
-Route::post('/registrar/venda', [VendaController::class, 'registrarVenda'])->name('registrar.venda');
+Route::post('/registrar/venda', [VendaController::class, 'registrarVenda'])
+->middleware(['auth', 'verified','CheckAddress'])
+->name('registrar.venda');
 Route::get('/dashboard', [VendaController::class, 'listarComprasCliente'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -54,10 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/cities/{stateAbbreviation}', [CitiesStatesController::class, 'getCitiesByState']);
+Route::get('/cities/{stateAbbreviation}', [CitiesStatesController::class, 'getCitiesByState'])->middleware(['auth', 'verified']);
 
 Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
-    ->middleware(['auth', 'verified', IsAdmin::class])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('usuarios.destroy');
 
+    Route::get('/teste-middleware', function () {
+        return 'Middleware funcionando!';
+    })->middleware(['auth', 'CheckAddress']);
 require __DIR__ . '/auth.php';

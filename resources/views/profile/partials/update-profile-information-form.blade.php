@@ -83,7 +83,7 @@
         <!-- CEP -->
         <div>
             <x-input-label id="banner-text" for="zip_code" :value="__('CEP *')" />
-            <x-text-input id="zip_code" name="zip_code" type="text"
+            <x-text-input id="zip_code" name="zip_code" type="text" maxlength="9"
                 class="mt-1 block w-full required {{ $errors->has('zip_code') ? 'border-red-500' : '' }}"
                 placeholder="00000-000" value="{{ old('zip_code', $user->zip_code) }}" />
             <x-input-error class="mt-2" :messages="$errors->get('zip_code')" />

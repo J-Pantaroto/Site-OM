@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use App\View\Components\MainLayout;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendCustomEmailVerification::class,
+
         ],
     ];
     /**
@@ -31,7 +33,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $router = $this->app->make(Router::class);
+
         $router->pushMiddlewareToGroup('web', \App\Http\Middleware\PreventDirectoryAccess::class);
+
+        $middlewares = config('middleware.route', []);
+        foreach ($middlewares as $alias => $middlewareClass) {
+            $router->aliasMiddleware($alias, $middlewareClass);
+        }
+
         Blade::component('components.main-layout', MainLayout::class);
     }
 }

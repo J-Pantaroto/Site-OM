@@ -5118,58 +5118,80 @@ if (usuarioAutenticado) {
   });
   document.addEventListener('DOMContentLoaded', function () {
     var finalizarCompra = document.getElementById('finalizar');
-    finalizarCompra.addEventListener('click', function (event) {
-      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-        icon: "success",
-        title: "Compra finalizada!",
-        text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
-        showClass: {
-          popup: "\n                        animate__rubberBand\n                        animate__backOutUp\n                      "
-        },
-        hideClass: {
-          popup: "\n                        animate__backOutDown\n                      "
-        }
+    if (finalizarCompra) {
+      finalizarCompra.addEventListener('click', function () {
+        var produtosCarrinho = carregarProdutosCarrinho();
+        var produtosFormatados = produtosCarrinho.map(function (produto) {
+          return {
+            id: produto.id,
+            quantidade: produto.quantidade
+          };
+        });
+        fetch("/registrar/venda", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: JSON.stringify({
+            produtos: produtosFormatados
+          })
+        }).then(function (response) {
+          console.log('RESPONSE:');
+          console.log(response);
+          if (response.status === 403) {
+            return response.json().then(function (data) {
+              sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                icon: 'warning',
+                title: 'Informações Incompletas',
+                text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                confirmButtonText: 'Ir para o perfil'
+              }).then(function () {
+                window.location.href = data.redirect_url;
+              });
+            });
+          }
+          if (!response.ok) {
+            return response.json().then(function (data) {
+              throw new Error(data.message || 'Erro desconhecido');
+            });
+          }
+          return response.json();
+        }).then(function (data) {
+          console.log('Resposta do backend:', data);
+          if (data && data.status === 'success') {
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              icon: "success",
+              title: "Compra finalizada!",
+              text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+              showClass: {
+                popup: "animate__rubberBand animate__backOutUp"
+              },
+              hideClass: {
+                popup: "animate__backOutDown"
+              }
+            });
+            limparCarrinho();
+            var carrinhoModal = document.getElementById('modal-loja');
+            if (carrinhoModal) {
+              carrinhoModal.classList.remove('show');
+              carrinhoModal.style.display = 'none';
+            }
+            var modalBackdrop = document.querySelector('.modal-backdrop');
+            if (modalBackdrop) modalBackdrop.remove();
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('padding-right');
+          }
+        })["catch"](function (error) {
+          console.error('Erro na requisição:', error);
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.'
+          });
+        });
       });
-      // Carregar os produtos do carrinho
-      var produtosCarrinho = carregarProdutosCarrinho();
-      console.log("PRODUTOSCARRINHO:");
-      console.log(produtosCarrinho);
-      var produtosFormatados = produtosCarrinho.map(function (produto) {
-        return {
-          id: produto.id,
-          quantidade: produto.quantidade
-        };
-      });
-
-      // Enviar a requisição POST para o servidor
-      fetch("/registrar/venda", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          produtos: produtosFormatados
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        console.log('Venda registrada com sucesso:', data);
-      })["catch"](function (error) {
-        console.error('Erro ao registrar venda:', error);
-      });
-      //fechar e limpar carrinho
-      limparCarrinho();
-      var carrinhoModal = document.getElementById('modal-loja');
-      carrinhoModal.classList.remove('show');
-      carrinhoModal.style.display = "none";
-      var modalBackdrop = document.querySelector('.modal-backdrop');
-      if (modalBackdrop) {
-        modalBackdrop.remove();
-      }
-      document.body.classList.remove('modal-open');
-      document.body.style.removeProperty('padding-right');
-    });
+    }
   });
   var limpaBotao = document.getElementById('limpar-tudo');
   limpaBotao.addEventListener('click', function (event) {

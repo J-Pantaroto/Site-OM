@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -26,19 +29,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'house_number',
         'neighborhood',
         'zip_code',
+        'complement',
+        'address_complete',
+        'admin'
     ];
-
+    protected $casts = [
+        'address_complete' => 'boolean',
+        'admin' => 'boolean',
+    ];
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    public function setCpfCnpjAttribute($value)
-    {
-        // Remove todos os caracteres que não são números
-        $this->attributes['cpf_cnpj'] = preg_replace('/\D/', '', $value);
-    }
-
     public function state()
     {
         return $this->belongsTo(State::class);
@@ -47,17 +50,32 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(City::class);
     }
-    public function getCpfCnpjFormattedAttribute()
+    public function zipCode(): Attribute
     {
-        $cpf_cnpj = $this->attributes['cpf_cnpj'];
+        return Attribute::make(
+            get: fn($value) => preg_replace('/(\d{5})(\d{3})/', '$1-$2', $value),
 
-        if (strlen($cpf_cnpj) === 11) {
-            return preg_replace("/(\d{3})(\d{3})(\d{3})(\d{2})/", "$1.$2.$3-$4", $cpf_cnpj);
-        } elseif (strlen($cpf_cnpj) === 14) {
-            return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "$1.$2.$3/$4-$5", $cpf_cnpj);
-        }
+            set: fn($value) => str_replace('-', '', $value)
+        );
+    }
+    public function cpfCnpj(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (!$value) {
+                    return null;
+                }
 
-        return $cpf_cnpj;
+                if (strlen($value) === 11) {
+                    return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $value);
+                } elseif (strlen($value) === 14) {
+                    return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $value);
+                }
+
+                return $value;
+            },
+            set: fn($value) => preg_replace('/\D/', '', $value)
+        );
     }
     protected $hidden = [
         'password',
@@ -76,7 +94,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->admin;
     }

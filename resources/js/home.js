@@ -125,9 +125,9 @@ async function buscarProdutos(pesquisa = '', escopo, categoria = '', limite, tip
                 } else {
                     botaoVerMais.style.display = "none"; // Oculta o botão se houver 10 ou menos produtos
                 }
-                if(textoResposta.totalProdutos> offset2 + quantidade){ //verifica sempre se a quantidade do limite mais a quantidade é maior q o total de produtos q eu retorno
+                if (textoResposta.totalProdutos > offset2 + quantidade) { //verifica sempre se a quantidade do limite mais a quantidade é maior q o total de produtos q eu retorno
                     botaoVerMais.removeAttribute("style");
-                }else{
+                } else {
                     botaoVerMais.style.display = "none";
                 }
             }
@@ -503,64 +503,82 @@ if (usuarioAutenticado) {
 
     document.addEventListener('DOMContentLoaded', () => {
         const finalizarCompra = document.getElementById('finalizar');
-        finalizarCompra.addEventListener('click', function (event) {
-            Swal.fire({
-                icon: "success",
-                title: "Compra finalizada!",
-                text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
-                showClass: {
-                    popup: `
-                        animate__rubberBand
-                        animate__backOutUp
-                      `
-                },
-                hideClass: {
-                    popup: `
-                        animate__backOutDown
-                      `
-                }
+
+        if (finalizarCompra) {
+            finalizarCompra.addEventListener('click', function () {
+                const produtosCarrinho = carregarProdutosCarrinho();
+                const produtosFormatados = produtosCarrinho.map(produto => ({
+                    id: produto.id,
+                    quantidade: produto.quantidade,
+                }));
+                fetch(`/registrar/venda`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: JSON.stringify({ produtos: produtosFormatados }),
+                })
+                    .then(response => {
+                        console.log('RESPONSE:');
+                        console.log(response);
+                        if (response.status === 403) {
+                            return response.json().then(data => {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Informações Incompletas',
+                                    text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                                    confirmButtonText: 'Ir para o perfil',
+                                }).then(() => {
+                                    window.location.href = data.redirect_url;
+                                });
+                            });
+                        }
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Erro desconhecido');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Resposta do backend:', data);
+                        if (data && data.status === 'success') {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Compra finalizada!",
+                                text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+                                showClass: {
+                                    popup: `animate__rubberBand animate__backOutUp`,
+                                },
+                                hideClass: {
+                                    popup: `animate__backOutDown`,
+                                },
+                            });
+                            limparCarrinho();
+                            const carrinhoModal = document.getElementById('modal-loja');
+                            if (carrinhoModal) {
+                                carrinhoModal.classList.remove('show');
+                                carrinhoModal.style.display = 'none';
+                            }
+
+                            const modalBackdrop = document.querySelector('.modal-backdrop');
+                            if (modalBackdrop) modalBackdrop.remove();
+
+                            document.body.classList.remove('modal-open');
+                            document.body.style.removeProperty('padding-right');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro na requisição:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro',
+                            text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.',
+                        });
+                    });
             });
-            // Carregar os produtos do carrinho
-            const produtosCarrinho = carregarProdutosCarrinho();
-            console.log("PRODUTOSCARRINHO:");
-            console.log(produtosCarrinho);
-            const produtosFormatados = produtosCarrinho.map(produto => ({
-                id: produto.id,
-                quantidade: produto.quantidade
-            }));
-
-            // Enviar a requisição POST para o servidor
-            fetch(`/registrar/venda`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    produtos: produtosFormatados
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Venda registrada com sucesso:', data);
-                })
-                .catch(error => {
-                    console.error('Erro ao registrar venda:', error);
-                });
-            //fechar e limpar carrinho
-            limparCarrinho();
-            const carrinhoModal = document.getElementById('modal-loja');
-            carrinhoModal.classList.remove('show');
-            carrinhoModal.style.display = "none";
-
-            const modalBackdrop = document.querySelector('.modal-backdrop');
-            if (modalBackdrop) {
-                modalBackdrop.remove();
-            }
-
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('padding-right');
-        });
+        }
     });
 
     function limparCarrinho() {

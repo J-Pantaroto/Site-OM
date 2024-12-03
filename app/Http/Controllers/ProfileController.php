@@ -66,12 +66,21 @@ class ProfileController extends Controller
             'house_number' => 'required|string|max:10',
             'neighborhood' => 'required|string|max:255',
             'zip_code' => 'required|string|max:9|regex:/^\d{5}-\d{3}$/',
+            'complement' => 'nullable|string|max:255',
         ]);
 
         $state = State::where('abbreviation', $validatedData['state'])->first();
+        if (!$state) {
+            return response()->json(['error' => 'Estado inválido.'], 422);
+        }
+
         $city = City::where('ibge_code', $validatedData['city'])
             ->where('state_id', $state->id)
             ->first();
+        if (!$city) {
+            return response()->json(['error' => 'Cidade inválida para o estado selecionado.'], 422);
+        }
+
         /** @var User $user */
         $user->update([
             'state_id' => $state->id,
@@ -80,10 +89,13 @@ class ProfileController extends Controller
             'house_number' => $validatedData['house_number'],
             'neighborhood' => $validatedData['neighborhood'],
             'zip_code' => $validatedData['zip_code'],
+            'complement' => $validatedData['complement'] ?? null,
+            'address_complete' => true,
         ]);
 
         return response()->json(['message' => 'Perfil atualizado com sucesso!'], 200);
     }
+
 
 
 
