@@ -32,14 +32,17 @@ class VerifyEmailController extends Controller
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
 
-            // Instanciando o modelo da tabela Verificacoes
-            \App\Models\VerifyAdmin::createHash($user);
+            if (config('config.config.aprovar_cadastro') === 'S') {
+                \App\Models\VerifyAdmin::createHash($user);
 
-
+                return redirect()->route('verify.return', [
+                    'message' => 'Seu email foi verificado, agora um de nossos administradores irá analisar seu perfil para aprovar seu cadastro.'
+                ]);
+            }
         }
 
-
-
-        return redirect()->route('verify.return', ['message' => 'Seu email foi verificado, agora um de nossos administradores irá analisar seu perfil para aprovar seu cadastro.']);
+        return redirect()->route('verify.return', [
+            'message' => 'Seu email foi verificado com sucesso!'
+        ]);
     }
 }

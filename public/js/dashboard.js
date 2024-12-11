@@ -4728,21 +4728,23 @@ if (rotaAtual === 'configuracoes.edit') {
   };
   var colorPicker = document.getElementById('colorPicker');
   var textInput = document.getElementById('value');
-  colorPicker.addEventListener('input', function () {
-    textInput.value = colorPicker.value;
-  });
-  textInput.addEventListener('input', function () {
-    var hexColor = colorToHex(textInput.value);
-    if (hexColor) {
-      colorPicker.value = hexColor;
-    }
-  });
-  document.addEventListener("DOMContentLoaded", function () {
-    var hexColor = colorToHex(textInput.value);
-    if (hexColor) {
-      colorPicker.value = hexColor;
-    }
-  });
+  if (colorPicker) {
+    colorPicker.addEventListener('input', function () {
+      textInput.value = colorPicker.value;
+    });
+    textInput.addEventListener('input', function () {
+      var hexColor = colorToHex(textInput.value);
+      if (hexColor) {
+        colorPicker.value = hexColor;
+      }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      var hexColor = colorToHex(textInput.value);
+      if (hexColor) {
+        colorPicker.value = hexColor;
+      }
+    });
+  }
 } else if (rotaAtual === 'configuracoes') {
   var parseColor = function parseColor(color) {
     var ctx = document.createElement("canvas").getContext("2d");
@@ -4981,6 +4983,45 @@ if (rotaAtual === 'configuracoes.edit') {
         }
       });
     });
+  });
+  var celularInput = document.getElementById('celular');
+  celularInput.addEventListener('input', function (e) {
+    var value = e.target.value;
+    value = value.replace(/\D/g, '');
+    if (value.length > 10) {
+      value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+    } else if (value.length > 6) {
+      value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+    } else if (value.length > 2) {
+      value = value.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+    } else if (value.length > 0) {
+      value = value.replace(/^(\d*)/, '($1');
+    } else {
+      value = '';
+    }
+    e.target.value = value;
+  });
+  //CELULAR
+  celularInput.addEventListener('keypress', function (e) {
+    var charCode = e.charCode || e.keyCode || e.which;
+    if (charCode < 48 || charCode > 57) {
+      e.preventDefault();
+    }
+  });
+  celularInput.addEventListener('paste', function (e) {
+    var pastedData = e.clipboardData.getData('Text');
+    pastedData = pastedData.replace(/\D/g, '');
+    if (pastedData.length > 10) {
+      pastedData = pastedData.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+    } else if (pastedData.length > 6) {
+      pastedData = pastedData.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+    } else if (pastedData.length > 2) {
+      pastedData = pastedData.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+    } else if (pastedData.length > 0) {
+      pastedData = pastedData.replace(/^(\d*)/, '($1');
+    }
+    e.preventDefault();
+    celularInput.value = pastedData;
   });
 }
 })();

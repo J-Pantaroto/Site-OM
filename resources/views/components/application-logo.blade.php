@@ -1,1 +1,1 @@
-<img src="{{ asset('images/logoLogin.png') }}" id="logo-login" class="d-block" alt="...">
+<img src="{{ asset(config('config.imgs.app_logo_path')) }}" id="logo-login" class="d-block" alt="...">

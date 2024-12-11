@@ -16,9 +16,9 @@ Route::post('/buscar', [HomeController::class, 'buscarProduto']); //rota para fe
 Route::post('/limpar/carrinho', [CarrinhoController::class, 'limparCarrinho']);
 Route::post('/remover/produto/carrinho', [CarrinhoController::class, 'removerProdutoCookie']);
 Route::post('/atualizar/carrinho', [CarrinhoController::class, 'atualizarCarrinho']);
-Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes');
-Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/');
-Route::post('/pesquisar/usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes');
+Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes') ->middleware(['auth', 'verified', 'admin']);
+Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/') ->middleware(['auth', 'verified', 'admin']);
+Route::post('/pesquisar/usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes') ->middleware(['auth', 'verified', 'admin']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [ProdutoController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
@@ -37,32 +37,32 @@ Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->middlewar
 Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('produtos.update');
 Route::delete('/produtos/imagens/{imagem}', [ProdutoController::class, 'destroyImagem'])->middleware(['auth', 'verified', 'admin'])->name('produtos.imagens.destroy');
 
-Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes');
-Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes.edit');
-Route::put('/configuracoes/{configuracao}', [ConfiguracoesController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('configuracoes.update');
+Route::get('/configuracoes', [ConfiguracoesController::class, 'index'])->middleware(['auth', 'verified', 'supervisor'])->name('configuracoes');
+Route::get('configuracoes/{configuracao}/edit',[ConfiguracoesController::class, 'edit'])->middleware(['auth', 'verified', 'supervisor'])->name('configuracoes.edit');
+Route::put('/configuracoes/{configuracao}', [ConfiguracoesController::class, 'update'])->middleware(['auth', 'verified', 'supervisor'])->name('configuracoes.update');
 
 
 Route::post('/registrar/venda', [VendaController::class, 'registrarVenda'])
 ->middleware(['auth', 'verified','CheckAddress'])
 ->name('registrar.venda');
 Route::get('/dashboard', [VendaController::class, 'listarComprasCliente'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified','user.approved'])
     ->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'user.approved'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/cities/{stateAbbreviation}', [CitiesStatesController::class, 'getCitiesByState'])->middleware(['auth', 'verified']);
+Route::get('/profile/{usuario}/definir', [ProfileController::class, 'editRole'])->name('profile.definir');
+Route::put('/profile/{usuario}/role', [ProfileController::class, 'updateRole'])->name('profile.updateRole');
+
+
+Route::get('/cities/{stateAbbreviation}', [CitiesStatesController::class, 'getCitiesByState'])->middleware(['auth', 'verified', 'user.approved']);
 
 Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin','user.approved'])
     ->name('usuarios.destroy');
-
-    Route::get('/teste-middleware', function () {
-        return 'Middleware funcionando!';
-    })->middleware(['auth', 'CheckAddress']);
 require __DIR__ . '/auth.php';

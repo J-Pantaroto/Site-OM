@@ -45,7 +45,7 @@
                         @endif
 
                         <div class="text-center mt-4">
-                            <a href="{{ route('login') }}" class="btn btn-warning">Voltar para Login</a>
+                            <a href="{{ route('home') }}" class="btn btn-warning">Voltar</a>
                         </div>
                     </div>
                 </div>

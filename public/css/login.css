@@ -95,5 +95,26 @@ input[type='checkbox'] {
     color: var(--color-black) !important;
 }
 
+#reenviar {
+    background-color: var(--color-button-primary) !important;
+    border-color: var(--color-button-primary) !important;
+    color: var(--color-black-90) !important;
+}
+
+#reenviar:hover {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#reenviar:active {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+#reenviar:focus {
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
 /*BOTOES */
 

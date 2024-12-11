@@ -32,13 +32,26 @@ class NewPasswordController extends Controller
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8', // No mínimo 8 caracteres
+                'regex:/[a-z]/', // Pelo menos uma letra minúscula
+                'regex:/[A-Z]/', // Pelo menos uma letra maiúscula
+                'regex:/[0-9]/', // Pelo menos um número
+            ], [
+                'password.required' => 'A senha é obrigatória.',
+                'password.confirmed' => 'A confirmação da senha não corresponde.',
+                'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
+                'password.regex' => 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número.',
+            ]
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
+            
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([

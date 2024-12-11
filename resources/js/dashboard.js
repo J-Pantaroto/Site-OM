@@ -151,11 +151,11 @@ if (rotaAtual === 'configuracoes.edit') {
         }
         return null;
     }
-
-    colorPicker.addEventListener('input', function () {
-        textInput.value = colorPicker.value;
-    });
-
+    if (colorPicker) {
+        colorPicker.addEventListener('input', function () {
+            textInput.value = colorPicker.value;
+        });
+    
     textInput.addEventListener('input', function () {
         const hexColor = colorToHex(textInput.value);
         if (hexColor) {
@@ -169,6 +169,7 @@ if (rotaAtual === 'configuracoes.edit') {
             colorPicker.value = hexColor;
         }
     });
+}
 } else if (rotaAtual === 'configuracoes') {
     function parseColor(color) {
         const ctx = document.createElement("canvas").getContext("2d");
@@ -233,22 +234,22 @@ if (rotaAtual === 'configuracoes.edit') {
         const zipInput = document.getElementById("zip_code"); // Campo de CEP
         const userState = stateSelect.getAttribute("data-selected-state"); // Estado pré-selecionado
         const userCity = citySelect.getAttribute("data-selected-city");   // Cidade pré-selecionada
-        
-            if (zipInput) {
-                zipInput.addEventListener("input", function (e) {
-                    let cep = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-                    if (cep.length > 5) {
-                        cep = cep.replace(/(\d{5})(\d{1,3})/, "$1-$2"); // Adiciona o hífen após o quinto dígito
-                    }
-                    e.target.value = cep;
-                });
-            }
+
+        if (zipInput) {
+            zipInput.addEventListener("input", function (e) {
+                let cep = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+                if (cep.length > 5) {
+                    cep = cep.replace(/(\d{5})(\d{1,3})/, "$1-$2"); // Adiciona o hífen após o quinto dígito
+                }
+                e.target.value = cep;
+            });
+        }
         // Preencher estado e cidade do usuário (se já estiver no cadastro)
         if (userState) {
             stateSelect.value = userState;
             loadCities(userState, userCity);
         }
-    
+
         // Carregar cidades ao selecionar um estado
         stateSelect.addEventListener("change", function () {
             const stateAbbreviation = this.value;
@@ -256,12 +257,12 @@ if (rotaAtual === 'configuracoes.edit') {
                 loadCities(stateAbbreviation);
             }
         });
-    
+
         // Função para carregar as cidades com base no estado
         function loadCities(stateAbbreviation, preselectedCity = null) {
             citySelect.disabled = true;
             citySelect.innerHTML = '<option value="" disabled selected>Carregando...</option>';
-            
+
             fetch(`/cities/${stateAbbreviation}`) // Chamada para buscar cidades
                 .then(response => response.json())
                 .then(data => {
@@ -282,7 +283,7 @@ if (rotaAtual === 'configuracoes.edit') {
                     citySelect.innerHTML = '<option value="" disabled selected>Erro ao carregar cidades</option>';
                 });
         }
-    
+
         // Buscar endereço pelo CEP e preencher automaticamente os campos de estado e cidade
         zipInput.addEventListener("blur", function () {
             const zipCode = zipInput.value.replace(/\D/g, ""); // Remover caracteres não numéricos
@@ -294,12 +295,12 @@ if (rotaAtual === 'configuracoes.edit') {
                             // Preencher endereço e bairro
                             document.getElementById("address").value = data.logradouro || '';
                             document.getElementById("neighborhood").value = data.bairro || '';
-    
+
                             // Preencher estado e carregar cidades
                             const stateAbbreviation = data.uf.toUpperCase();
                             stateSelect.value = stateAbbreviation;
                             stateSelect.dispatchEvent(new Event("change"));
-    
+
                             // Selecionar cidade após carregar
                             setTimeout(() => {
                                 const cityOption = Array.from(citySelect.options).find(option => option.textContent === data.localidade);
@@ -334,12 +335,12 @@ if (rotaAtual === 'configuracoes.edit') {
     });
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.querySelector("form#profile-form");
-    
+
         form.addEventListener("submit", function (event) {
             event.preventDefault(); // Evita o comportamento padrão do formulário
-    
+
             const formData = new FormData(form);
-    
+
             fetch(form.action, {
                 method: form.method,
                 headers: {
@@ -370,14 +371,14 @@ if (rotaAtual === 'configuracoes.edit') {
                         form.querySelectorAll("input, select, textarea").forEach((el) =>
                             el.classList.remove("border-red-500")
                         );
-                            Object.keys(error.errors).forEach((field, index) => {
+                        Object.keys(error.errors).forEach((field, index) => {
                             const input = document.querySelector(`[name="${field}"]`);
                             if (input) {
                                 input.classList.add("border-red-500");
-                                if (index === 0) input.focus(); 
+                                if (index === 0) input.focus();
                             }
                         });
-    
+
                         Swal.fire({
                             icon: "error",
                             title: "Erro no formulário",
@@ -385,8 +386,48 @@ if (rotaAtual === 'configuracoes.edit') {
                                 .map(([field, messages]) => `<p>${field}: ${messages.join(", ")}</p>`)
                                 .join("")
                         });
-                    } 
+                    }
                 });
         });
     });
+    const celularInput = document.getElementById('celular');
+    celularInput.addEventListener('input', function (e) {
+        let value = e.target.value;
+        value = value.replace(/\D/g, '');
+        if (value.length > 10) {
+            value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+        } else if (value.length > 6) {
+            value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+        } else if (value.length > 0) {
+            value = value.replace(/^(\d*)/, '($1');
+        } else {
+            value = '';
+        }
+        e.target.value = value;
+    });
+    //CELULAR
+    celularInput.addEventListener('keypress', function (e) {
+        const charCode = e.charCode || e.keyCode || e.which;
+        if (charCode < 48 || charCode > 57) {
+            e.preventDefault();
+        }
+    });
+    celularInput.addEventListener('paste', function (e) {
+        let pastedData = e.clipboardData.getData('Text');
+        pastedData = pastedData.replace(/\D/g, '');
+        if (pastedData.length > 10) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+        } else if (pastedData.length > 6) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+        } else if (pastedData.length > 2) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+        } else if (pastedData.length > 0) {
+            pastedData = pastedData.replace(/^(\d*)/, '($1');
+        }
+        e.preventDefault();
+        celularInput.value = pastedData;
+    });
+
 }    

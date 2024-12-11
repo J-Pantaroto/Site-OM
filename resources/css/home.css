@@ -72,7 +72,7 @@
 
 /* IMAGEM ABAIXO DO HEADER */
 .banner {
-    background-image: url('../../public/images/img-bg.webp');
+    background-image: var(--banner-image);
     background-size: cover;
     background-position: center;
     height: 50vh;

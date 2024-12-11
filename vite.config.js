@@ -5,7 +5,7 @@ export default defineConfig({
     server: {
         watch: {
             usePolling: true,
-            interval: 1000, // Ajuste o intervalo conforme necessario
+            interval: 1000,
         },
     },
     plugins: [
@@ -27,7 +27,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
-            '~bootstrap': '/node_modules/bootstrap', // Adicionando o alias para o Bootstrap
+            '~bootstrap': '/node_modules/bootstrap', 
         },
     },
 });

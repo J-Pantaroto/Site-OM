@@ -1,3 +1,4 @@
+import { get } from 'jquery';
 import Swal from 'sweetalert2';
 let camposValidos = {
     nome: true,
@@ -5,13 +6,19 @@ let camposValidos = {
     cpfCnpj: true,
     senha: true,
     confirmarSenha: true,
+    celular: true,
 };
-
 let rotaAtual = document.getElementById('rota').getAttribute('data-id');
 // Função geral para verificar se o formulário é válido
 function verificarFormulario() {
     return Object.values(camposValidos).every(Boolean); // Retorna true se todos os campos forem válidos
 }
+
+function atualizarEstadoBotao() {
+    const botaoRegistrar = document.getElementById('registrar');
+    botaoRegistrar.disabled = !verificarFormulario();
+}
+
 if (rotaAtual === "register" || rotaAtual === "login") {
     // VALIDACOES EMAIL
     document.getElementById('email').addEventListener('input', function () {
@@ -67,6 +74,72 @@ if (rotaAtual === "register" || rotaAtual === "login") {
 }
 
 if (rotaAtual === "register") {
+    // CELULAR
+    const celularInput = document.getElementById('celular');
+    const mensagem = document.getElementById('erro-celular');
+
+    celularInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+        if (value.length > 10) {
+            value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+        } else if (value.length > 6) {
+            value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+        } else if (value.length > 2) {
+            value = value.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+        } else if (value.length > 0) {
+            value = value.replace(/^(\d*)/, '($1');
+        }
+        e.target.value = value; // Atualiza o valor corretamente
+        validarCelular();
+    });
+
+    celularInput.addEventListener('keypress', function (e) {
+        const charCode = e.charCode || e.keyCode || e.which;
+        if (charCode < 48 || charCode > 57) {
+            e.preventDefault(); // Permite apenas números
+        }
+    });
+
+    celularInput.addEventListener('paste', function (e) {
+        let pastedData = e.clipboardData.getData('Text').replace(/\D/g, ''); // Remove caracteres não numéricos
+        if (pastedData.length > 10) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1)$2-$3');
+        } else if (pastedData.length > 6) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1)$2-$3');
+        } else if (pastedData.length > 2) {
+            pastedData = pastedData.replace(/^(\d{2})(\d{0,5})/, '($1)$2');
+        } else if (pastedData.length > 0) {
+            pastedData = pastedData.replace(/^(\d*)/, '($1');
+        }
+        e.preventDefault();
+        celularInput.value = pastedData; // Atualiza o valor corretamente
+        validarCelular();
+    });
+
+    celularInput.addEventListener('change', validarCelular);
+
+    function validarCelular() {
+        const celularValue = celularInput.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+        // Remove classes antigas
+        celularInput.classList.remove('valido', 'invalido');
+        mensagem.textContent = '';
+
+        // Verifica o tamanho do número
+        if (celularValue.length < 10) {
+            celularInput.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Celular inválido';
+            camposValidos.celular = false;
+        } else {
+            celularInput.classList.add('valido');
+            mensagem.textContent = '';
+            camposValidos.celular = true;
+        }
+        atualizarEstadoBotao();
+    }
+
+    //CPF/CNPJ
     document.getElementById('cpf_cnpj').addEventListener('input', function () {
         let cpf_cnpj = this.value.replace(/[^\d]+/g, '');
         if (cpf_cnpj.length <= 11) {
@@ -117,6 +190,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CPF inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -134,6 +208,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CPF inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -151,6 +226,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CPF inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -158,6 +234,7 @@ if (rotaAtual === "register") {
             this.classList.add('valido');
             camposValidos.cpfCnpj = true;
             mensagem.textContent = '';
+            atualizarEstadoBotao();
         } else if (cpf_cnpj.length === 14) {
             // Validação do CNPJ
             if (/^(\d)\1{13}$/.test(cpf_cnpj)) {
@@ -166,6 +243,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CNPJ inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -190,6 +268,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CNPJ inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -213,6 +292,7 @@ if (rotaAtual === "register") {
                 mensagem.style.color = 'red';
                 mensagem.textContent = 'CNPJ inválido';
                 camposValidos.cpfCnpj = false;
+                atualizarEstadoBotao();
                 return;
             }
 
@@ -220,12 +300,14 @@ if (rotaAtual === "register") {
             this.classList.add('valido');
             mensagem.textContent = '';
             camposValidos.cpfCnpj = true;
+            atualizarEstadoBotao();
         } else {
             this.classList.remove('valido');
             this.classList.add('invalido');
             mensagem.style.color = 'red';
             mensagem.textContent = 'Número inválido';
             camposValidos.cpfCnpj = false;
+            atualizarEstadoBotao();
         }
     });
 
@@ -242,6 +324,7 @@ if (rotaAtual === "register") {
             mensagem.textContent = 'Informe um nome válido.';
             nome.classList.add('invalido');
             camposValidos.nome = false;
+            atualizarEstadoBotao();
             return;
         }
         const nomeValido = /^[A-Za-zÀ-ÿ\s]+$/.test(nomeDigitado);
@@ -250,6 +333,7 @@ if (rotaAtual === "register") {
             mensagem.textContent = 'O nome deve conter apenas letras.';
             nome.classList.add('invalido');
             camposValidos.nome = false;
+            atualizarEstadoBotao();
             return;
         }
         const nomeRepetido = /(.)\1{2,}/.test(nomeDigitado);
@@ -258,12 +342,14 @@ if (rotaAtual === "register") {
             mensagem.textContent = 'O nome contém muitos caracteres repetidos.';
             nome.classList.add('invalido');
             camposValidos.nome = false;
+            atualizarEstadoBotao();
             return;
         }
         this.classList.remove('invalido');
         this.classList.add('valido');
         camposValidos.nome = true;
         mensagem.textContent = '';
+        atualizarEstadoBotao();
     });
     // VALIDACOES SENHA REGISTRO
     document.getElementById('password').addEventListener('input', function () {
@@ -271,6 +357,7 @@ if (rotaAtual === "register") {
         this.classList.remove('valido', 'invalido');
         mensagem.textContent = '';
         let password = this.value;
+        atualizarEstadoBotao();
 
         if (password.length < 8) {
             this.classList.remove('valido');
@@ -278,6 +365,7 @@ if (rotaAtual === "register") {
             camposValidos.senha = false;
             mensagem.style.color = 'red';
             mensagem.textContent = 'Senha muito curta, informe uma senha com pelo menos 8 digitos';
+            atualizarEstadoBotao();
             return;
         }
         if (!/[A-Z]/.test(password)) {
@@ -286,6 +374,7 @@ if (rotaAtual === "register") {
             mensagem.style.color = 'red';
             mensagem.textContent = 'Informe pelo menos uma letra maiuscula';
             camposValidos.senha = false;
+            atualizarEstadoBotao();
             return;
         }
         if (!/[a-z]/.test(password)) {
@@ -294,6 +383,7 @@ if (rotaAtual === "register") {
             mensagem.style.color = 'red';
             mensagem.textContent = 'Informe pelo menos uma letra minuscula';
             camposValidos.senha = false;
+            atualizarEstadoBotao();
             return;
         }
 
@@ -302,6 +392,7 @@ if (rotaAtual === "register") {
         this.classList.add('valido');
         camposValidos.senha = true;
         mensagem.textContent = '';
+        atualizarEstadoBotao();
 
         //funcao para alterar visibilidade da senha
 
@@ -333,7 +424,7 @@ if (rotaAtual === "register") {
     });
     document.getElementById('registrar').addEventListener('click', (event) => {
         event.preventDefault(); // Prevenir o envio do formulário
-    
+
         if (!verificarFormulario()) {
             Swal.fire({
                 icon: "error",
@@ -349,80 +440,87 @@ if (rotaAtual === "register") {
             document.getElementById('form').submit();
         }
     });
-        const nome = document.getElementById('name');
-        const email = document.getElementById('email');
-        const cpf_cnpj = document.getElementById('cpf_cnpj');
-        const password = document.getElementById('password');
-        const password_confirmation = document.getElementById('password_confirmation');
+    const nome = document.getElementById('name');
+    const email = document.getElementById('email');
+    const cpf_cnpj = document.getElementById('cpf_cnpj');
+    const password = document.getElementById('password');
+    const password_confirmation = document.getElementById('password_confirmation');
 
-        // Validação de nome
-        nome.addEventListener('input', function () {
-            if (nome.value.trim().length < 3) {
-                const mensagem = document.getElementById('erro-nome');
-                nome.classList.add('invalido');
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'Informe seu nome';
-                nome.focus();
-                camposValidos.nome = false;
-            }
-        });
+    // Validação de nome
+    nome.addEventListener('input', function () {
+        if (nome.value.trim().length < 3) {
+            const mensagem = document.getElementById('erro-nome');
+            nome.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Informe seu nome';
+            nome.focus();
+            camposValidos.nome = false;
+            atualizarEstadoBotao();
+        }
+    });
 
-        // Validação de email
-        email.addEventListener('input', function () {
-            if (email.value.length <= 0) {
-                const mensagem = document.getElementById('erro-email');
-                email.classList.add('invalido');
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'Informe seu email';
-                email.focus();
-                camposValidos.email = false;
-            }
-        });
+    // Validação de email
+    email.addEventListener('input', function () {
+        if (email.value.length <= 0) {
+            const mensagem = document.getElementById('erro-email');
+            email.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Informe seu email';
+            email.focus();
+            camposValidos.email = false;
+            atualizarEstadoBotao();
+        }
+    });
 
-        // Validação de CPF/CNPJ
-        cpf_cnpj.addEventListener('input', function () {
-            if (cpf_cnpj.value.length <= 0) {
-                const mensagem = document.getElementById('erro-cpf-cnpj');
-                cpf_cnpj.classList.add('invalido');
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'Informe seu CPF ou CNPJ';
-                cpf_cnpj.focus();
-                camposValidos.cpfCnpj = false;
-            }
-        });
-        // Validação de senha
-        password.addEventListener('input', function () {
-            if (password.value.length <= 0) {
-                const mensagem = document.getElementById('erro-senha');
-                password.classList.add('invalido');
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'Informe uma senha e após isso confirme sua senha';
-                password.focus();
-                camposValidos.senha = false;
-            }
-        });
-        // Validação de confirmação de senha
-        document.getElementById('password_confirmation').addEventListener('input', function () {
-            const mensagem = document.getElementById('erro-confirmar-senha');
-            mensagem.textContent = '';  // Limpa mensagem anterior
-            this.classList.remove('valido', 'invalido');
-        
-            if (this.value.length === 0) {
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'Confirme sua senha';
-                this.classList.add('invalido');
-                camposValidos.confirmarSenha = false;
-            } else if (this.value !== document.getElementById('password').value) {
-                mensagem.style.color = 'red';
-                mensagem.textContent = 'As senhas não coincidem';
-                this.classList.add('invalido');
-                camposValidos.confirmarSenha = false;
-            } else {
-                this.classList.remove('invalido');
-                this.classList.add('valido');
-                camposValidos.confirmarSenha = true;
-            }
-        });
+    // Validação de CPF/CNPJ
+    cpf_cnpj.addEventListener('input', function () {
+        if (cpf_cnpj.value.length <= 0) {
+            const mensagem = document.getElementById('erro-cpf-cnpj');
+            cpf_cnpj.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Informe seu CPF ou CNPJ';
+            cpf_cnpj.focus();
+            camposValidos.cpfCnpj = false;
+            atualizarEstadoBotao();
+        }
+    });
+    // Validação de senha
+    password.addEventListener('input', function () {
+        if (password.value.length <= 0) {
+            const mensagem = document.getElementById('erro-senha');
+            password.classList.add('invalido');
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Informe uma senha e após isso confirme sua senha';
+            password.focus();
+            camposValidos.senha = false;
+            atualizarEstadoBotao();
+        }
+    });
+    // Validação de confirmação de senha
+    document.getElementById('password_confirmation').addEventListener('input', function () {
+        const mensagem = document.getElementById('erro-confirmar-senha');
+        mensagem.textContent = '';  // Limpa mensagem anterior
+        this.classList.remove('valido', 'invalido');
+        atualizarEstadoBotao();
+        if (this.value.length === 0) {
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'Confirme sua senha';
+            this.classList.add('invalido');
+            camposValidos.confirmarSenha = false;
+            atualizarEstadoBotao();
+        } else if (this.value !== document.getElementById('password').value) {
+            mensagem.style.color = 'red';
+            mensagem.textContent = 'As senhas não coincidem';
+            this.classList.add('invalido');
+            camposValidos.confirmarSenha = false;
+            atualizarEstadoBotao();
+        } else {
+            this.classList.remove('invalido');
+            this.classList.add('valido');
+            camposValidos.confirmarSenha = true;
+            atualizarEstadoBotao();
+        }
+    });
 } else if (rotaAtual === 'login') {
     const botao = document.getElementById('login');
     botao.addEventListener('click', (event) => {
@@ -437,6 +535,7 @@ if (rotaAtual === "register") {
             mensagem.textContent = 'Informe seu email';
             email.focus();
             camposValidos.email = false;
+            atualizarEstadoBotao();
         }
 
         // Validação de senha
@@ -447,6 +546,7 @@ if (rotaAtual === "register") {
             mensagem.textContent = 'Informe uma senha e após isso confirme sua senha';
             password.focus();
             camposValidos.senha = false;
+            atualizarEstadoBotao();
         }
 
 
@@ -462,9 +562,99 @@ if (rotaAtual === "register") {
                     popup: 'animate__fadeOutDown'
                 }
             });
+            atualizarEstadoBotao();
             return;
         } else if (verificarFormulario()) {
             document.getElementById('form').submit();
         }
     });
+} if (rotaAtual === "password.reset") {
+    document.addEventListener('DOMContentLoaded', function () {
+        const password = document.getElementById('password');
+        const passwordConfirmation = document.getElementById('password_confirmation');
+        const submitButton = document.getElementById('registrar');
+
+        let camposValidos = {
+            senha: false,
+            confirmarSenha: false,
+        };
+
+        function atualizarEstadoBotao() {
+            submitButton.disabled = !(camposValidos.senha && camposValidos.confirmarSenha);
+        }
+
+        // Validação da senha
+        password.addEventListener('input', function () {
+            const mensagem = document.querySelector('.erro-senha') || document.createElement('div');
+            mensagem.className = 'text-red-500 erro-senha';
+            mensagem.style.marginTop = '0.5rem';
+
+            if (password.nextElementSibling !== mensagem) {
+                password.insertAdjacentElement('afterend', mensagem);
+            }
+
+            if (password.value.length < 8) {
+                mensagem.textContent = 'A senha deve ter pelo menos 8 caracteres.';
+                password.classList.add('border-red-500');
+                password.classList.remove('border-green-500');
+                camposValidos.senha = false;
+            } else if (!/[A-Z]/.test(password.value)) {
+                mensagem.textContent = 'A senha deve conter pelo menos uma letra maiúscula.';
+                password.classList.add('border-red-500');
+                password.classList.remove('border-green-500');
+                camposValidos.senha = false;
+            } else if (!/[a-z]/.test(password.value)) {
+                mensagem.textContent = 'A senha deve conter pelo menos uma letra minúscula.';
+                password.classList.add('border-red-500');
+                password.classList.remove('border-green-500');
+                camposValidos.senha = false;
+            } else if (!/[0-9]/.test(password.value)) {
+                mensagem.textContent = 'A senha deve conter pelo menos um número.';
+                password.classList.add('border-red-500');
+                password.classList.remove('border-green-500');
+                camposValidos.senha = false;
+            } else {
+                mensagem.textContent = '';
+                password.classList.remove('border-red-500');
+                password.classList.add('border-green-500');
+                camposValidos.senha = true;
+            }
+
+            atualizarEstadoBotao();
+        });
+
+        // Validação de confirmação de senha
+        passwordConfirmation.addEventListener('input', function () {
+            const mensagem = document.querySelector('.erro-confirmar-senha') || document.createElement('div');
+            mensagem.className = 'text-red-500 erro-confirmar-senha';
+            mensagem.style.marginTop = '0.5rem';
+
+            if (passwordConfirmation.nextElementSibling !== mensagem) {
+                passwordConfirmation.insertAdjacentElement('afterend', mensagem);
+            }
+
+            if (passwordConfirmation.value.length === 0) {
+                mensagem.textContent = 'Confirme sua senha.';
+                passwordConfirmation.classList.add('border-red-500');
+                passwordConfirmation.classList.remove('border-green-500');
+                camposValidos.confirmarSenha = false;
+            } else if (passwordConfirmation.value !== password.value) {
+                mensagem.textContent = 'As senhas não coincidem.';
+                passwordConfirmation.classList.add('border-red-500');
+                passwordConfirmation.classList.remove('border-green-500');
+                camposValidos.confirmarSenha = false;
+            } else {
+                mensagem.textContent = '';
+                passwordConfirmation.classList.remove('border-red-500');
+                passwordConfirmation.classList.add('border-green-500');
+                camposValidos.confirmarSenha = true;
+            }
+
+            atualizarEstadoBotao();
+        });
+
+        // Inicializa o botão de envio no estado correto
+        atualizarEstadoBotao();
+    });
+
 }

@@ -48,19 +48,22 @@ return [
     ],
     'config' => [
         'nome_site' => env('APP_NAME', 'A definir nome_site'),
-        'site_url' => env('URL_APP', 'A definir site_url' ),
-        'metodo_email'=>env('MAIL_MAILER', 'smpt'),
-        'email_host'=>env('MAIL_HOST', 'A definir email_host'),
-        'email_porta'=>env('MAIL_PORT','587'),
-        'email_usuario'=>env('MAIL_USERNAME', 'A definir email usuario'),
-        'email_senha'=>env('MAIL_USERNAME', 'A definir email usuario'),
-        'email_encryption'=>env('MAIL_ENCRYPTION', 'A definir email encrypton'),
-        'email_remetente'=>env('MAIL_FROM_ADDRESS', 'A definir remetente'),
-        'instagram'=>env('INSTAGRAM_URL', 'A definir link instagram empresa'),
-        'facebook'=>env('FACEBOOK_URL', 'A definir link facebook empresa'),
-        'whatsapp'=>env('WHATSAPP_URL', 'A definir link whatsapp empresa'),
+        'site_url' => env('URL_APP', 'A definir site_url'),
+        'metodo_email' => env('MAIL_MAILER', 'smpt'),
+        'email_host' => env('MAIL_HOST', 'A definir email_host'),
+        'email_porta' => env('MAIL_PORT', '587'),
+        'email_usuario' => env('MAIL_USERNAME', 'A definir email usuario'),
+        'email_senha' => env('MAIL_USERNAME', 'A definir email usuario'),
+        'email_encryption' => env('MAIL_ENCRYPTION', 'A definir email encrypton'),
+        'email_remetente' => env('MAIL_FROM_ADDRESS', 'A definir remetente'),
+        'instagram_url' => env('INSTAGRAM_URL', 'A definir link instagram empresa'),
+        'facebook_url' => env('FACEBOOK_URL', 'A definir link facebook empresa'),
+        'whatsapp_url' => env('WHATSAPP_URL', 'A definir link whatsapp empresa'),
+        'aprovar_cadastro' => env('APROVAR_CADASTRO', 'N'),
     ],
-    'imgs' =>[
-        
-    ]
+    'imgs' => [
+        'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),
+        'home_banner_path' => env('IMG_HOME_BANNER_PATH', 'DEFINIR NO CONFIG HOME_BANNER')
+
+    ],
 ];

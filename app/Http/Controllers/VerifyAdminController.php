@@ -15,7 +15,7 @@ class VerifyAdminController extends Controller
         $hash = $request->route('hash');
         $userForVerify = VerifyAdmin::where('hash', $hash)->first();
         if(!$userForVerify){
-            return redirect()->route('login')->withErrors(['email' => 'Verificação inválida']);
+            return redirect()->route('login')->withErrors( ['email' => 'Verificação inválida']);
         }
 
         $userForVerify->update(['user_verified_at' => now()]);

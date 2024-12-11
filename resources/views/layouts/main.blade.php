@@ -121,13 +121,13 @@
     <footer class="mt-auto">
         <div id="footer_copyright">
             <div id="footer_social_media">
-                <a href="{{ config('social.instagram') }}" target="_blank" class="footer-link" id="instagram">
+                <a href="{{ config('config.config.instagram_url') }}" target="_blank" class="footer-link" id="instagram">
                     <i class="fa-brands fa-instagram"></i>
                 </a>
-                <a href="{{ config('social.facebook') }}" target="_blank" class="footer-link" id="facebook">
+                <a href="{{ config('config.config.facebook_url') }}" target="_blank" class="footer-link" id="facebook">
                     <i class="fa-brands fa-facebook-f"></i>
                 </a>
-                <a href="{{ config('social.whatsapp') }}" target="_blank" class="footer-link" id="whatsapp">
+                <a href="{{ config('config.config.whatsapp_url') }}" target="_blank" class="footer-link" id="whatsapp">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
             </div>

@@ -1,3 +1,8 @@
+<style>
+    :root {
+        --banner-image: url('{{ asset(config('config.imgs.home_banner_path')) }}');
+    }
+</style>
 <x-main-layout>
 <div class="banner">
         <div class="banner-content">

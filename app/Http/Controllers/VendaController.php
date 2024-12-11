@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use App\Models\Venda;
+use App\Models\User;
 use App\Models\ItensVenda;
 use Illuminate\Http\Request;
+
 class VendaController extends Controller
 {
     public function registrarVenda(Request $request)
@@ -59,12 +63,29 @@ class VendaController extends Controller
     public function listarComprasCliente()
     {
         $user = Auth::user();
-        // Obtém todas as vendas do cliente
-        $vendas = Venda::with('itensVenda.produto') // Carrega os itens da venda e o produto relacionado
+        /** @var User $user */
+        $showAddressWarning = !$user->isAddressComplete();
+
+        // Configure a sessão para exibir o aviso apenas uma vez
+        if ($showAddressWarning && !session('address_warning_shown')) {
+            session(['address_warning_shown' => true]);
+
+            $vendas = Venda::with('itensVenda.produto')
+                ->where('cliente_id', $user->id)
+                ->get();
+                return view('dashboard', [
+                    'vendas' => $vendas,
+                    'showAddressWarning' => $showAddressWarning,
+                ]);
+        }
+
+        $vendas = Venda::with('itensVenda.produto')
             ->where('cliente_id', $user->id)
             ->get();
 
-        return view('dashboard', ['vendas' => $vendas]);
+            return view('dashboard', [
+                'vendas' => $vendas,
+                'showAddressWarning' => null,
+            ]);
     }
-
 }

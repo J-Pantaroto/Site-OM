@@ -55,10 +55,6 @@ class RegisteredUserController extends Controller
                 return redirect()->back()->withErrors(['cpf_cnpj' => 'CNPJ inválido ou inativo.']);
             }
         }
-/*          elseif (strlen($request->cpf_cnpj) === 11) {
-            echo "teste";
-        } */
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -68,6 +64,8 @@ class RegisteredUserController extends Controller
         Session::put('email', $request->email);
         event(new Registered($user));
         Auth::login($user);
+        $request->session()->regenerate();
+        setcookie('carrinho', json_encode([]), time() + 86400, '/');
         return redirect(route('verification.notice'))->with('email', $user->email); // Adiciona o email à sessão;
 
     }

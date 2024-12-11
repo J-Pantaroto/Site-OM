@@ -8,7 +8,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <x-application-logo class="w-20 h-20 fill-current" />
                     </a>
                 </div>
 
@@ -29,11 +29,13 @@
                             {{ __('Usuarios') }}
                         </x-nav-link>
                     </div>
+                    @if (auth()->check() && auth()->user()->isSupervisor())
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 md:flex">
                         <x-nav-link id="link-header" :href="route('configuracoes')" :active="request()->routeIs('configuracoes')">
                             {{ __('Configuracoes') }}
                         </x-nav-link>
                     </div>
+                    @endif
                 @endif
             </div>
 
@@ -104,9 +106,11 @@
                 <x-responsive-nav-link id="link-header" :href="route('usuarios')" :active="request()->routeIs('dashboard')">
                     {{ __('Usuarios') }}
                 </x-responsive-nav-link>
+                @if (auth()->check() && auth()->user()->isSupervisor())
                 <x-responsive-nav-link id="link-header" :href="route('configuracoes')" :active="request()->routeIs('configuracoes')">
                     {{ __('Configuracoes') }}
                 </x-responsive-nav-link>
+                @endif
             @endif
         </div>
 

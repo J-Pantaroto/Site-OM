@@ -43,6 +43,14 @@
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
+        <div>
+            <x-input-label id="banner-text" for="celular" :value="__('Celular *')" />
+            <x-text-input id="celular" name="celular" type="text"
+                class="mt-1 block w-full required {{ $errors->has('celular') ? 'border-red-500' : '' }}"
+                value="{{ old('celular', $user->celular) }}" required autofocus autocomplete="celular" />
+            <x-input-error class="mt-2" :messages="$errors->get('celular')" />
+        </div>
+        
         <!-- Estado -->
         <div>
             <x-input-label id="banner-text" for="state" :value="__('Estado *')" />
