@@ -48,6 +48,7 @@ return [
     ],
     'config' => [
         'nome_site' => env('APP_NAME', 'A definir nome_site'),
+        'boas_vindas' => env('MENSAGEM_BOAS_VINDAS', 'A definir mensagem_boas_vindas'),
         'site_url' => env('URL_APP', 'A definir site_url'),
         'metodo_email' => env('MAIL_MAILER', 'smpt'),
         'email_host' => env('MAIL_HOST', 'A definir email_host'),
@@ -60,10 +61,12 @@ return [
         'facebook_url' => env('FACEBOOK_URL', 'A definir link facebook empresa'),
         'whatsapp_url' => env('WHATSAPP_URL', 'A definir link whatsapp empresa'),
         'aprovar_cadastro' => env('APROVAR_CADASTRO', 'N'),
+        'exibir_preco' => env('EXIBIR_PRECO', 'N'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),
-        'home_banner_path' => env('IMG_HOME_BANNER_PATH', 'DEFINIR NO CONFIG HOME_BANNER')
+        'home_banner_path' => env('IMG_HOME_BANNER_PATH', 'DEFINIR NO CONFIG HOME_BANNER'),
+        'fav_icon_path' => env('IMG_FAV_ICON', 'images/favicon.png')
 
     ],
 ];

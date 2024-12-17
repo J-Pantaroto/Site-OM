@@ -129,6 +129,11 @@
     border-color: var(--color-button-primary-hover);
     color: var(--color-black);
 }
+.btn.button-primary:disabled{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
 .btn.button-primary:focus{
     background-color: var(--color-button-primary-hover) !important;
     border-color: var(--color-button-primary-hover) !important;

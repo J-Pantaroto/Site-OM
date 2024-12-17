@@ -467,6 +467,11 @@ ul {
     border-color: var(--color-button-primary-hover) !important;
     color: var(--color-black) !important;
 }
+.btn.button-primary:disabled{
+    background-color: var(--color-button-primary-hover) !important;
+    border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
 .btn.button-primary:active{
     background-color: var(--color-button-primary-hover) !important;
     border-color: var(--color-button-primary-hover) !important;

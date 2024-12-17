@@ -20,15 +20,17 @@
                             <tr>
                                 <th class="tablebackground" scope="col">ID</th>
                                 <th class="tablebackground" scope="col">Produto</th>
-                                <th class="tablebackground" scope="col">Descrição</th>
-                                <th class="tablebackground" scope="col">Quantidade</th>
+                                <th class="tablebackground" scope="col">Nome</th>
+                                @if (config('config.config.exibir_preco') === 'S')
+                                    <th class="tablebackground" scope="col">Preço</th>
+                                @endif
                                 <th class="tablebackground" scope="col">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($produtos->isEmpty())
                                 <tr>
-                                    <td colspan="5">Nenhum produto cadastrado.</td>
+                                    <td colspan="6">Nenhum produto cadastrado.</td>
                                 </tr>
                             @else
                                 @foreach ($produtos as $produto)
@@ -50,7 +52,11 @@
                                             @endif
                                         </td>
                                         <td>{{ $produto->nome }}</td>
-                                        <td>{{ $produto->quantidade }}</td>
+                                        @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
+                                            <td>
+                                                R$ {{ $produto->preco }}
+                                            </td>
+                                        @endif
                                         <td>
                                             <a type="button" class="btn btn-outline-dark"
                                                 href="{{ route('produtos.edit', $produto->id) }}">

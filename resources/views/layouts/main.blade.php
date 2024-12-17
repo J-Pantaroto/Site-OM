@@ -14,17 +14,16 @@
         <link rel="stylesheet" href="{{ asset('css/produto.css') }}">
     @endif
     @include('colors')
-    <link rel="shortcut icon" href="imgs/login24.jpg" type="">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>{{ config('app.name') }}</title>
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ config('config.imgs.fav_icon_path') }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 </head>
 
-<body class="d-flex flex-column min-vh-100 ">
+<body class="d-flex flex-column min-vh-100" data-exibir-preco="{{ config('config.config.exibir_preco') === 'S' ? 'true' : 'false' }}">
     <div id="usuario-autenticado" data-autenticado="{{ auth()->check() ? 'true' : 'false' }}"></div>
     <nav class="navbar navbar-expand-lg shadow fixed-top">
         <div class="container-fluid align-items-center">

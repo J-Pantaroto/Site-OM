@@ -55,31 +55,7 @@ class HomeController extends Controller
     public function adicionarProdutoCarrinho(Request $request){
         $id = $request->input('produto_id');
         $nome = $request->input('nome');
-    }
-    public function create()
-    {
+        $preco = $request->input('preco');
     }
 
-   
-    public function store(Request $request)
-    {
-    }
-
- 
-    public function show(string $id)
-    {
-    }
-
-    public function edit(string $id)
-    {
-    }
-
-    public function update(Request $request, string $id)
-    {
-    }
-
-
-    public function destroy(string $id)
-    {
-    }
 }

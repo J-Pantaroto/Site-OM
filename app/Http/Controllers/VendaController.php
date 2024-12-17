@@ -18,6 +18,7 @@ class VendaController extends Controller
                 'produtos' => 'required|array',
                 'produtos.*.id' => 'required|exists:produtos,id',
                 'produtos.*.quantidade' => 'required|integer|min:1',
+                'produtos.*.preco' => 'nullable|numeric|min:0', // Preco opcional
             ]);
 
             $produtos = $request->input('produtos');
@@ -31,11 +32,16 @@ class VendaController extends Controller
                     'message' => 'Usuário não autenticado.',
                 ], 401);
             }
+            $exibirPreco = config('config.config.exibir_preco') === 'S';
+            $total = $exibirPreco ? array_reduce($produtos, function ($carry, $produto) {
+                return $carry + ($produto['preco'] * $produto['quantidade']);
+            }, 0) : 0;
 
             // Criar a venda com cliente_id e data atual
             $venda = Venda::create([
                 'cliente_id' => $user->id,
                 'data_venda' => now(),
+                'total' => $total ?? 0, // Define o total como 0 se não houver preço
             ]);
 
             // Inserir os itens da venda
@@ -44,9 +50,10 @@ class VendaController extends Controller
                     'venda_id' => $venda->id,
                     'produto_id' => $produto['id'],
                     'quantidade' => $produto['quantidade'],
+                    'preco' => $exibirPreco ? $produto['preco'] : 0, // Insere o preço apenas se permitido
+                    'subtotal' => $exibirPreco ? ($produto['preco'] * $produto['quantidade']) : 0,
                 ]);
             }
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Venda registrada com sucesso!',
@@ -65,27 +72,35 @@ class VendaController extends Controller
         $user = Auth::user();
         /** @var User $user */
         $showAddressWarning = !$user->isAddressComplete();
-
-        // Configure a sessão para exibir o aviso apenas uma vez
-        if ($showAddressWarning && !session('address_warning_shown')) {
-            session(['address_warning_shown' => true]);
-
-            $vendas = Venda::with('itensVenda.produto')
-                ->where('cliente_id', $user->id)
-                ->get();
-                return view('dashboard', [
-                    'vendas' => $vendas,
-                    'showAddressWarning' => $showAddressWarning,
-                ]);
-        }
-
-        $vendas = Venda::with('itensVenda.produto')
+        $exibirPreco = config('config.exibir_preco') === 'S';
+    
+        $vendas = Venda::with(['itensVenda.produto'])
             ->where('cliente_id', $user->id)
-            ->get();
-
-            return view('dashboard', [
-                'vendas' => $vendas,
-                'showAddressWarning' => null,
-            ]);
+            ->get()
+            ->map(function ($venda) use ($exibirPreco) {
+                $total = $exibirPreco ? $venda->itensVenda->sum(function ($item) {
+                    return $item->preco * $item->quantidade;
+                }) : null;
+    
+                return [
+                    'id' => $venda->id,
+                    'data_venda' => $venda->data_venda,
+                    'total' => $total,
+                    'itens' => $venda->itensVenda->map(function ($item) use ($exibirPreco) {
+                        return [
+                            'nome' => $item->produto->nome,
+                            'quantidade' => $item->quantidade,
+                            'preco' => $exibirPreco ? $item->preco : null,
+                            'subtotal' => $exibirPreco ? $item->preco * $item->quantidade : null,
+                        ];
+                    }),
+                ];
+            });
+    
+        return view('dashboard', [
+            'vendas' => $vendas,
+            'showAddressWarning' => $showAddressWarning,
+            'exibirPreco' => $exibirPreco
+        ]);
     }
 }

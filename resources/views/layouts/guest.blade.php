@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ mix('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ mix('css/login.css') }}">
     <title>{{ config('app.name', 'Mercado das Latas') }}</title>
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ config('config.imgs.fav_icon_path') }}" type="image/x-icon">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />

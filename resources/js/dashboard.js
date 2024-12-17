@@ -1,5 +1,7 @@
 import Swal from 'sweetalert2';
 let rotaAtual = document.getElementById('rota').getAttribute('data-id');
+const exibirPreco = document.body.getAttribute('data-exibir-preco') === 'true';
+
 async function buscar(pesquisa = '', escopo = '') {
     let url = '';
     if (escopo === 'usuarios') {
@@ -73,32 +75,32 @@ async function buscar(pesquisa = '', escopo = '') {
                     const imagemProduto = item.imagem;
 
                     row.innerHTML = `
-                        <td>${item.id}</td>
-                        <td>
-                            <img src="/storage/${imagemProduto}" style="width: 8rem; height: auto;" alt="Imagem do Produto">
-                        </td>
-                        <td>${item.nome}</td>
-                        <td>${item.quantidade !== undefined ? item.quantidade : 'N/A'}</td>
-                        <td>
-                            <a href="/produtos/${item.id}/edit" class="btn btn-outline-dark" type="button">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    <td>${item.id}</td>
+                    <td>
+                        <img src="/storage/${item.imagem || 'produtos/placeholder.png'}" style="width: 8rem; height: auto;" alt="Imagem do Produto">
+                    </td>
+                    <td>${item.nome || ''}</td>
+                    ${exibirPreco ? `<td>${item.preco ? `R$ ${item.preco}` : ''}</td>` : ''}
+                    <td>${item.quantidade !== undefined ? item.quantidade : ''}</td>
+                    <td>
+                        <a href="/produtos/${item.id}/edit" class="btn btn-outline-dark" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                            </svg>
+                        </a>
+                        <form style="display:inline" action="/produtos/${item.id}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-outline-danger" id="excluir">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark" class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"></path>
                                 </svg>
-                            </a>
-                            <form style="display:inline" action="/produtos/${item.id}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
-                                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="btn btn-outline-danger" id="excluir">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark" class="bi bi-trash3" viewBox="0 0 16 16">
-                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                    </svg>
-                                </button>
-                            </form>
-                        </td>
-                    `;
+                            </button>
+                        </form>
+                    </td>
+                `;
                 }
-
                 tabelaContainer.appendChild(row);
             });
         }
@@ -155,21 +157,21 @@ if (rotaAtual === 'configuracoes.edit') {
         colorPicker.addEventListener('input', function () {
             textInput.value = colorPicker.value;
         });
-    
-    textInput.addEventListener('input', function () {
-        const hexColor = colorToHex(textInput.value);
-        if (hexColor) {
-            colorPicker.value = hexColor;
-        }
-    });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const hexColor = colorToHex(textInput.value);
-        if (hexColor) {
-            colorPicker.value = hexColor;
-        }
-    });
-}
+        textInput.addEventListener('input', function () {
+            const hexColor = colorToHex(textInput.value);
+            if (hexColor) {
+                colorPicker.value = hexColor;
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const hexColor = colorToHex(textInput.value);
+            if (hexColor) {
+                colorPicker.value = hexColor;
+            }
+        });
+    }
 } else if (rotaAtual === 'configuracoes') {
     function parseColor(color) {
         const ctx = document.createElement("canvas").getContext("2d");
@@ -430,4 +432,38 @@ if (rotaAtual === 'configuracoes.edit') {
         celularInput.value = pastedData;
     });
 
-}    
+} else if (rotaAtual === 'produtos.edit') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const precoInput = document.getElementById('preco');
+        if (precoInput) {
+            precoInput.addEventListener('input', function (e) {
+                let valor = precoInput.value;
+                valor = valor.replace(/[^0-9.,]/g, '');
+                valor = valor.replace(/,/g, '.');
+                const partes = valor.split('.');
+                if (partes.length > 2) {
+                    precoInput.value = partes[0] + '.' + partes[1];
+                } else {
+                    precoInput.value = valor;
+                }
+                if (parseFloat(precoInput.value) < 0) {
+                    precoInput.setCustomValidity('O preço não pode ser negativo.');
+                    precoInput.reportValidity();
+                } else {
+                    precoInput.setCustomValidity('');
+                }
+            });
+            precoInput.addEventListener('blur', function () {
+                if (precoInput.value === '' || isNaN(precoInput.value)) {
+                    precoInput.setCustomValidity('Por favor, insira um valor válido para o preço.');
+                    precoInput.reportValidity();
+                } else {
+                    precoInput.setCustomValidity('');
+                }
+            });
+        }
+    });
+
+
+
+}

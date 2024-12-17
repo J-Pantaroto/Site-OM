@@ -59,6 +59,16 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        @if (config('config.config.exibir_preco') === 'S')
+                        <div class="mb-3">
+                            <label for="preco" class="form-label">Preço</label>
+                            <input type="text" class="form-control @error('preco') is-invalid @enderror"
+                                   id="preco" name="preco" value="{{ old('preco', $produto->preco) }}">
+                            @error('preco')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        @endif
                         <div class="mb-3">
                             <label for="descricao" class="form-label">Descrição</label>
                             <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" required>{{ old('descricao', $produto->descricao) }}</textarea>

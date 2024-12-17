@@ -4,16 +4,18 @@
     }
 </style>
 <x-main-layout>
-<div class="banner">
+    <div class="banner">
         <div class="banner-content">
-            <h1 class="banner-text">Bem-vindo à nossa loja</h1>
+            <h1 class="banner-text">Bem vindo a nossa loja</h1>
+        {{--<h1 class="banner-text">{{ config('config.config.boas_vindas') }}</h1> --}}
             <p class="banner-text">Confira nossas mercadorias abaixo</p>
             <a href="#produtos-container" class="btn btn-primary mt-3 button-primary">Ver Produtos</a>
         </div>
     </div>
     <div class="container pt-5">
         <div class="dropdown row gx-0">
-            <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto button-primary">Mostrar Grupos</button>
+            <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto button-primary">Mostrar
+                Grupos</button>
             <div class="col-lg-3 col-12 text-center menu_lateral" id="gruposList">
                 <ul class="list-group list-group-flush w-75 mx-auto">
                     <li class="list-group-item active list-group-item-action m-0 lista" data-grupo-id="todos">
@@ -22,7 +24,7 @@
                     @foreach ($grupos as $grupo)
                         <a href="" class="list-group-item list-group-item-action m-0 lista"
                             data-grupo-id="{{ $grupo->id }}">
-                            {{$grupo->descricao}}
+                            {{ $grupo->descricao }}
                         </a>
                     @endforeach
                 </ul>
@@ -39,13 +41,18 @@
                                 <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
                                     class="text-decoration-none a-text">
                                     <div class="card m-4 card-produto">
-                                        <img src="{{ asset('storage/' . $produto->imagem) }}" class="card-img-top img-fluid" alt="...">
+                                        <img src="{{ asset('storage/' . $produto->imagem) }}"
+                                            class="card-img-top img-fluid" alt="...">
                                         <div class="card-body text-center">
                                             <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
+                                            @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
+                                                <p class="produto-preco">R$ {{ $produto->preco }}</p>
+                                            @endif
                                             <div class="produto-descricao">
                                                 <p>{{ $produto->descricao }}</p>
                                             </div>
-                                            <a class="btn btn-primary d-block adicionar-carrinho button-primary" data-id="{{ $produto->id }}">
+                                            <a class="btn btn-primary d-block adicionar-carrinho button-primary"
+                                                data-id="{{ $produto->id }}">
                                                 Adicionar ao carrinho
                                             </a>
                                         </div>
@@ -86,18 +93,27 @@
                                                 <th>Imagem</th>
                                                 <th>Produto</th>
                                                 <th>Quantidade</th>
+                                                @if (config('config.config.exibir_preco') === 'S')
+                                                    <th>Preço</th>
+                                                    <th>Subtotal</th>
+                                                @endif
                                                 <th>Ação</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cartItems">
                                         </tbody>
                                     </table>
+                                    @if (config('config.config.exibir_preco') === 'S')
+                                        <h5>Total: <span id="cartTotal">R$ 0,00</span></h5>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary button-danger" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" id="finalizar" class="btn btn-primary button-primary">Solicitar orcamento</button>
+                            <button type="button" class="btn btn-primary button-danger"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" id="finalizar" class="btn btn-primary button-primary">Solicitar
+                                orcamento</button>
                         </div>
                     </div>
                 </div>

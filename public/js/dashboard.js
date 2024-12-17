@@ -4587,6 +4587,7 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 var rotaAtual = document.getElementById('rota').getAttribute('data-id');
+var exibirPreco = document.body.getAttribute('data-exibir-preco') === 'true';
 function buscar() {
   return _buscar.apply(this, arguments);
 } // Pesquisa
@@ -4672,7 +4673,7 @@ function _buscar() {
                 } else if (escopo === 'produtos') {
                   // Verificar se a imagem do produto está disponível ou usar o placeholder
                   var imagemProduto = item.imagem;
-                  row.innerHTML = "\n                        <td>".concat(item.id, "</td>\n                        <td>\n                            <img src=\"/storage/").concat(imagemProduto, "\" style=\"width: 8rem; height: auto;\" alt=\"Imagem do Produto\">\n                        </td>\n                        <td>").concat(item.nome, "</td>\n                        <td>").concat(item.quantidade !== undefined ? item.quantidade : 'N/A', "</td>\n                        <td>\n                            <a href=\"/produtos/").concat(item.id, "/edit\" class=\"btn btn-outline-dark\" type=\"button\">\n                                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n                                    <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"/>\n                                    <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"/>\n                                </svg>\n                            </a>\n                            <form style=\"display:inline\" action=\"/produtos/").concat(item.id, "\" method=\"POST\" onsubmit=\"return confirm('Tem certeza que deseja excluir este produto?');\">\n                                <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                                <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                                <button type=\"submit\" class=\"btn btn-outline-danger\" id=\"excluir\">\n                                    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-trash3\" viewBox=\"0 0 16 16\">\n                                        <path d=\"M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5\"/>\n                                    </svg>\n                                </button>\n                            </form>\n                        </td>\n                    ");
+                  row.innerHTML = "\n                    <td>".concat(item.id, "</td>\n                    <td>\n                        <img src=\"/storage/").concat(item.imagem || 'produtos/placeholder.png', "\" style=\"width: 8rem; height: auto;\" alt=\"Imagem do Produto\">\n                    </td>\n                    <td>").concat(item.nome || '', "</td>\n                    ").concat(exibirPreco ? "<td>".concat(item.preco ? "R$ ".concat(item.preco) : '', "</td>") : '', "\n                    <td>").concat(item.quantidade !== undefined ? item.quantidade : '', "</td>\n                    <td>\n                        <a href=\"/produtos/").concat(item.id, "/edit\" class=\"btn btn-outline-dark\" type=\"button\">\n                            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-pencil-square\" viewBox=\"0 0 16 16\">\n                                <path d=\"M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z\"></path>\n                                <path fill-rule=\"evenodd\" d=\"M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z\"></path>\n                            </svg>\n                        </a>\n                        <form style=\"display:inline\" action=\"/produtos/").concat(item.id, "\" method=\"POST\" onsubmit=\"return confirm('Tem certeza que deseja excluir este produto?');\">\n                            <input type=\"hidden\" name=\"_token\" value=\"").concat(document.querySelector('meta[name="csrf-token"]').getAttribute('content'), "\">\n                            <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                            <button type=\"submit\" class=\"btn btn-outline-danger\" id=\"excluir\">\n                                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"dark\" class=\"bi bi-trash3\" viewBox=\"0 0 16 16\">\n                                    <path d=\"M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5\"></path>\n                                </svg>\n                            </button>\n                        </form>\n                    </td>\n                ");
                 }
                 tabelaContainer.appendChild(row);
               });
@@ -5022,6 +5023,37 @@ if (rotaAtual === 'configuracoes.edit') {
     }
     e.preventDefault();
     celularInput.value = pastedData;
+  });
+} else if (rotaAtual === 'produtos.edit') {
+  document.addEventListener('DOMContentLoaded', function () {
+    var precoInput = document.getElementById('preco');
+    if (precoInput) {
+      precoInput.addEventListener('input', function (e) {
+        var valor = precoInput.value;
+        valor = valor.replace(/[^0-9.,]/g, '');
+        valor = valor.replace(/,/g, '.');
+        var partes = valor.split('.');
+        if (partes.length > 2) {
+          precoInput.value = partes[0] + '.' + partes[1];
+        } else {
+          precoInput.value = valor;
+        }
+        if (parseFloat(precoInput.value) < 0) {
+          precoInput.setCustomValidity('O preço não pode ser negativo.');
+          precoInput.reportValidity();
+        } else {
+          precoInput.setCustomValidity('');
+        }
+      });
+      precoInput.addEventListener('blur', function () {
+        if (precoInput.value === '' || isNaN(precoInput.value)) {
+          precoInput.setCustomValidity('Por favor, insira um valor válido para o preço.');
+          precoInput.reportValidity();
+        } else {
+          precoInput.setCustomValidity('');
+        }
+      });
+    }
   });
 }
 })();

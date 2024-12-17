@@ -1,27 +1,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-    #address-warning {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
 <x-app-layout>
     <x-slot name="header">
-        <h2 id="banner-text" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Painel') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Minhas Compras') }}
         </h2>
     </x-slot>
+
     @if ($showAddressWarning)
     <script>
         const Toast = Swal.mixin({
@@ -47,44 +31,82 @@
             `
         });
     </script>
-    
     @endif
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div id="banner" class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
-
-                <div class="text-center mb-4">
-                    <h3 id="banner-text" class="fs-3 font-semibold text-gray-800">Minhas compras</h3>
-                    <div id="banner-text" class="text-gray-900 dark:text-gray-100">
-                        {{ __('Bem-vindo! ' . explode(' ', Auth::user()->name)[0]) }}
-                    </div>
-                </div>
-                <div class="table-responsive mt-4">
+            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+                <h3 class="text-center mb-4 font-semibold text-gray-800">Histórico de Compras</h3>
+                <div class="table-responsive">
                     <table class="table table-striped">
                         <thead class="table-dark">
                             <tr>
-                                <th class="tablebackground" scope="col">Compra</th>
-                                <th class="tablebackground" scope="col">Produto</th>
-                                <th class="tablebackground" scope="col">Quantidade</th>
-                                <th class="tablebackground" scope="col">Data da Compra</th>
+                                <th>ID</th>
+                                <th>Data da Compra</th>
+                                @if ($exibirPreco)
+                                    <th>Total</th>
+                                @endif
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($vendas->isEmpty())
+                            <tr>
+                                <td colspan="7">Nenhuma compra realizada ainda!</td>
+                            </tr>
+                            @endif
                             @foreach ($vendas as $venda)
-                                @foreach ($venda->itensVenda as $item)
-                                    <tr>
-                                        <th scope="row">{{ $venda->id }}</th>
-                                        <td>{{ $item->produto->nome }}</td>
-                                        <td>{{ $item->quantidade }}</td>
-                                        <td>{{ $venda->data_venda }}</td>
-                                    </tr>
-                                @endforeach
+                                <tr>
+                                    <td>{{ $venda['id'] }}</td>
+                                    <td>{{ $venda['data_venda'] }}</td>
+                                    @if ($exibirPreco)
+                                        <td>R$ {{ number_format($venda['total'], 2, ',', '.') }}</td>
+                                    @endif
+                                    <td>
+                                        <button class="btn btn-primary button-primary" onclick="toggleDetalhes({{ $venda['id'] }})">
+                                            Ver Detalhes
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr id="detalhes-{{ $venda['id'] }}" style="display: none;">
+                                    <td colspan="4">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Produto</th>
+                                                    <th>Quantidade</th>
+                                                    @if ($exibirPreco)
+                                                        <th>Preço</th>
+                                                        <th>Subtotal</th>
+                                                    @endif
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($venda['itens'] as $item)
+                                                    <tr>
+                                                        <td>{{ $item['nome'] }}</td>
+                                                        <td>{{ $item['quantidade'] }}</td>
+                                                        @if ($exibirPreco)
+                                                            <td>R$ {{ number_format($item['preco'], 2, ',', '.') }}</td>
+                                                            <td>R$ {{ number_format($item['subtotal'], 2, ',', '.') }}</td>
+                                                        @endif
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
 </x-app-layout>
+<script>
+    function toggleDetalhes(vendaId) {
+        const detalhes = document.getElementById(`detalhes-${vendaId}`);
+        detalhes.style.display = detalhes.style.display === 'none' ? 'table-row' : 'none';
+    }
+</script>
