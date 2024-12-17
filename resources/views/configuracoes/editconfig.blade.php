@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                <h3 id="banner-text" class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                     {{ __('Editar Configuração') }}: {{ $configuracao }}
                 </h3>
                 <form action="{{ route('configuracoes.update', $configuracao) }}" method="POST"

@@ -52,7 +52,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $produto->nome }}</td>
-                                        @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
+                                        @if (config('config.config.exibir_preco') === 'S')
                                             <td>
                                                 R$ {{ $produto->preco }}
                                             </td>

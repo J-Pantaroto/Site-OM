@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 id="banner-text" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Configurações') }}
         </h2>
     </x-slot>
@@ -18,7 +18,7 @@
                     <div class="input-group me-2">
                         <input type="text" name="search" placeholder="Buscar configuração..."
                             value="{{ request('search') }}"
-                            class="form-control border border-transparent rounded bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:border-yellow-400 focus:ring-0 transition duration-150 ease-in-out form-control">
+                            class="form-control border border-transparent rounded bg-gray-50 hover:bg-gray-100  focus:outline-none focus:ring-0 transition duration-150 ease-in-out form-control">
                     </div>
                     <div class="me-2">
                         <select name="category" class="form-select">

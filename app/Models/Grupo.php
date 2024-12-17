@@ -10,4 +10,8 @@ class Grupo extends Model
     protected $table = 'grupos';
     protected $fillable = ['descricao'];
     use HasFactory;
+    public function produtos()
+    {
+        return $this->hasMany(Produto::class, 'grupo_id');
+    }
 }

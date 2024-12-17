@@ -23,7 +23,7 @@
                                     <div class="card">
                                         <img style="height: 80px;" src="{{ asset('storage/' . $imagem->imagem) }}"
                                             class="card-img-top" alt="Imagem do Produto">
-                                        <input  class="form-check-input mt-2" type="checkbox" name="imagem_principal_selecionada"
+                                        <input  class="form-check-input mt-2" type="radio" name="imagem_principal_selecionada"
                                             value="{{ $imagem->imagem }}"
                                             onclick="setImagemPrincipal('{{ $imagem->imagem }}')">
                                         <div class="card-body text-center">
