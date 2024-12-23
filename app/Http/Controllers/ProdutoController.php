@@ -71,9 +71,12 @@ class ProdutoController extends Controller
             'imagens.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
-            'preco' => 'nullable|numeric|min:0',
+            'preco' => 'nullable|string|',
         ]);
 
+        $precoFormatado = $request->input('preco')
+            ? (float) str_replace(',', '.', $request->input('preco'))
+            : null;
         // Se o produto está com o placeholder como imagem principal, remove-o
         if ($produto->imagem === 'produtos/placeholder.png') {
             $produto->imagens()->where('imagem', 'produtos/placeholder.png')->delete();
@@ -98,7 +101,7 @@ class ProdutoController extends Controller
         // Atualizar nome, descrição e imagem do produto, garantindo que a imagem principal seja atualizada
         $produto->nome = $request->input('nome');
         $produto->descricao = $request->input('descricao');
-        $produto->preco = $request->input('preco');
+        $produto->preco = $precoFormatado;
         $produto->save();
 
         // Caso o usuário selecione manualmente uma imagem como principal

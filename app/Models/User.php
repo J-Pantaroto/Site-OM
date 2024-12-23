@@ -128,6 +128,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function isAdmin(): bool
     {
+        if($this->supervisor){
+            return true;
+        }
         return $this->admin;
     }
     public function isSupervisor(): bool

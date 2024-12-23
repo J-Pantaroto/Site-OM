@@ -13,7 +13,7 @@ class DefaultSupervisorSeeder extends Seeder
     public function run(): void
     {
         // Verifica se já existe um supervisor padrão
-        if (!User::where('email', 'supervisor@exemplo.com')->exists()) {
+        if (!User::where('email', 'suporte@omturbo.com')->exists()) {
             User::create([
                 'name' => 'Supervisor',
                 'email' => 'suporte@omturbo.com',
@@ -24,6 +24,7 @@ class DefaultSupervisorSeeder extends Seeder
                 'house_number' => '3071',
                 'complement' => 'OM INFORMATICA',
                 'neighborhood' => 'Centro',
+                'zip_code'=>'79801-004',
                 'cpf_cnpj' => '00189631000109',
                 'email_verified_at' => NOW(),
                 'created_at' => NOW(),
