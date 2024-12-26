@@ -25,7 +25,11 @@ class AuthenticatedSessionController extends Controller
     {
         // Autentica o usuário
         $request->authenticate();
-    
+        if (!Auth::user()->hasVerifiedEmail()) {
+            session(['email' => Auth::user()->email]);
+            Auth::logout();
+            return redirect()->route('verification.notice')->with('message', 'Por favor, verifique seu e-mail antes de continuar.');
+        }
         // Regenera a sessão e define o cookie do carrinho
         $request->session()->regenerate();
         setcookie('carrinho', json_encode([]), time() + 86400, '/');

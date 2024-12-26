@@ -7,11 +7,43 @@
     <div class="banner">
         <div class="banner-content">
             <h1 class="banner-text">Bem vindo a nossa loja</h1>
-        {{--<h1 class="banner-text">{{ config('config.config.boas_vindas') }}</h1> --}}
+            {{--<h1 class="banner-text">{{ config('config.config.boas_vindas') }}</h1> --}}
             <p class="banner-text">Confira nossas mercadorias abaixo</p>
             <a href="#produtos-container" class="btn btn-primary mt-3 button-primary">Ver Produtos</a>
         </div>
     </div>
+    @if ($nenhumProdutoComPreco)
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let options = {
+                icon: 'info',
+                title: '{{ $isAdmin ? "Atenção, Administrador!" : "Produtos Indisponíveis" }}',
+                text: '{{ $isAdmin 
+                    ? "Nenhum preço foi definido para os produtos, verifique a sessão de dados dos produtos no OmSys, caso tenha alguma dificuldade ou dúvida entre em contato com o suporte: 2108-2600"
+                    : "Infelizmente os produtos não estão disponíveis no momento. Entre em contato com o responsável pelo email: " . config("mail.from.address") }}',
+                allowOutsideClick: false, // Impede clique fora
+                allowEscapeKey: false,   // Impede ESC
+                allowEnterKey: false,    // Impede ENTER
+            };
+
+            if ({{ $isAdmin ? 'true' : 'false' }}) {
+                options.showConfirmButton = true; 
+                options.confirmButtonText = 'Ir para lista de produtos';
+                options.confirmButtonColor = '{{config('config.colors.button_primary')}}';
+                options.preConfirm = () => {
+                    window.location.href = '{{ route("produtos") }}';
+                };
+            } else {
+                options.showConfirmButton = false; // Sem botão
+            }
+
+            Swal.fire(options);
+        });
+    </script>
+@endif
+
+
+
     <div class="container pt-5">
         <div class="dropdown row gx-0">
             <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto button-primary">Mostrar
@@ -41,8 +73,8 @@
                                 <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
                                     class="text-decoration-none a-text">
                                     <div class="card m-4 card-produto">
-                                        <img src="{{ asset('storage/' . $produto->imagem) }}"
-                                            class="card-img-top img-fluid" alt="...">
+                                        <img src="{{ asset('storage/' . $produto->imagem) }}" class="card-img-top img-fluid"
+                                            alt="...">
                                         <div class="card-body text-center">
                                             <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
                                             @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
@@ -62,9 +94,11 @@
                         @endforeach
                     @endif
                 </div>
+                @if($mostrarBotaoVerMais)
                 <div class="text-center mt-4">
                     <button class="btn btn-primary button-primary" id="verMais">Ver mais produtos</button>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -125,4 +159,5 @@
         @endauth
     @endif
     <script src="{{ mix('js/home.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </x-main-layout>

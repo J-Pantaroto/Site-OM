@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Produto;
 use App\Models\Grupo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class HomeController extends Controller
 {
@@ -22,8 +24,10 @@ class HomeController extends Controller
                 $query->whereNotNull('preco')->where('preco', '>', 0);
             }
         })->get();
-
-        return view('home', compact('grupos', 'produtos'));
+        $nenhumProdutoComPreco = $exibirPreco && $produtos->isEmpty();
+        $isAdmin = Auth::check() && Auth::user()->is_admin || $isAdmin = Auth::check() && Auth::user()->isSuperVisor();
+        $mostrarBotaoVerMais = $produtos->total() > $produtos->perPage();
+        return view('home', compact('grupos', 'produtos', 'nenhumProdutoComPreco', 'isAdmin','mostrarBotaoVerMais'));
     }
 
 

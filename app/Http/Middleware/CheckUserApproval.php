@@ -25,7 +25,7 @@ class CheckUserApproval
         if (!$user->hasVerifiedEmail()) {
             Auth::logout();
             return redirect()->route('login')
-                ->withErrors(['email' => 'Você precisa verificar seu e-mail antes de acessar sua conta.']);
+            ->withErrors(['email' => 'Você precisa verificar seu e-mail antes de acessar sua conta.']);
         }
         if (config('config.config.aprovar_cadastro') === 'S') {
             // Verifica se o cadastro foi aprovado pelo administrador
