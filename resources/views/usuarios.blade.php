@@ -4,9 +4,6 @@
             {{ __('Usuários') }}
         </h2>
     </x-slot>
-    <script>
-        const isSupervisor = {{ auth()->check() && auth()->user()->isSupervisor() ? 'true' : 'false' }};
-    </script>
 
     @if (session('success'))
         <div id="success-message" style="display: none;">{{ session('success') }}</div>
@@ -77,4 +74,7 @@
             </div>
         </div>
     </div>
+    <script>
+        const isSupervisor = {{ auth()->check() && auth()->user()->isSupervisor() ? 'true' : 'false' }};
+    </script>
 </x-app-layout>

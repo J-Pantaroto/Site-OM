@@ -17,7 +17,7 @@ Route::post('/limpar/carrinho', [CarrinhoController::class, 'limparCarrinho']);
 Route::post('/remover/produto/carrinho', [CarrinhoController::class, 'removerProdutoCookie']);
 Route::post('/atualizar/carrinho', [CarrinhoController::class, 'atualizarCarrinho']);
 Route::post('/pesquisar/produtos', [ProdutoController::class, 'pesquisarProdutos'])->name('produtos.pes') ->middleware(['auth', 'verified', 'admin']);
-Route::get('/pesquisar/produto/{nome}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/') ->middleware(['auth', 'verified', 'admin']);
+Route::get('/pesquisar/produto/{slug}', [ProdutoController::class, 'pesquisaProduto'])->name('produto/');
 Route::post('/pesquisar/usuarios', [ProfileController::class, 'pesquisarUsuarios'])->name('usuarios.pes') ->middleware(['auth', 'verified', 'admin']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produtos', [ProdutoController::class, 'index'])
@@ -66,3 +66,6 @@ Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
     ->middleware(['auth', 'verified', 'admin','user.approved'])
     ->name('usuarios.destroy');
 require __DIR__ . '/auth.php';
+
+Route::post('/buscar-subgrupos', [HomeController::class, 'buscarSubgrupos']);
+Route::post('/buscar-produtos-por-subgrupo', [HomeController::class, 'buscarProdutosPorSubgrupo']);

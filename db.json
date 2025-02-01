@@ -1,0 +1,32 @@
+{
+    "produtos": [
+        {
+            "A_NUME": "000000061",
+            "A_NOME": "TESTE 2",
+            "A_DESC": "Produto retornado da  API 1",
+            "A_PRCV": 10.50,
+            "A_GRUP": "01"
+        },
+        {
+            "A_NUME": "000000060",
+            "A_NOME": "TESTE 1",
+            "A_DESC": "Produto retornado da API 2",
+            "A_PRCV": 20.75,
+            "A_GRUP": "01"
+        }
+    ],
+    "vendas": [
+        {
+            "id": 1,
+            "A_SITU": "pendente"
+        },
+        {
+            "id": 2,
+            "A_SITU": "finalizado"
+        },
+        {
+            "id": 3,
+            "A_SITU": "cancelado"
+        }
+    ]
+}

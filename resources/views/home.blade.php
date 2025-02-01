@@ -7,7 +7,6 @@
     <div class="banner">
         <div class="banner-content">
             <h1 class="banner-text">Bem vindo a nossa loja</h1>
-            {{--<h1 class="banner-text">{{ config('config.config.boas_vindas') }}</h1> --}}
             <p class="banner-text">Confira nossas mercadorias abaixo</p>
             <a href="#produtos-container" class="btn btn-primary mt-3 button-primary">Ver Produtos</a>
         </div>
@@ -41,67 +40,87 @@
         });
     </script>
 @endif
-
-
-
-    <div class="container pt-5">
-        <div class="dropdown row gx-0">
-            <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto button-primary">Mostrar
-                Grupos</button>
-            <div class="col-lg-3 col-12 text-center menu_lateral" id="gruposList">
-                <ul class="list-group list-group-flush w-75 mx-auto">
-                    <li class="list-group-item active list-group-item-action m-0 lista" data-grupo-id="todos">
-                        Todos os Produtos
-                    </li>
-                    @foreach ($grupos as $grupo)
-                        <a href="" class="list-group-item list-group-item-action m-0 lista"
-                            data-grupo-id="{{ $grupo->id }}">
+<div class="container pt-5">
+    <div class="dropdown row gx-0">
+        <button id="toggleGrupos" class="btn btn-secondary d-none mt-3 w-75 mx-auto button-primary">
+            Mostrar Grupos
+        </button>
+        <div class="col-lg-3 col-12 text-center menu_lateral" id="gruposList">
+            <ul class="list-group list-group-flush w-75 mx-auto">
+                <a href="" class="list-group-item active list-group-item-action m-0 lista grupo-item" data-grupo-id="todos">
+                    Todos os Produtos
+                </a>
+                @foreach ($gruposPrincipais as $grupo)
+                    <a href="" class="list-group-item list-group-item-action m-0 lista grupo-item" 
+                       data-grupo-id="{{ $grupo->codigo }}">
+                        {{ $grupo->descricao }}
+                    </a>
+                    <ul id="subgrupos-{{ $grupo->codigo }}" 
+                        class="list-group list-group-flush w-75 mx-auto mt-3 subgrupos-list d-none">
+                    </ul>
+                @endforeach
+                    @foreach ($gruposRestantes as $grupo)
+                        <a href="" class="oculto d-none list-group-item list-group-item-action m-0 lista grupo-item" 
+                           data-grupo-id="{{ $grupo->codigo }}">
                             {{ $grupo->descricao }}
                         </a>
+                        <ul id="subgrupos-{{ $grupo->codigo }}" 
+                            class="list-group list-group-flush w-75 mx-auto mt-3 subgrupos-list d-none">
+                        </ul>
                     @endforeach
-                </ul>
-            </div>
-            <div class="col-lg-9 col-12">
-                <div id="produtos-container" class="row gx-0">
-                    @if (empty($produtos))
-                        <div class="alert alert-danger" role="alert">
-                            Nenhum produto cadastrado
-                        </div>
-                    @else
-                        @foreach ($produtos as $produto)
-                            <div class="col-md-4 col-6">
-                                <a href="{{ route('produto/', ['nome' => $produto->nome]) }}"
-                                    class="text-decoration-none a-text">
-                                    <div class="card m-4 card-produto">
-                                        <img src="{{ asset('storage/' . $produto->imagem) }}" class="card-img-top img-fluid"
-                                            alt="...">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
-                                            @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
-                                                <p class="produto-preco">R$ {{ $produto->preco }}</p>
-                                            @endif
-                                            <div class="produto-descricao">
-                                                <p>{{ $produto->descricao }}</p>
-                                            </div>
-                                            <a class="btn btn-primary d-block adicionar-carrinho button-primary"
-                                                data-id="{{ $produto->id }}">
-                                                Adicionar ao carrinho
-                                            </a>
+            </ul>
+            <!-- Botão para Mostrar Mais -->
+            <button id="toggleGrupos1" class="btn btn-primary btn-sm button-primary m-2">
+                Mostrar mais
+            </button>
+        </div>
+
+
+        <!-- Container de Produtos -->
+        <div class="col-lg-9 col-12">
+            <div id="produtos-container" class="row gx-0">
+                @if (empty($produtos))
+                    <div class="alert alert-danger" role="alert">
+                        Nenhum produto cadastrado
+                    </div>
+                @else
+                    @foreach ($produtos as $produto)
+                        <div class="col-md-4 col-6">
+                            <a href="{{ route('produto/', ['slug' => $produto->slug]) }}" 
+                               class="text-decoration-none a-text">
+                                <div class="card m-4 card-produto">
+                                    @if(config('config.config.validar_estoque'))
+                                    <p class= "produto-quantidade d-none">{{$produto->quantidade}}</p>
+                                    @endif
+                                    <img src="{{ asset('storage/' . $produto->imagem) }}" 
+                                         class="card-img-top img-fluid" alt="...">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
+                                        @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
+                                            <p class="produto-preco">R$ {{ $produto->preco }}</p>
+                                        @endif
+                                        <div class="produto-descricao">
+                                            <p>{{ $produto->descricao }}</p>
                                         </div>
+                                        <a class="btn btn-primary d-block adicionar-carrinho button-primary" 
+                                           data-id="{{ $produto->id }}">
+                                            Adicionar ao carrinho
+                                        </a>
                                     </div>
-                                </a>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-                @if($mostrarBotaoVerMais)
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary button-primary" id="verMais">Ver mais produtos</button>
-                </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
                 @endif
             </div>
+            @if($mostrarBotaoVerMais)
+            <div class="text-center mt-4">
+                <button class="btn btn-primary button-primary" id="verMais">Ver mais produtos</button>
+            </div>
+            @endif
         </div>
     </div>
+</div>
 
     @if (Route::has('login'))
         @auth

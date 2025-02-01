@@ -73,32 +73,39 @@ class VendaController extends Controller
         /** @var User $user */
         $showAddressWarning = !$user->isAddressComplete();
         $exibirPreco = config('config.exibir_preco') === 'S';
-    
+
         $vendas = Venda::with(['itensVenda.produto'])
             ->where('cliente_id', $user->id)
             ->get()
-            ->map(function ($venda) use ($exibirPreco) {
-                $total = $exibirPreco ? $venda->itensVenda->sum(function ($item) {
-                    return $item->preco * $item->quantidade;
-                }) : null;
-    
-                return [
-                    'id' => $venda->id,
-                    'data_venda' => $venda->data_venda,
-                    'total' => $total,
-                    'itens' => $venda->itensVenda->map(function ($item) use ($exibirPreco) {
-                        return [
-                            'nome' => $item->produto->nome,
-                            'quantidade' => $item->quantidade,
-                            'preco' => $exibirPreco ? $item->preco : null,
-                            'subtotal' => $exibirPreco ? $item->preco * $item->quantidade : null,
-                        ];
-                    }),
-                ];
+            ->groupBy(function ($venda) {
+                return in_array($venda->situacao, ['pendente', 'liberado', 'em separacao']) ? 'em_andamento' : 'finalizado';
+            })
+            ->map(function ($group, $status) use ($exibirPreco) {
+                return $group->map(function ($venda) use ($exibirPreco) {
+                    $total = $exibirPreco ? $venda->itensVenda->sum(function ($item) {
+                        return $item->preco * $item->quantidade;
+                    }) : null;
+
+                    return [
+                        'id' => $venda->id,
+                        'data_venda' => $venda->data_venda,
+                        'status' => $venda->situacao,
+                        'total' => $total,
+                        'itens' => $venda->itensVenda->map(function ($item) use ($exibirPreco) {
+                            return [
+                                'nome' => $item->produto->nome,
+                                'quantidade' => $item->quantidade,
+                                'preco' => $exibirPreco ? $item->preco : null,
+                                'subtotal' => $exibirPreco ? $item->preco * $item->quantidade : null,
+                            ];
+                        }),
+                    ];
+                });
             });
-    
+
         return view('dashboard', [
-            'vendas' => $vendas,
+            'pedidosEmAndamento' => $vendas->get('em_andamento', collect()),
+            'ultimasCompras' => $vendas->get('finalizado', collect())->take(5),
             'showAddressWarning' => $showAddressWarning,
             'exibirPreco' => $exibirPreco
         ]);

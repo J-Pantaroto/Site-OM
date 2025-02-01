@@ -54,16 +54,16 @@
 
 @media (max-width: 970px) {
     #logo-login:hover {
-        width: 2.9rem;
-        height: 2.9rem;
-        transform: scale(1.0);
-        filter: drop-shadow(0 0 4px var(--color-white-90));
+        width: 2.9rem !important;
+        height: 2.9rem !important;
+        transform: scale(1.0) !important;
+        filter: drop-shadow(0 0 4px var(--color-white-90)) !important;
     }
     #logo-login{
-        width: 2.9rem;
-        height: 2.9rem;
-        transform: scale(1.0);
-        filter: drop-shadow(0 0 4px var(--color-white-90));
+        width: 2.9rem !important;
+        height: 2.9rem !important;
+        transform: scale(1.0) !important;
+        filter: drop-shadow(0 0 4px var(--color-white-90)) !important;
     }
 }
 
@@ -201,6 +201,13 @@
     padding: 0.938rem;
 }
 
+.subgrupo-item {
+    font-size: 0.750rem;
+    font-weight: normal;
+    border: none;
+    padding-left: 1.5rem;
+}
+
 /* MENU LATERAL */
 
 
@@ -253,29 +260,29 @@
 
 @media (max-width: 1400px) {
     .card-body {
-        max-height: none;
-        height: auto;
+        max-height: none !important;
+        height: auto !important;
     }
 
     .card {
-        min-height: 15rem;
+        min-height: 15rem !important;
     }
 }
 
 @media (max-width: 992px) {
     .card-produto {
-        margin: 0.5rem;
+        margin: 0.5rem !important;
     }
 
     .card-body {
-        padding: 0.5rem;
+        padding: 0.5rem !important;
     }
 }
 
 @media (max-width: 768px) {
     .adicionar-carrinho {
-        padding: 0.5rem;
-        font-size: 0.875rem;
+        padding: 0.4rem !important;
+        font-size: 0.750rem !important;
     }
 }
 
@@ -306,11 +313,11 @@
 
 @media (max-width: 576px) {
     .card-body h5 {
-        font-size: 1rem;
+        font-size: 0.8rem !important;
     }
 
     .produto-descricao {
-        font-size: 0.875rem;
+        font-size: 0.750rem !important;
     }
 }
 
@@ -438,18 +445,18 @@ ul {
 
 @media (max-width: 768px) {
     .modal-dialog {
-        max-width: 90%;
-        margin: 1rem;
+        max-width: 90% !important;
+        margin: 1rem !important;
     }
 
     .modal-content {
-        border-radius: 0.5rem;
+        border-radius: 0.5rem !important;
     }
 
     .modal-header,
     .modal-body,
     .modal-footer {
-        padding: 1rem;
+        padding: 1rem !important;
     }
 }
 
@@ -464,45 +471,45 @@ ul {
 
 @media (max-width: 768px) {
     .floating-cart {
-        bottom: 0.938rem;
-        right: 0.938rem;
-        padding: 0.75rem;
+        bottom: 0.938rem !important;
+        right: 0.938rem !important;
+        padding: 0.75rem !important;
     }
 
     .floating-cart i {
-        font-size: 1.25rem;
+        font-size: 1.25rem !important;
     }
 
     #cart-count {
-        top: -0.25rem;
-        right: -0.25rem;
-        padding: 0.063rem 0.313rem;
-        font-size: 0.688rem;
+        top: -0.25rem !important;
+        right: -0.25rem !important;
+        padding: 0.063rem 0.313rem !important;
+        font-size: 0.688rem !important;
     }
 
     .button-minus,
     .button-plus {
-        max-width: 1.5rem;
-        max-height: 1.5rem;
+        max-width: 1.5rem !important;
+        max-height: 1.5rem !important;
     }
 }
 
 @media (max-width: 480px) {
     .floating-cart {
-        bottom: 1rem;
-        right: 1rem;
-        padding: 0.625rem;
+        bottom: 1rem !important;
+        right: 1rem !important;
+        padding: 0.625rem !important;
     }
 
     .floating-cart i {
-        font-size: 1.25rem;
+        font-size: 1.25rem !important;
     }
 
     #cart-count {
-        top: -0.188rem;
-        right: -0.188rem;
-        padding: 0.063rem 0.25rem;
-        font-size: 0.625rem;
+        top: -0.188rem !important;
+        right: -0.188rem !important;
+        padding: 0.063rem 0.25rem !important;
+        font-size: 0.625rem !important;
     }
 }
 

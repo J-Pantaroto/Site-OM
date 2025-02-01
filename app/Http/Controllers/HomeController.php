@@ -4,74 +4,152 @@ namespace App\Http\Controllers;
 
 use App\Models\Produto;
 use App\Models\Grupo;
+use App\Models\SubGrupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $exibirPreco = config('config.config.exibir_preco') === 'S';
+        $exibirPreco    = config('config.config.exibir_preco') === 'S';
+        $validarEstoque = config('config.config.validar_estoque') === 'S';
         $produtosQuery = Produto::query();
         if ($exibirPreco) {
             $produtosQuery->whereNotNull('preco')->where('preco', '>', 0);
         }
+        if ($validarEstoque) {
+            $produtosQuery->whereNotNull('quantidade')->where('quantidade', '>', 0);
+        }
         $produtos = $produtosQuery->paginate(12);
+        $gruposQuery = Grupo::query();
+        $gruposQuery->whereExists(function ($query) use ($exibirPreco, $validarEstoque) {
+            $query->select(DB::raw(1))
+                  ->from('produtos')
+                  ->whereColumn('produtos.grupo', 'grupos.codigo');
+    
+            if ($exibirPreco) {
+                $query->whereNotNull('produtos.preco')->where('produtos.preco', '>', 0);
+            }
+    
+            if ($validarEstoque) {
+                $query->whereNotNull('produtos.quantidade')->where('produtos.quantidade', '>', 0);
+            }
+        });
+    
+    
+        $grupos = $gruposQuery->get();
+    
+        // Separação de grupos
+        $gruposPrincipais = $grupos->take(15);
+        $gruposRestantes  = $grupos->skip(15);
+    
+        $nenhumProdutoComPreco = $exibirPreco && $produtos->isEmpty();
+        $isAdmin = Auth::check() && (Auth::user()->is_admin || Auth::user()->isSuperVisor());
+        $mostrarBotaoVerMais  = $produtos->total() > $produtos->perPage();
+    
+        return view('home', compact(
+            'gruposPrincipais',
+            'gruposRestantes',
+            'produtos',
+            'nenhumProdutoComPreco',
+            'isAdmin',
+            'mostrarBotaoVerMais'
+        ));
+    }
+    
 
-        $grupos = Grupo::whereHas('produtos', function ($query) use ($exibirPreco) {
+
+    public function buscarSubgrupos(Request $request)
+    {
+        $grupo = $request->input('grupo');
+        $exibirPreco = config('config.config.exibir_preco') === 'S';
+        $validarEstoque = config('config.config.validar_estoque') === 'S';
+        $subgrupos = Subgrupo::whereHas('produtos', function ($query) use ($grupo, $exibirPreco, $validarEstoque) {
+            $query->where('grupo', $grupo);
             if ($exibirPreco) {
                 $query->whereNotNull('preco')->where('preco', '>', 0);
             }
-        })->get();
-        $nenhumProdutoComPreco = $exibirPreco && $produtos->isEmpty();
-        $isAdmin = Auth::check() && Auth::user()->is_admin || $isAdmin = Auth::check() && Auth::user()->isSuperVisor();
-        $mostrarBotaoVerMais = $produtos->total() > $produtos->perPage();
-        return view('home', compact('grupos', 'produtos', 'nenhumProdutoComPreco', 'isAdmin','mostrarBotaoVerMais'));
+            if ($validarEstoque) {
+                $query->whereNotNull('quantidade')->where('quantidade', '>', 0);
+            }
+        })->get(['codigo', 'descricao']);
+
+        Log::info('Subgrupos retornados:', ['subgrupos' => $subgrupos]);
+
+        return response()->json([
+            'status' => 'sucesso',
+            'subgrupos' => $subgrupos,
+        ]);
     }
-
-
     public function buscarProduto(Request $request)
     {
         $exibirPreco = config('config.config.exibir_preco') === 'S';
+        $validarEstoque = config('config.config.validar_estoque') === 'S';
+        $exibirPreco = config('config.config.exibir_preco') === 'S';
         $pesquisa = $request->input('pesquisa');
-        $categoria = $request->input('categoria');
-        $limite = $request->input('limite');
-        $offset = $request->input('offset');
+        $grupo = $request->input('grupo');
+        $subgrupo = $request->input('subgrupo');
+        $limite = $request->input('limite', 12);
+        $offset = $request->input('offset', 0);
         $escopo = $request->input('escopo');
 
         $query = Produto::query();
+
+
         if ($exibirPreco) {
             $query->whereNotNull('preco')->where('preco', '>', 0);
         }
+        if ($validarEstoque) {
+            $query->whereNotNull('quantidade')->where('quantidade', '>', 0);
+        }
 
-        if ($escopo != "todos") {
-            if ($pesquisa) {
-                $query->where('nome', 'like', '%' . $pesquisa . '%');
-            }
-            if ($categoria) {
-                $query->where('grupo_id', $categoria);
-            }
+        if ($grupo && $escopo != 'todos') {
+            $query->where('grupo', $grupo);
+        }
+        if ($subgrupo && $escopo != 'todos') {
+            $query->where('subgrupo', $subgrupo);
+        }
+
+        if ($pesquisa) {
+            $query->where('nome', 'like', '%' . $pesquisa . '%');
         }
 
         $totalProdutos = $query->count();
 
         $produtos = $query->offset($offset)
             ->limit($limite)
-            ->get();
+            ->get()
+            ->transform(function ($produto) {
+                $produto->imagem = asset('storage/' . $produto->imagem);
+                return $produto;
+            });
 
-        $produtos->transform(function ($produto) {
-            $produto->imagem = asset('storage/' . $produto->imagem);
-            return $produto;
-        });
+        $subgrupos = [];
+        if ($grupo) {
+            $subgrupos = Subgrupo::whereHas('produtos', function ($query) use ($grupo, $exibirPreco, $validarEstoque) {
+                $query->where('grupo', $grupo);
+                if ($exibirPreco) {
+                    $query->whereNotNull('preco')->where('preco', '>', 0);
+                }
+
+                if ($validarEstoque) {
+                    $query->whereNotNull('quantidade')->where('quantidade', '>', 0);
+                }
+            })->get(['codigo', 'descricao']);
+        }
 
         return response()->json([
             'status' => 'sucesso',
             'quantidade' => $produtos->count(),
             'totalProdutos' => $totalProdutos,
-            'produtos' => $produtos
+            'produtos' => $produtos,
+            'subgrupos' => $subgrupos,
         ]);
     }
+
     public function adicionarProdutoCarrinho(Request $request)
     {
         $id = $request->input('produto_id');

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Grupo extends Model
+class SubGrupo extends Model
 {
-    protected $table = 'grupos';
+    protected $table = 'subgrupo';
     protected $fillable = ['descricao','codigo'];
     use HasFactory;
     public function produtos()
     {
-        return $this->hasMany(Produto::class, 'grupo');
+        return $this->hasMany(Produto::class, 'subgrupo','codigo');
     }
 }

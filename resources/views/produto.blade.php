@@ -21,7 +21,9 @@
                     @if (!empty($prod->preco) && config('config.config.exibir_preco') === 'S')
                         <h4 class="produto-preco">Preço: R$ {{ $prod->preco }}</h4>
                     @endif
-
+                    @if (!config('config.config.validar_estoque') === 'S')
+                        <h3 class="produto-quantidade"> Quantidade disponível: {{$prod->quantidade}}</h3>
+                    @endif
                     <div class="mt-auto d-flex justify-content-end">
                         <button class="btn btn-primary button-primary" id="adicionar-carrinho"
                             data-id="{{ $prod->id }}" type="submit">

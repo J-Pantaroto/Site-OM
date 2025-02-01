@@ -1,5 +1,10 @@
 /.phpunit.cache
 /node_modules
+/public/hot
+public/images/*
+!public/images/logoOM.png
+!public/images/404.png
+/storage/*.key
 /vendor
 .phpactor.json
 .phpunit.result.cache

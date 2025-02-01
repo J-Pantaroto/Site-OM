@@ -62,6 +62,7 @@ return [
         'whatsapp_url' => env('WHATSAPP_URL', 'A definir link whatsapp empresa'),
         'aprovar_cadastro' => env('APROVAR_CADASTRO', 'N'),
         'exibir_preco' => env('EXIBIR_PRECO', 'N'),
+        'validar_estoque'=> env('VALIDAR_ESTOQUE','N'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),

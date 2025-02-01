@@ -5,19 +5,35 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Produto extends Model
 {
   protected $table = 'produtos';
   use HasFactory;
-  protected $fillable = ['nome', 'descricao', 'imagem'];
+  protected $fillable = ['nome', 'descricao', 'imagem', 'codigo', 'inativo', 'grupo', 'subgrupo', 'slug', 'quantidade','preco'];
+
+//gerar slug para url
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::saving(function ($produto) {
+      $produto->slug = Str::slug($produto->nome);
+    });
+  }
+
   public function imagens()
   {
     return $this->hasMany(ImagemProduto::class);
   }
   public function grupos()
   {
-    return $this->belongsTo(Grupo::class, 'grupo_id');
+    return $this->belongsTo(Grupo::class, 'grupo');
+  }
+  public function subgrupo()
+  {
+    return $this->belongsTo(Subgrupo::class, 'subgrupo', 'codigo');
   }
   public function preco(): Attribute
   {

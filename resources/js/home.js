@@ -3,142 +3,89 @@ var escopo = 'todos';
 var offset2 = 0
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-async function buscarProdutos(pesquisa = '', escopo, categoria = '', limite, tipo_chamada) {
+var validarQuantidade = document.head.dataset.validarQuantidade === 'true';
+async function buscarProdutos({ pesquisa = '', grupo = '', subgrupo = '', limite = 12, tipo_chamada = 'nova_busca', escopo = 'todos' }) {
     try {
-        if (tipo_chamada == "mais_produto") {
+        if (tipo_chamada === "mais_produto") {
             offset2 += parseInt(limite);
         } else {
             offset2 = 0;
         }
+
         const resposta = await fetch(`/buscar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             },
             body: JSON.stringify({
-                pesquisa: pesquisa,
-                categoria: categoria,
-                limite: limite,
+                pesquisa,
+                grupo,
+                subgrupo,
+                limite,
                 offset: offset2,
-                escopo: escopo,
-            })
+                escopo,
+            }),
         });
 
-        const textoResposta = await resposta.json();
+        const data = await resposta.json();
         const produtosContainer = document.getElementById('produtos-container');
         const botaoVerMais = document.getElementById("verMais");
-        if (textoResposta.status === 'sucesso') {
-            const quantidade = textoResposta.quantidade;
-            const produtos = textoResposta.produtos;
+        const subgruposList = document.getElementById(`subgrupos-${grupo}`);
 
-            if (tipo_chamada != 'mais_produto') {
-                produtosContainer.innerHTML = ''; // Limpa os produtos existentes ao realizar uma nova busca
+        if (data.status === 'sucesso') {
+            const produtos = data.produtos;
+            const quantidade = data.quantidade;
+
+            if (data.subgrupos && grupo && subgruposList) { // Verifica se subgruposList não é null
+                if (!subgruposList.hasChildNodes()) { // Só adiciona subgrupos se a lista estiver vazia
+                    subgruposList.innerHTML = data.subgrupos
+                        .map(subgrupo => `
+                            <a href="#" class="list-group-item list-group-item-action subgrupo-item" data-subgrupo-id="${subgrupo.codigo}">
+                                ${subgrupo.descricao}
+                            </a>
+                        `)
+                        .join('');
+                }
+            }
+
+            if (tipo_chamada !== 'mais_produto') {
+                produtosContainer.innerHTML = '';
             }
 
             if (quantidade === 0) {
                 produtosContainer.innerHTML = '<p>Produto não encontrado!</p>';
-                botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
+                botaoVerMais.style.display = "none";
             } else {
                 produtos.forEach(produto => {
-                    // Cria o container do produto
                     const produtoDiv = document.createElement('div');
                     produtoDiv.className = 'col-md-4 col-6';
-
-                    // Cria o card do produto
-                    const divCard = document.createElement("div");
-                    divCard.className = "card m-4 card-produto";
-
-                    // Cria o link para o produto (só para imagem e título)
-                    const linkProduto = document.createElement("a");
-                    linkProduto.href = `/pesquisar/produto/${encodeURIComponent(produto.nome)}`;
-                    linkProduto.className = "text-decoration-none a-text";
-
-                    // Cria a imagem do produto
-                    const img = document.createElement("img");
-                    img.src = produto.imagem;
-                    img.className = "card-img-top img-fluid";
-                    img.setAttribute("alt", produto.nome);
-
-                    // Adiciona a imagem ao link
-                    linkProduto.appendChild(img);
-
-                    // Adiciona o link (com a imagem) ao card
-                    divCard.appendChild(linkProduto);
-
-                    // Cria a div do card-body
-                    const divCardBody = document.createElement("div");
-                    divCardBody.className = "card-body text-center";
-
-                    // Cria o link para o nome do produto
-                    const linkNome = document.createElement("a");
-                    linkNome.href = `/pesquisar/produto/${encodeURIComponent(produto.nome)}`;
-                    linkNome.className = "text-decoration-none a-text";
-
-                    // Cria o título com o nome do produto
-                    const h5 = document.createElement("h5");
-                    h5.className = "card-title produto-nome";
-                    h5.textContent = produto.nome;
-                    if (produto.nome.length > 22) {
-                        h5.classList.add("fs-6");
-                    }
-
-                    // Adiciona o título ao link
-                    linkNome.appendChild(h5);
-
-                    if (exibirPreco && produto.preco) {
-                        const preco = document.createElement('p');
-                        preco.className = 'produto-preco';
-                        preco.textContent = `R$ ${produto.preco}`;
-                        linkNome.appendChild(preco); // Adiciona o preço no card-body
-                    }
-                    // Adiciona o link do nome ao card-body
-                    divCardBody.appendChild(linkNome);
-
-                    // Cria a descrição do produto
-                    const divDescricao = document.createElement("div");
-                    divDescricao.className = "produto-descricao";
-                    const paragrafo = document.createElement("p");
-                    paragrafo.textContent = produto.descricao;
-
-                    // Adiciona a descrição ao card-body
-                    divDescricao.appendChild(paragrafo);
-                    divCardBody.appendChild(divDescricao);
-
-                    // Cria o botão de "Adicionar ao carrinho"
-                    const botaoAdicionar = document.createElement("a");
-                    botaoAdicionar.className = "btn btn-primary d-block adicionar-carrinho button-primary";
-                    botaoAdicionar.textContent = "Adicionar ao carrinho";
-                    botaoAdicionar.setAttribute('data-id', produto.id);  // Adiciona o ID do produto
-
-                    // Adiciona o botão ao card-body (fora do link do produto)
-                    divCardBody.appendChild(botaoAdicionar);
-
-                    // Adiciona o card-body ao card
-                    divCard.appendChild(divCardBody);
-
-                    // Adiciona o card ao container do produto
-                    produtoDiv.appendChild(divCard);
-
-                    // Adiciona o container do produto ao container principal (produtosContainer)
+                    produtoDiv.innerHTML = `
+                        <div class="card m-4 card-produto">
+                            ${validarQuantidade && produto.quantidade ? `<p class= "produto-quantidade d-none">${produto.quantidade}</p>` : ''}
+                            <a href="/pesquisar/produto/${encodeURIComponent(produto.slug)}" class="text-decoration-none a-text">
+                                <img src="${produto.imagem}" class="card-img-top img-fluid" alt="${produto.nome}">
+                            </a>
+                            <div class="card-body text-center">
+                                <a href="/pesquisar/produto/${encodeURIComponent(produto.slug)}" class="text-decoration-none a-text">
+                                    <h5 class="card-title produto-nome">${produto.nome}</h5>
+                                    ${exibirPreco && produto.preco ? `<p class="produto-preco">R$ ${produto.preco}</p>` : ''}
+                                </a>
+                                <p class="produto-descricao">${produto.descricao}</p>
+                                <a class="btn btn-primary d-block adicionar-carrinho button-primary" data-id="${produto.id}">Adicionar ao carrinho</a>
+                            </div>
+                        </div>`;
                     produtosContainer.appendChild(produtoDiv);
-                    window.dispatchEvent(new Event('resize'));
                 });
 
-
-                if (textoResposta.totalProdutos > textoResposta.quantidade) {
-                    botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
+                if (data.totalProdutos > offset2 + quantidade) {
+                    botaoVerMais.classList.remove('d-none');
                 } else {
-                    botaoVerMais.style.display = "none"; // Oculta o botão se houver 10 ou menos produtos
-                }
-                if (textoResposta.totalProdutos > offset2 + quantidade) { //verifica sempre se a quantidade do limite mais a quantidade é maior q o total de produtos q eu retorno
-                    botaoVerMais.removeAttribute("style");
-                } else {
-                    botaoVerMais.style.display = "none";
+                    botaoVerMais.classList.add('d-none');
                 }
             }
         } else {
-            console.error('Erro:', textoResposta.mensagem);
+            console.error('Erro:', data.mensagem);
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -152,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         escopo = "pesquisa"
         const pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-        buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
+        buscarProdutos({ pesquisa: pesquisaInput, grupo: '', subgrupo: '', limite: 12, tipo_chamada: 'pesquisar_produto', escopo: escopo });
         const listItems = document.querySelectorAll('.lista');
         listItems.forEach(li => li.classList.remove('active'));
         const todosProdutos = document.querySelector('[data-grupo-id="todos"]');
@@ -165,33 +112,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.event.keyCode == 13) {
             escopo = "pesquisa"
             const pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-            buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
+            buscarProdutos({ pesquisa: pesquisaInput, grupo: '', subgrupo: '', limite: 12, tipo_chamada: 'pesquisar_produto', escopo: escopo });
             window.dispatchEvent(new Event('resize'));
         }
     })
 })
 
-
-//CATEGORIA
-const listItems = document.querySelectorAll('.lista');
-
-listItems.forEach(item => {
-    item.addEventListener('click', (event) => {
-        escopo = item.getAttribute('data-grupo-id')
-        event.preventDefault();
-        // Remover classe ativa de todos os itens
-        listItems.forEach(li => li.classList.remove('active'));
-        // Adicionar classe ativa ao item clicado
-        document.querySelector('input[name="pesquisa"]').value = '';
-        item.classList.add('active');
-        buscarProdutos('', escopo, escopo, 10, 'categoria_produto');
-    });
-});
 //VER MAIS
 document.getElementById("verMais").addEventListener("click", function () {
-    buscarProdutos('', escopo, escopo, 10, 'mais_produto')
-    window.dispatchEvent(new Event('resize'));
-})
+    const pesquisaInput = document.querySelector('input[name="pesquisa"]').value; // Captura o valor atual da pesquisa
+
+    if (pesquisaInput === '' || pesquisaInput === null) {
+        const activeItem = document.querySelector('.list-group-item.active'); // Use o seletor correto baseado na estrutura do HTML
+        const categoriaSelecionada = activeItem ? activeItem.getAttribute('data-grupo-id') : ''; // Se não houver item ativo, assume vazio
+        const subCategoriaSelecionada = activeItem ? activeItem.getAttribute('data-subgrupo-id') : ''; // Se não houver item ativo, assume vazio
+        buscarProdutos({ pesquisa: pesquisaInput, grupo: categoriaSelecionada, subgrupo: subCategoriaSelecionada, limite: 12, tipo_chamada: 'mais_produto', escopo: escopo });
+        window.dispatchEvent(new Event('resize'));
+    } else {
+        const subCategoriaSelecionada = null;
+        const categoriaSelecionada = null;
+        buscarProdutos({ pesquisa: pesquisaInput, grupo: categoriaSelecionada, subgrupo: subCategoriaSelecionada, limite: 12, tipo_chamada: 'mais_produto', escopo: escopo });
+        window.dispatchEvent(new Event('resize'));
+    }
+});
+
 
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
@@ -329,6 +273,7 @@ if (usuarioAutenticado) {
                     const produtoSelecionado = event.target.closest('.card-produto');
                     const nomeProduto = produtoSelecionado.querySelector('.card-title').textContent;
                     const imagemProduto = produtoSelecionado.querySelector('img').src;
+                    const quantidadeDisponivel = parseInt(produtoSelecionado.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
 
                     let produtoExistente = Array.from(cartItems.querySelectorAll('tr')).find(row => {
                         return row.querySelector('td:nth-child(2)').textContent === nomeProduto;
@@ -341,6 +286,14 @@ if (usuarioAutenticado) {
                     if (produtoExistente) {
                         const quantidadeSpan = produtoExistente.querySelector('.quantity-span');
                         let quantidadeAtual = parseInt(quantidadeSpan.textContent);
+                        if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Estoque insuficiente!',
+                                text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                            });
+                            return;
+                        }
                         quantidadeAtual += 1;
                         quantidadeSpan.textContent = quantidadeAtual;
                         if (exibirPreco) {
@@ -349,6 +302,14 @@ if (usuarioAutenticado) {
                             subtotalCell.textContent = `R$ ${novoSubtotal.toFixed(2)}`;
                         }
                     } else {
+                        if (validarQuantidade && quantidadeDisponivel <= 0) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Produto fora de estoque!',
+                                text: 'Este produto não está disponível no momento.',
+                            });
+                            return;
+                        }
                         const imagemCardAtual = produtoSelecionado.querySelector('img').src;
                         const produtoCarrinho = document.createElement('tr');
                         const imagemContainer = document.createElement('td');
@@ -481,6 +442,16 @@ if (usuarioAutenticado) {
             const item = button.closest('tr'); // Linha do item
             const nomeProduto = item.querySelector('td:nth-child(2)').textContent; // Nome do produto
             let value = parseInt(quantidadeSpan.textContent); // Quantidade atual
+            let quantidadeAtual = parseInt(quantidadeSpan.textContent);
+
+            const produtoOriginal = Array.from(document.querySelectorAll('.card-produto')).find(produto =>
+                produto.querySelector('.card-title').textContent === nomeProduto
+            );
+
+            const quantidadeDisponivel = produtoOriginal
+                ? parseInt(produtoOriginal.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0
+                : Infinity; // Caso não encontre, assume infinito (não restringe)
+
 
             // Botão de decremento
             if (button.classList.contains('button-minus')) {
@@ -558,6 +529,14 @@ if (usuarioAutenticado) {
 
             // Botão de incremento
             if (button.classList.contains('button-plus')) {
+                if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Estoque insuficiente!',
+                        text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                    });
+                    return;
+                }
                 value++;
                 quantidadeSpan.textContent = value;
                 atualizarProdutoQuantidade(nomeProduto, value); // Atualiza quantidade no estado
@@ -963,3 +942,131 @@ function footerResponse() {
         }
     }
 }
+
+//CATEGORIA
+const grupoTodos = document.querySelector('[data-grupo-id="todos"]');
+grupoTodos.addEventListener('click', function (event) {
+    event.preventDefault();
+    atualizarGruposOuSubgrupos({ grupoId: 'todos' });
+});
+
+async function atualizarGruposOuSubgrupos({ grupoId = '', subgrupoId = '' }) {
+    const produtosContainer = document.getElementById('produtos-container');
+    const subgruposList = grupoId ? document.getElementById(`subgrupos-${grupoId}`) : null;
+    const grupoAtivo = document.querySelector('.list-group-item.active');
+    if (grupoAtivo && grupoAtivo.getAttribute('data-grupo-id') === grupoId && !subgrupoId) {
+        grupoAtivo.classList.remove('active');
+        const subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
+        if (subgrupoAtivoAnterior) {
+            subgrupoAtivoAnterior.classList.remove('active');
+        }
+        document.querySelectorAll('.subgrupos-list').forEach(list => list.classList.add('d-none'));
+        buscarProdutos({ pesquisa: '', grupo: '', subgrupo: '', limite: 12, tipo_chamada: 'nova_busca', escopo: 'todos' });
+        document.querySelector('[data-grupo-id="todos"]').classList.add('active');
+        return;
+    }
+    if (!subgrupoId) {
+        document.querySelectorAll('.grupo-item').forEach(item => item.classList.remove('active'));
+        document.querySelector(`[data-grupo-id="${grupoId}"]`)?.classList.add('active');
+    }
+
+    document.querySelectorAll('.subgrupos-list').forEach(list => {
+        if (!list.id.includes(`subgrupos-${grupoId}`)) {
+            list.classList.add('d-none');
+        }
+    });
+    if (grupoId && !subgrupoId) {
+        const subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
+        if (subgrupoAtivoAnterior) {
+            subgrupoAtivoAnterior.classList.remove('active');
+        }
+        if (grupoId === 'todos') {
+            buscarProdutos({ pesquisa: '', grupo: '', subgrupo: '', limite: 12, tipo_chamada: 'nova_busca', escopo: 'todos' });
+            return;
+        }
+
+        if (subgruposList) {
+            subgruposList.classList.remove('d-none');
+            subgruposList.innerHTML = '<li class="list-group-item m-0">Carregando...</li>';
+
+            try {
+                const response = await fetch(`/buscar-subgrupos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: JSON.stringify({ grupo: grupoId }),
+                });
+
+                const data = await response.json();
+                if (data.status === 'sucesso' && Array.isArray(data.subgrupos)) {
+                    subgruposList.innerHTML = data.subgrupos
+                        .map(subgrupo => `
+                            <a href="" class=" ml-3 list-group-item list-group-item-action subgrupo-item" data-subgrupo-id="${subgrupo.codigo}">
+                                ${subgrupo.descricao}
+                            </a>
+                        `)
+                        .join('');
+                } else {
+                    subgruposList.innerHTML = '<li class="list-group-item">Nenhum subgrupo encontrado</li>';
+                }
+            } catch (error) {
+                console.error('Erro ao buscar subgrupos:', error);
+                subgruposList.innerHTML = '<li class="list-group-item">Erro ao carregar subgrupos</li>';
+            }
+        }
+
+        buscarProdutos({ pesquisa: '', grupo: grupoId, subgrupo: '', limite: 12, tipo_chamada: 'nova_busca', escopo: 'grupo' });
+    }
+
+    if (grupoId && subgrupoId) {
+        document.querySelector(`[data-grupo-id="${grupoId}"]`)?.classList.add('active');
+
+        const subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
+        if (subgrupoAtivoAnterior) {
+            subgrupoAtivoAnterior.classList.remove('active');
+        }
+
+        const subgrupoAtivo = document.querySelector(`[data-subgrupo-id="${subgrupoId}"]`);
+        if (subgrupoAtivo) {
+            setTimeout(() => {
+                subgrupoAtivo.classList.add('active');
+            }, 100);
+        }
+
+        buscarProdutos({ pesquisa: '', grupo: grupoId, subgrupo: subgrupoId, limite: 12, tipo_chamada: 'nova_busca', escopo: 'subgrupo' });
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', event => {
+        if (event.target.classList.contains('grupo-item')) {
+            event.preventDefault();
+            const grupoId = event.target.getAttribute('data-grupo-id');
+            atualizarGruposOuSubgrupos({ grupoId });
+        }
+        else if (event.target.classList.contains('subgrupo-item')) {
+            event.preventDefault();
+            const subgrupoId = event.target.getAttribute('data-subgrupo-id');
+            const grupoId = document.querySelector('.list-group-item.active')?.getAttribute('data-grupo-id');
+            atualizarGruposOuSubgrupos({ grupoId, subgrupoId });
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggleGrupos1');
+    const gruposOcultos = document.querySelectorAll('.oculto');
+
+    toggleButton.addEventListener('click', () => {
+        const areHidden = Array.from(gruposOcultos).some(grupo => grupo.classList.contains('d-none'));
+
+        if (areHidden) {
+
+            gruposOcultos.forEach(grupo => grupo.classList.remove('d-none'));
+            toggleButton.textContent = 'Mostrar menos';
+        } else {
+            gruposOcultos.forEach(grupo => grupo.classList.add('d-none'));
+            toggleButton.textContent = 'Mostrar mais';
+        }
+    });
+});

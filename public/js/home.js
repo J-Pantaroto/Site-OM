@@ -4589,38 +4589,24 @@ var escopo = 'todos';
 var offset2 = 0;
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-function buscarProdutos() {
+var validarQuantidade = document.head.dataset.validarQuantidade === 'true';
+function buscarProdutos(_x) {
   return _buscarProdutos.apply(this, arguments);
 } //PESQUISA
 function _buscarProdutos() {
-  _buscarProdutos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-    var pesquisa,
-      escopo,
-      categoria,
-      limite,
-      tipo_chamada,
-      resposta,
-      textoResposta,
-      produtosContainer,
-      botaoVerMais,
-      quantidade,
-      produtos,
-      _args2 = arguments;
+  _buscarProdutos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(_ref) {
+    var _ref$pesquisa, pesquisa, _ref$grupo, grupo, _ref$subgrupo, subgrupo, _ref$limite, limite, _ref$tipo_chamada, tipo_chamada, _ref$escopo, escopo, resposta, data, produtosContainer, botaoVerMais, subgruposList, produtos, quantidade;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          pesquisa = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
-          escopo = _args2.length > 1 ? _args2[1] : undefined;
-          categoria = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : '';
-          limite = _args2.length > 3 ? _args2[3] : undefined;
-          tipo_chamada = _args2.length > 4 ? _args2[4] : undefined;
-          _context2.prev = 5;
-          if (tipo_chamada == "mais_produto") {
+          _ref$pesquisa = _ref.pesquisa, pesquisa = _ref$pesquisa === void 0 ? '' : _ref$pesquisa, _ref$grupo = _ref.grupo, grupo = _ref$grupo === void 0 ? '' : _ref$grupo, _ref$subgrupo = _ref.subgrupo, subgrupo = _ref$subgrupo === void 0 ? '' : _ref$subgrupo, _ref$limite = _ref.limite, limite = _ref$limite === void 0 ? 12 : _ref$limite, _ref$tipo_chamada = _ref.tipo_chamada, tipo_chamada = _ref$tipo_chamada === void 0 ? 'nova_busca' : _ref$tipo_chamada, _ref$escopo = _ref.escopo, escopo = _ref$escopo === void 0 ? 'todos' : _ref$escopo;
+          _context2.prev = 1;
+          if (tipo_chamada === "mais_produto") {
             offset2 += parseInt(limite);
           } else {
             offset2 = 0;
           }
-          _context2.next = 9;
+          _context2.next = 5;
           return fetch("/buscar", {
             method: 'POST',
             headers: {
@@ -4629,139 +4615,67 @@ function _buscarProdutos() {
             },
             body: JSON.stringify({
               pesquisa: pesquisa,
-              categoria: categoria,
+              grupo: grupo,
+              subgrupo: subgrupo,
               limite: limite,
               offset: offset2,
               escopo: escopo
             })
           });
-        case 9:
+        case 5:
           resposta = _context2.sent;
-          _context2.next = 12;
+          _context2.next = 8;
           return resposta.json();
-        case 12:
-          textoResposta = _context2.sent;
+        case 8:
+          data = _context2.sent;
           produtosContainer = document.getElementById('produtos-container');
           botaoVerMais = document.getElementById("verMais");
-          if (textoResposta.status === 'sucesso') {
-            quantidade = textoResposta.quantidade;
-            produtos = textoResposta.produtos;
-            if (tipo_chamada != 'mais_produto') {
-              produtosContainer.innerHTML = ''; // Limpa os produtos existentes ao realizar uma nova busca
+          subgruposList = document.getElementById("subgrupos-".concat(grupo));
+          if (data.status === 'sucesso') {
+            produtos = data.produtos;
+            quantidade = data.quantidade;
+            if (data.subgrupos && grupo && subgruposList) {
+              // Verifica se subgruposList não é null
+              if (!subgruposList.hasChildNodes()) {
+                // Só adiciona subgrupos se a lista estiver vazia
+                subgruposList.innerHTML = data.subgrupos.map(function (subgrupo) {
+                  return "\n                            <a href=\"#\" class=\"list-group-item list-group-item-action subgrupo-item\" data-subgrupo-id=\"".concat(subgrupo.codigo, "\">\n                                ").concat(subgrupo.descricao, "\n                            </a>\n                        ");
+                }).join('');
+              }
+            }
+            if (tipo_chamada !== 'mais_produto') {
+              produtosContainer.innerHTML = '';
             }
             if (quantidade === 0) {
               produtosContainer.innerHTML = '<p>Produto não encontrado!</p>';
-              botaoVerMais.style.display = "none"; // Oculta o botão se não houver produtos
+              botaoVerMais.style.display = "none";
             } else {
               produtos.forEach(function (produto) {
-                // Cria o container do produto
                 var produtoDiv = document.createElement('div');
                 produtoDiv.className = 'col-md-4 col-6';
-
-                // Cria o card do produto
-                var divCard = document.createElement("div");
-                divCard.className = "card m-4 card-produto";
-
-                // Cria o link para o produto (só para imagem e título)
-                var linkProduto = document.createElement("a");
-                linkProduto.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                linkProduto.className = "text-decoration-none a-text";
-
-                // Cria a imagem do produto
-                var img = document.createElement("img");
-                img.src = produto.imagem;
-                img.className = "card-img-top img-fluid";
-                img.setAttribute("alt", produto.nome);
-
-                // Adiciona a imagem ao link
-                linkProduto.appendChild(img);
-
-                // Adiciona o link (com a imagem) ao card
-                divCard.appendChild(linkProduto);
-
-                // Cria a div do card-body
-                var divCardBody = document.createElement("div");
-                divCardBody.className = "card-body text-center";
-
-                // Cria o link para o nome do produto
-                var linkNome = document.createElement("a");
-                linkNome.href = "/pesquisar/produto/".concat(encodeURIComponent(produto.nome));
-                linkNome.className = "text-decoration-none a-text";
-
-                // Cria o título com o nome do produto
-                var h5 = document.createElement("h5");
-                h5.className = "card-title produto-nome";
-                h5.textContent = produto.nome;
-                if (produto.nome.length > 22) {
-                  h5.classList.add("fs-6");
-                }
-
-                // Adiciona o título ao link
-                linkNome.appendChild(h5);
-                if (exibirPreco && produto.preco) {
-                  var preco = document.createElement('p');
-                  preco.className = 'produto-preco';
-                  preco.textContent = "R$ ".concat(produto.preco);
-                  linkNome.appendChild(preco); // Adiciona o preço no card-body
-                }
-                // Adiciona o link do nome ao card-body
-                divCardBody.appendChild(linkNome);
-
-                // Cria a descrição do produto
-                var divDescricao = document.createElement("div");
-                divDescricao.className = "produto-descricao";
-                var paragrafo = document.createElement("p");
-                paragrafo.textContent = produto.descricao;
-
-                // Adiciona a descrição ao card-body
-                divDescricao.appendChild(paragrafo);
-                divCardBody.appendChild(divDescricao);
-
-                // Cria o botão de "Adicionar ao carrinho"
-                var botaoAdicionar = document.createElement("a");
-                botaoAdicionar.className = "btn btn-primary d-block adicionar-carrinho button-primary";
-                botaoAdicionar.textContent = "Adicionar ao carrinho";
-                botaoAdicionar.setAttribute('data-id', produto.id); // Adiciona o ID do produto
-
-                // Adiciona o botão ao card-body (fora do link do produto)
-                divCardBody.appendChild(botaoAdicionar);
-
-                // Adiciona o card-body ao card
-                divCard.appendChild(divCardBody);
-
-                // Adiciona o card ao container do produto
-                produtoDiv.appendChild(divCard);
-
-                // Adiciona o container do produto ao container principal (produtosContainer)
+                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                <a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"").concat(produto.id, "\">Adicionar ao carrinho</a>\n                            </div>\n                        </div>");
                 produtosContainer.appendChild(produtoDiv);
-                window.dispatchEvent(new Event('resize'));
               });
-              if (textoResposta.totalProdutos > textoResposta.quantidade) {
-                botaoVerMais.removeAttribute("style"); // Exibe o botão se houver mais de 10 produtos
+              if (data.totalProdutos > offset2 + quantidade) {
+                botaoVerMais.classList.remove('d-none');
               } else {
-                botaoVerMais.style.display = "none"; // Oculta o botão se houver 10 ou menos produtos
-              }
-              if (textoResposta.totalProdutos > offset2 + quantidade) {
-                //verifica sempre se a quantidade do limite mais a quantidade é maior q o total de produtos q eu retorno
-                botaoVerMais.removeAttribute("style");
-              } else {
-                botaoVerMais.style.display = "none";
+                botaoVerMais.classList.add('d-none');
               }
             }
           } else {
-            console.error('Erro:', textoResposta.mensagem);
+            console.error('Erro:', data.mensagem);
           }
-          _context2.next = 21;
+          _context2.next = 18;
           break;
-        case 18:
-          _context2.prev = 18;
-          _context2.t0 = _context2["catch"](5);
+        case 15:
+          _context2.prev = 15;
+          _context2.t0 = _context2["catch"](1);
           console.error('Erro:', _context2.t0);
-        case 21:
+        case 18:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[5, 18]]);
+    }, _callee2, null, [[1, 15]]);
   }));
   return _buscarProdutos.apply(this, arguments);
 }
@@ -4771,7 +4685,14 @@ document.addEventListener('DOMContentLoaded', function () {
     event.preventDefault();
     escopo = "pesquisa";
     var pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-    buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
+    buscarProdutos({
+      pesquisa: pesquisaInput,
+      grupo: '',
+      subgrupo: '',
+      limite: 12,
+      tipo_chamada: 'pesquisar_produto',
+      escopo: escopo
+    });
     var listItems = document.querySelectorAll('.lista');
     listItems.forEach(function (li) {
       return li.classList.remove('active');
@@ -4785,32 +4706,49 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.event.keyCode == 13) {
       escopo = "pesquisa";
       var pesquisaInput = document.querySelector('input[name="pesquisa"]').value;
-      buscarProdutos(pesquisaInput, escopo, '', 10, 'pesquisar_produto');
+      buscarProdutos({
+        pesquisa: pesquisaInput,
+        grupo: '',
+        subgrupo: '',
+        limite: 12,
+        tipo_chamada: 'pesquisar_produto',
+        escopo: escopo
+      });
       window.dispatchEvent(new Event('resize'));
     }
   });
 });
 
-//CATEGORIA
-var listItems = document.querySelectorAll('.lista');
-listItems.forEach(function (item) {
-  item.addEventListener('click', function (event) {
-    escopo = item.getAttribute('data-grupo-id');
-    event.preventDefault();
-    // Remover classe ativa de todos os itens
-    listItems.forEach(function (li) {
-      return li.classList.remove('active');
-    });
-    // Adicionar classe ativa ao item clicado
-    document.querySelector('input[name="pesquisa"]').value = '';
-    item.classList.add('active');
-    buscarProdutos('', escopo, escopo, 10, 'categoria_produto');
-  });
-});
 //VER MAIS
 document.getElementById("verMais").addEventListener("click", function () {
-  buscarProdutos('', escopo, escopo, 10, 'mais_produto');
-  window.dispatchEvent(new Event('resize'));
+  var pesquisaInput = document.querySelector('input[name="pesquisa"]').value; // Captura o valor atual da pesquisa
+
+  if (pesquisaInput === '' || pesquisaInput === null) {
+    var activeItem = document.querySelector('.list-group-item.active'); // Use o seletor correto baseado na estrutura do HTML
+    var categoriaSelecionada = activeItem ? activeItem.getAttribute('data-grupo-id') : ''; // Se não houver item ativo, assume vazio
+    var subCategoriaSelecionada = activeItem ? activeItem.getAttribute('data-subgrupo-id') : ''; // Se não houver item ativo, assume vazio
+    buscarProdutos({
+      pesquisa: pesquisaInput,
+      grupo: categoriaSelecionada,
+      subgrupo: subCategoriaSelecionada,
+      limite: 12,
+      tipo_chamada: 'mais_produto',
+      escopo: escopo
+    });
+    window.dispatchEvent(new Event('resize'));
+  } else {
+    var _subCategoriaSelecionada = null;
+    var _categoriaSelecionada = null;
+    buscarProdutos({
+      pesquisa: pesquisaInput,
+      grupo: _categoriaSelecionada,
+      subgrupo: _subCategoriaSelecionada,
+      limite: 12,
+      tipo_chamada: 'mais_produto',
+      escopo: escopo
+    });
+    window.dispatchEvent(new Event('resize'));
+  }
 });
 
 //dropdown
@@ -4935,7 +4873,7 @@ if (usuarioAutenticado) {
     atualizarContagemCarrinho();
   };
   var atualizarCookiesCarrinho = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(produtos) {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(produtos) {
       var response, data;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
@@ -4970,8 +4908,8 @@ if (usuarioAutenticado) {
         }
       }, _callee, null, [[0, 9]]);
     }));
-    return function atualizarCookiesCarrinho(_x) {
-      return _ref.apply(this, arguments);
+    return function atualizarCookiesCarrinho(_x2) {
+      return _ref2.apply(this, arguments);
     };
   }();
   var atualizarContagemCarrinho = function atualizarContagemCarrinho() {
@@ -5065,9 +5003,11 @@ if (usuarioAutenticado) {
     if (addCarrinho) {
       addCarrinho.addEventListener('click', function (event) {
         if (event.target.classList.contains('adicionar-carrinho')) {
+          var _produtoSelecionado$q;
           var produtoSelecionado = event.target.closest('.card-produto');
           var nomeProduto = produtoSelecionado.querySelector('.card-title').textContent;
           var imagemProduto = produtoSelecionado.querySelector('img').src;
+          var quantidadeDisponivel = parseInt((_produtoSelecionado$q = produtoSelecionado.querySelector('.produto-quantidade')) === null || _produtoSelecionado$q === void 0 ? void 0 : _produtoSelecionado$q.textContent.replace(/\D/g, '')) || 0;
           var produtoExistente = Array.from(cartItems.querySelectorAll('tr')).find(function (row) {
             return row.querySelector('td:nth-child(2)').textContent === nomeProduto;
           });
@@ -5078,6 +5018,14 @@ if (usuarioAutenticado) {
           if (produtoExistente) {
             var quantidadeSpan = produtoExistente.querySelector('.quantity-span');
             var quantidadeAtual = parseInt(quantidadeSpan.textContent);
+            if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+              sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                icon: 'error',
+                title: 'Estoque insuficiente!',
+                text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+              });
+              return;
+            }
             quantidadeAtual += 1;
             quantidadeSpan.textContent = quantidadeAtual;
             if (exibirPreco) {
@@ -5086,6 +5034,14 @@ if (usuarioAutenticado) {
               subtotalCell.textContent = "R$ ".concat(novoSubtotal.toFixed(2));
             }
           } else {
+            if (validarQuantidade && quantidadeDisponivel <= 0) {
+              sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                icon: 'error',
+                title: 'Produto fora de estoque!',
+                text: 'Este produto não está disponível no momento.'
+              });
+              return;
+            }
             var imagemCardAtual = produtoSelecionado.querySelector('img').src;
             var produtoCarrinho = document.createElement('tr');
             var imagemContainer = document.createElement('td');
@@ -5200,10 +5156,16 @@ if (usuarioAutenticado) {
     var button = event.target;
     var inputGrupo = button.closest('.input-group'); // Grupo de botões de quantidade
     if (inputGrupo) {
+      var _produtoOriginal$quer;
       var quantidadeSpan = inputGrupo.querySelector('.quantity-span');
       var item = button.closest('tr'); // Linha do item
       var nomeProduto = item.querySelector('td:nth-child(2)').textContent; // Nome do produto
       var value = parseInt(quantidadeSpan.textContent); // Quantidade atual
+      var quantidadeAtual = parseInt(quantidadeSpan.textContent);
+      var produtoOriginal = Array.from(document.querySelectorAll('.card-produto')).find(function (produto) {
+        return produto.querySelector('.card-title').textContent === nomeProduto;
+      });
+      var quantidadeDisponivel = produtoOriginal ? parseInt((_produtoOriginal$quer = produtoOriginal.querySelector('.produto-quantidade')) === null || _produtoOriginal$quer === void 0 ? void 0 : _produtoOriginal$quer.textContent.replace(/\D/g, '')) || 0 : Infinity; // Caso não encontre, assume infinito (não restringe)
 
       // Botão de decremento
       if (button.classList.contains('button-minus')) {
@@ -5274,6 +5236,14 @@ if (usuarioAutenticado) {
 
       // Botão de incremento
       if (button.classList.contains('button-plus')) {
+        if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: 'error',
+            title: 'Estoque insuficiente!',
+            text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+          });
+          return;
+        }
         value++;
         quantidadeSpan.textContent = value;
         atualizarProdutoQuantidade(nomeProduto, value); // Atualiza quantidade no estado
@@ -5534,6 +5504,201 @@ function footerResponse() {
     }
   }
 }
+
+//CATEGORIA
+var grupoTodos = document.querySelector('[data-grupo-id="todos"]');
+grupoTodos.addEventListener('click', function (event) {
+  event.preventDefault();
+  atualizarGruposOuSubgrupos({
+    grupoId: 'todos'
+  });
+});
+function atualizarGruposOuSubgrupos(_x3) {
+  return _atualizarGruposOuSubgrupos.apply(this, arguments);
+}
+function _atualizarGruposOuSubgrupos() {
+  _atualizarGruposOuSubgrupos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(_ref3) {
+    var _ref3$grupoId, grupoId, _ref3$subgrupoId, subgrupoId, produtosContainer, subgruposList, grupoAtivo, subgrupoAtivoAnterior, _document$querySelect2, _subgrupoAtivoAnterior, response, data, _document$querySelect3, _subgrupoAtivoAnterior2, subgrupoAtivo;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _ref3$grupoId = _ref3.grupoId, grupoId = _ref3$grupoId === void 0 ? '' : _ref3$grupoId, _ref3$subgrupoId = _ref3.subgrupoId, subgrupoId = _ref3$subgrupoId === void 0 ? '' : _ref3$subgrupoId;
+          produtosContainer = document.getElementById('produtos-container');
+          subgruposList = grupoId ? document.getElementById("subgrupos-".concat(grupoId)) : null;
+          grupoAtivo = document.querySelector('.list-group-item.active');
+          if (!(grupoAtivo && grupoAtivo.getAttribute('data-grupo-id') === grupoId && !subgrupoId)) {
+            _context3.next = 12;
+            break;
+          }
+          grupoAtivo.classList.remove('active');
+          subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
+          if (subgrupoAtivoAnterior) {
+            subgrupoAtivoAnterior.classList.remove('active');
+          }
+          document.querySelectorAll('.subgrupos-list').forEach(function (list) {
+            return list.classList.add('d-none');
+          });
+          buscarProdutos({
+            pesquisa: '',
+            grupo: '',
+            subgrupo: '',
+            limite: 12,
+            tipo_chamada: 'nova_busca',
+            escopo: 'todos'
+          });
+          document.querySelector('[data-grupo-id="todos"]').classList.add('active');
+          return _context3.abrupt("return");
+        case 12:
+          if (!subgrupoId) {
+            document.querySelectorAll('.grupo-item').forEach(function (item) {
+              return item.classList.remove('active');
+            });
+            (_document$querySelect2 = document.querySelector("[data-grupo-id=\"".concat(grupoId, "\"]"))) === null || _document$querySelect2 === void 0 || _document$querySelect2.classList.add('active');
+          }
+          document.querySelectorAll('.subgrupos-list').forEach(function (list) {
+            if (!list.id.includes("subgrupos-".concat(grupoId))) {
+              list.classList.add('d-none');
+            }
+          });
+          if (!(grupoId && !subgrupoId)) {
+            _context3.next = 38;
+            break;
+          }
+          _subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
+          if (_subgrupoAtivoAnterior) {
+            _subgrupoAtivoAnterior.classList.remove('active');
+          }
+          if (!(grupoId === 'todos')) {
+            _context3.next = 20;
+            break;
+          }
+          buscarProdutos({
+            pesquisa: '',
+            grupo: '',
+            subgrupo: '',
+            limite: 12,
+            tipo_chamada: 'nova_busca',
+            escopo: 'todos'
+          });
+          return _context3.abrupt("return");
+        case 20:
+          if (!subgruposList) {
+            _context3.next = 37;
+            break;
+          }
+          subgruposList.classList.remove('d-none');
+          subgruposList.innerHTML = '<li class="list-group-item m-0">Carregando...</li>';
+          _context3.prev = 23;
+          _context3.next = 26;
+          return fetch("/buscar-subgrupos", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              grupo: grupoId
+            })
+          });
+        case 26:
+          response = _context3.sent;
+          _context3.next = 29;
+          return response.json();
+        case 29:
+          data = _context3.sent;
+          if (data.status === 'sucesso' && Array.isArray(data.subgrupos)) {
+            subgruposList.innerHTML = data.subgrupos.map(function (subgrupo) {
+              return "\n                            <a href=\"\" class=\" ml-3 list-group-item list-group-item-action subgrupo-item\" data-subgrupo-id=\"".concat(subgrupo.codigo, "\">\n                                ").concat(subgrupo.descricao, "\n                            </a>\n                        ");
+            }).join('');
+          } else {
+            subgruposList.innerHTML = '<li class="list-group-item">Nenhum subgrupo encontrado</li>';
+          }
+          _context3.next = 37;
+          break;
+        case 33:
+          _context3.prev = 33;
+          _context3.t0 = _context3["catch"](23);
+          console.error('Erro ao buscar subgrupos:', _context3.t0);
+          subgruposList.innerHTML = '<li class="list-group-item">Erro ao carregar subgrupos</li>';
+        case 37:
+          buscarProdutos({
+            pesquisa: '',
+            grupo: grupoId,
+            subgrupo: '',
+            limite: 12,
+            tipo_chamada: 'nova_busca',
+            escopo: 'grupo'
+          });
+        case 38:
+          if (grupoId && subgrupoId) {
+            (_document$querySelect3 = document.querySelector("[data-grupo-id=\"".concat(grupoId, "\"]"))) === null || _document$querySelect3 === void 0 || _document$querySelect3.classList.add('active');
+            _subgrupoAtivoAnterior2 = document.querySelector('.subgrupo-item.active');
+            if (_subgrupoAtivoAnterior2) {
+              _subgrupoAtivoAnterior2.classList.remove('active');
+            }
+            subgrupoAtivo = document.querySelector("[data-subgrupo-id=\"".concat(subgrupoId, "\"]"));
+            if (subgrupoAtivo) {
+              setTimeout(function () {
+                subgrupoAtivo.classList.add('active');
+              }, 100);
+            }
+            buscarProdutos({
+              pesquisa: '',
+              grupo: grupoId,
+              subgrupo: subgrupoId,
+              limite: 12,
+              tipo_chamada: 'nova_busca',
+              escopo: 'subgrupo'
+            });
+          }
+        case 39:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[23, 33]]);
+  }));
+  return _atualizarGruposOuSubgrupos.apply(this, arguments);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('grupo-item')) {
+      event.preventDefault();
+      var grupoId = event.target.getAttribute('data-grupo-id');
+      atualizarGruposOuSubgrupos({
+        grupoId: grupoId
+      });
+    } else if (event.target.classList.contains('subgrupo-item')) {
+      var _document$querySelect;
+      event.preventDefault();
+      var subgrupoId = event.target.getAttribute('data-subgrupo-id');
+      var _grupoId = (_document$querySelect = document.querySelector('.list-group-item.active')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.getAttribute('data-grupo-id');
+      atualizarGruposOuSubgrupos({
+        grupoId: _grupoId,
+        subgrupoId: subgrupoId
+      });
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', function () {
+  var toggleButton = document.getElementById('toggleGrupos1');
+  var gruposOcultos = document.querySelectorAll('.oculto');
+  toggleButton.addEventListener('click', function () {
+    var areHidden = Array.from(gruposOcultos).some(function (grupo) {
+      return grupo.classList.contains('d-none');
+    });
+    if (areHidden) {
+      gruposOcultos.forEach(function (grupo) {
+        return grupo.classList.remove('d-none');
+      });
+      toggleButton.textContent = 'Mostrar menos';
+    } else {
+      gruposOcultos.forEach(function (grupo) {
+        return grupo.classList.add('d-none');
+      });
+      toggleButton.textContent = 'Mostrar mais';
+    }
+  });
+});
 })();
 
 /******/ })()

@@ -26,87 +26,79 @@
                 <p><strong>Atenção:</strong> Seu endereço ainda não está completo.</p>
                 <p>
                     Para facilitar futuros pedidos, recomendamos preencher essas informações em
-                    <a href="{{ route('profile.edit') }}" class="text-blue-500 underline">seu perfil</a>.
+                    <a href="{{ route('profile.edit') }}" class="text-yellow-500 underline">seu perfil</a>.
                 </p>
-            `
+            `,
         });
     </script>
     @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <h3 class="text-center mb-4 font-semibold text-gray-800">Histórico de Compras</h3>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Data da Compra</th>
-                                @if ($exibirPreco)
-                                    <th>Total</th>
-                                @endif
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($vendas->isEmpty())
-                            <tr>
-                                <td colspan="7">Nenhuma compra realizada ainda!</td>
-                            </tr>
-                            @endif
-                            @foreach ($vendas as $venda)
-                                <tr>
-                                    <td>{{ $venda['id'] }}</td>
-                                    <td>{{ $venda['data_venda'] }}</td>
-                                    @if ($exibirPreco)
-                                        <td>R$ {{ number_format($venda['total'], 2, ',', '.') }}</td>
-                                    @endif
-                                    <td>
-                                        <button class="btn btn-primary button-primary" onclick="toggleDetalhes({{ $venda['id'] }})">
-                                            Ver Detalhes
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr id="detalhes-{{ $venda['id'] }}" style="display: none;">
-                                    <td colspan="4">
-                                        <table class="table table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Produto</th>
-                                                    <th>Quantidade</th>
-                                                    @if ($exibirPreco)
-                                                        <th>Preço</th>
-                                                        <th>Subtotal</th>
-                                                    @endif
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($venda['itens'] as $item)
-                                                    <tr>
-                                                        <td>{{ $item['nome'] }}</td>
-                                                        <td>{{ $item['quantidade'] }}</td>
-                                                        @if ($exibirPreco)
-                                                            <td>R$ {{ number_format($item['preco'], 2, ',', '.') }}</td>
-                                                            <td>R$ {{ number_format($item['subtotal'], 2, ',', '.') }}</td>
-                                                        @endif
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h3 class="font-semibold text-lg">Pedidos em Andamento</h3>
+                    <ul class="mt-4">
+                        @forelse ($pedidosEmAndamento as $pedido)
+                            <li class="border-b border-gray-200 py-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="{{ $pedido['status'] === 'pendente' ? 'text-yellow-500' : ($pedido['status'] === 'liberado' ? 'text-blue-500' : 'text-green-500') }}">
+                                        Pedido #{{ $pedido['id'] }} - {{ ucfirst($pedido['status']) }}
+                                    </span>
+                                    <span class="text-sm text-gray-500">{{ $pedido['data_venda'] }}</span>
+                                </div>
+                                <button onclick="toggleItems({{ $pedido['id'] }})" class="btn btn-primary btn-sm button-primary">Ver Itens</button>
+                                <ul id="itens-{{ $pedido['id'] }}" class="hidden mt-2 text-sm text-gray-600">
+                                    @foreach ($pedido['itens'] as $item)
+                                        <li>
+                                            {{ $item['nome'] }} ({{ $item['quantidade'] }}x)
+                                            @if ($exibirPreco)
+                                                - R$ {{ number_format($item['preco'], 2, ',', '.') }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @empty
+                            <li class="text-gray-500">Nenhum pedido em andamento.</li>
+                        @endforelse
+                    </ul>
+
+                    <h3 class="font-semibold text-lg mt-8">Últimas Compras</h3>
+                    <ul class="mt-4">
+                        @forelse ($ultimasCompras as $compra)
+                            <li class="border-b border-gray-200 py-2">
+                                <div class="flex justify-between items-center">
+                                    <span class="{{ $compra['status'] === 'cancelado' ? 'text-red-500' : 'text-green-500' }}">
+                                        Compra #{{ $compra['id'] }} - {{ ucfirst($compra['status']) }}
+                                    </span>
+                                    <span class="text-sm text-gray-500">{{ $compra['data_venda'] }}</span>
+                                </div>
+                                <button onclick="toggleItems({{ $compra['id'] }})" class="btn btn-primary btn-sm button-primary">Ver Itens</button>
+                                <ul id="itens-{{ $compra['id'] }}" class="hidden mt-2 text-sm text-gray-600">
+                                    @foreach ($compra['itens'] as $item)
+                                        <li>
+                                            {{ $item['nome'] }} ({{ $item['quantidade'] }}x)
+                                            @if ($exibirPreco)
+                                                - R$ {{ number_format($item['preco'], 2, ',', '.') }}
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @empty
+                            <li class="text-gray-500">Nenhuma compra encontrada.</li>
+                        @endforelse
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
 <script>
-    function toggleDetalhes(vendaId) {
-        const detalhes = document.getElementById(`detalhes-${vendaId}`);
-        detalhes.style.display = detalhes.style.display === 'none' ? 'table-row' : 'none';
+    function toggleItems(id) {
+        const itens = document.getElementById(`itens-${id}`);
+        itens.classList.toggle('hidden');
     }
 </script>
