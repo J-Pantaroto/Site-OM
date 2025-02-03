@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-<head data-validar-estoque ="{{config('config.config.validar-estoque') === 'S' ? 'true' : 'false'}}">
+<head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100" data-exibir-preco="{{ config('config.config.exibir_preco') === 'S' ? 'true' : 'false' }}">
-
+    <div id="validar-estoque" data-validar-estoque ="{{config('config.config.validar-estoque') === 'S' ? 'true' : 'false'}}"></div>
     <div id="usuario-autenticado" data-autenticado="{{ auth()->check() ? 'true' : 'false' }}"></div>
     <nav class="navbar navbar-expand-lg shadow fixed-top">
         <div class="container-fluid align-items-center">

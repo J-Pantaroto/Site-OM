@@ -4588,8 +4588,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 var escopo = 'todos';
 var offset2 = 0;
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-var validarQuantidade = document.head.dataset.validarQuantidade === 'true';
+console.log(validarQuantidade);
 function buscarProdutos(_x) {
   return _buscarProdutos.apply(this, arguments);
 } //PESQUISA

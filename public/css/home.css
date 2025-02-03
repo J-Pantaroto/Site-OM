@@ -319,6 +319,9 @@
     .produto-descricao {
         font-size: 0.750rem !important;
     }
+    .produto-quantidade{
+        font-size: 0.750rem !important;
+    }
 }
 
 /* CARD PRODUTO */

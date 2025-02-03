@@ -89,15 +89,15 @@
                             <a href="{{ route('produto/', ['slug' => $produto->slug]) }}" 
                                class="text-decoration-none a-text">
                                 <div class="card m-4 card-produto">
-                                    @if(config('config.config.validar_estoque'))
-                                    <p class= "produto-quantidade d-none">{{$produto->quantidade}}</p>
-                                    @endif
                                     <img src="{{ asset('storage/' . $produto->imagem) }}" 
-                                         class="card-img-top img-fluid" alt="...">
+                                    class="card-img-top img-fluid" alt="...">
                                     <div class="card-body text-center">
                                         <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
                                         @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
-                                            <p class="produto-preco">R$ {{ $produto->preco }}</p>
+                                        <p class="produto-preco">R$ {{ $produto->preco }}</p>
+                                        @endif
+                                        @if(config('config.config.validar_estoque') === 'S')
+                                        <p class= "produto-quantidade ">Quantidade em estoque: {{$produto->quantidade}}</p>
                                         @endif
                                         <div class="produto-descricao">
                                             <p>{{ $produto->descricao }}</p>

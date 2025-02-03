@@ -16,13 +16,13 @@
                 <div class="d-flex flex-column h-100">
                     <div class="card-body">
                         <h3 id="nome-produto" class="card-title text-center">{{ $prod->nome }}</h3>
-                        <p class="card-text mt-4 p-4">{{ $prod->descricao }}</p>
+                        <p class="card-text text-center p-4">{{ $prod->descricao }}</p>
                     </div>
                     @if (!empty($prod->preco) && config('config.config.exibir_preco') === 'S')
                         <h4 class="produto-preco">Preço: R$ {{ $prod->preco }}</h4>
                     @endif
-                    @if (!config('config.config.validar_estoque') === 'S')
-                        <h3 class="produto-quantidade"> Quantidade disponível: {{$prod->quantidade}}</h3>
+                    @if (config('config.config.validar_estoque') === 'S')
+                        <p class="produto-quantidade mt-4 p-4"> Quantidade disponível: {{$prod->quantidade}}</p>
                     @endif
                     <div class="mt-auto d-flex justify-content-end">
                         <button class="btn btn-primary button-primary" id="adicionar-carrinho"

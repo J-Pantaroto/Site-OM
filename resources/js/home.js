@@ -2,8 +2,9 @@ import Swal from 'sweetalert2';
 var escopo = 'todos';
 var offset2 = 0
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-var validarQuantidade = document.head.dataset.validarQuantidade === 'true';
+console.log(validarQuantidade);
 async function buscarProdutos({ pesquisa = '', grupo = '', subgrupo = '', limite = 12, tipo_chamada = 'nova_busca', escopo = 'todos' }) {
     try {
         if (tipo_chamada === "mais_produto") {
