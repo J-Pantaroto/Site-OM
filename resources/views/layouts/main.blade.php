@@ -18,7 +18,7 @@
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>{{ config('app.name') }}</title>
-    <link rel="icon" href="{{ config('config.imgs.fav_icon_path') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset(config('config.imgs.fav_icon_path')) }}" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 </head>
