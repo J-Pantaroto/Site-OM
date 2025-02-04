@@ -1,20 +1,5 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-    <a href="https://github.com/laravel/framework/actions">
-        <img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Status do Build">
-    </a>
-    <a href="https://packagist.org/packages/laravel/framework">
-        <img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Downloads Totais">
-    </a>
-    <a href="https://packagist.org/packages/laravel/framework">
-        <img src="https://img.shields.io/packagist/v/laravel/framework" alt="Última Versão Estável">
-    </a>
-    <a href="https://packagist.org/packages/laravel/framework">
-        <img src="https://img.shields.io/packagist/l/laravel/framework" alt="Licença">
-    </a>
-</p>
-
 ## Sobre o Projeto
 
 Este projeto foi desenvolvido utilizando o **Laravel**, um framework PHP moderno e robusto para construção de aplicações web escaláveis e eficientes. O projeto inclui recursos como:
