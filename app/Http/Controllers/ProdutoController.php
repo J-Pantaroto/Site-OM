@@ -14,7 +14,7 @@ class ProdutoController extends Controller
     public function index()
     {
         $totalProdutos = 20;
-        $produtos = Produto::orderBy('nome', 'ASC')->paginate($totalProdutos);
+        $produtos = Produto::orderBy('ID', 'ASC')->paginate($totalProdutos);
         $grupos = Grupo::all();
 
         return view('produtos', compact('grupos', 'produtos'));
@@ -68,7 +68,7 @@ class ProdutoController extends Controller
         $produto = Produto::findOrFail($id);
 
         $request->validate([
-            'imagens.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagens.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
             'preco' => 'nullable|string|',

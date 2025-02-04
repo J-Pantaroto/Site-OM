@@ -63,6 +63,8 @@ return [
         'aprovar_cadastro' => env('APROVAR_CADASTRO', 'N'),
         'exibir_preco' => env('EXIBIR_PRECO', 'N'),
         'validar_estoque'=> env('VALIDAR_ESTOQUE','N'),
+        'somente_cadastrar_ao_sincronizar'=> env('SOMENTE_CADASTRAR_AO_SINCRONIZAR','N'),
+        'dados_produtos_para_sincronizar'=> env('DADOS_PRODUTOS_PARA_SINCRONIZAR','todos'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),

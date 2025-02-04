@@ -4578,6 +4578,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
+var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
   window.abrirFecharDropDown = function (escopo) {
@@ -4723,11 +4725,21 @@ if (usuarioAutenticado) {
     atualizarCookiesCarrinho(produtosCarrinho);
   };
   var adicionarProdutoCarrinho = function adicionarProdutoCarrinho(produto) {
+    var _document$querySelect4;
     var produtosCarrinho = carregarProdutosCarrinho();
     var produtoExistente = produtosCarrinho.find(function (p) {
       return p.nome === produto.nome;
     });
+    var quantidadeDisponivel = parseInt((_document$querySelect4 = document.querySelector('.produto-quantidade')) === null || _document$querySelect4 === void 0 ? void 0 : _document$querySelect4.textContent.replace(/\D/g, '')) || 0;
     if (produtoExistente) {
+      if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          icon: 'error',
+          title: 'Estoque insuficiente!',
+          text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+        });
+        return;
+      }
       produtoExistente.quantidade += 1;
     } else {
       if (exibirPreco) {
@@ -4761,15 +4773,41 @@ if (usuarioAutenticado) {
     atualizarContagemCarrinho();
   };
   document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
-    var _document$querySelect;
+    var _document$querySelect, _document$querySelect2;
+    var quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
     var produto = {
       id: this.dataset.id,
       nome: document.getElementById('nome-produto').textContent,
       imagem: document.getElementById('imagem').src,
-      preco: exibirPreco ? parseFloat((_document$querySelect = document.querySelector('.produto-preco')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
+      preco: exibirPreco ? parseFloat((_document$querySelect2 = document.querySelector('.produto-preco')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
       quantidade: 1
     };
-    adicionarProdutoCarrinho(produto);
+    var produtosCarrinho = carregarProdutosCarrinho();
+    var produtoExistente = produtosCarrinho.find(function (p) {
+      return p.nome === produto.nome;
+    });
+    if (validarQuantidade && quantidadeDisponivel <= 0) {
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+        icon: 'error',
+        title: 'Produto fora de estoque!',
+        text: 'Este produto não está disponível no momento.'
+      });
+      return;
+    }
+    if (produtoExistente) {
+      if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          icon: 'error',
+          title: 'Estoque insuficiente!',
+          text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+        });
+        return;
+      }
+      produtoExistente.quantidade += 1;
+    } else {
+      produtosCarrinho.push(produto);
+    }
+    atualizarCookiesCarrinho(produtosCarrinho);
     atualizarCarrinho();
     atualizarContagemCarrinho();
     sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
@@ -4791,10 +4829,12 @@ if (usuarioAutenticado) {
     var button = event.target;
     var inputGrupo = button.closest('.input-group');
     if (inputGrupo) {
+      var _document$querySelect3;
       var quantidadeSpan = inputGrupo.querySelector('.quantity-span');
       var item = button.closest('tr');
       var nomeProduto = item.querySelector('td:nth-child(2)').textContent;
       var value = parseInt(quantidadeSpan.textContent);
+      var quantidadeDisponivel = parseInt((_document$querySelect3 = document.querySelector('.produto-quantidade')) === null || _document$querySelect3 === void 0 ? void 0 : _document$querySelect3.textContent.replace(/\D/g, '')) || 0;
       if (button.classList.contains('button-minus')) {
         if (value > 1) {
           value--;
@@ -4812,6 +4852,14 @@ if (usuarioAutenticado) {
         atualizarContagemCarrinho();
       }
       if (button.classList.contains('button-plus')) {
+        if (validarQuantidade && value >= quantidadeDisponivel) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: 'error',
+            title: 'Estoque insuficiente!',
+            text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+          });
+          return;
+        }
         value++;
         quantidadeSpan.textContent = value;
         atualizarProdutoQuantidade(nomeProduto, value);

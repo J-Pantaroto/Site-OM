@@ -27,29 +27,29 @@ class HomeController extends Controller
         $gruposQuery = Grupo::query();
         $gruposQuery->whereExists(function ($query) use ($exibirPreco, $validarEstoque) {
             $query->select(DB::raw(1))
-                  ->from('produtos')
-                  ->whereColumn('produtos.grupo', 'grupos.codigo');
-    
+                ->from('produtos')
+                ->whereColumn('produtos.grupo', 'grupos.codigo');
+
             if ($exibirPreco) {
                 $query->whereNotNull('produtos.preco')->where('produtos.preco', '>', 0);
             }
-    
+
             if ($validarEstoque) {
                 $query->whereNotNull('produtos.quantidade')->where('produtos.quantidade', '>', 0);
             }
         });
-    
-    
+
+
         $grupos = $gruposQuery->get();
-    
+
         // Separação de grupos
         $gruposPrincipais = $grupos->take(15);
         $gruposRestantes  = $grupos->skip(15);
-    
+
         $nenhumProdutoComPreco = $exibirPreco && $produtos->isEmpty();
         $isAdmin = Auth::check() && (Auth::user()->is_admin || Auth::user()->isSuperVisor());
         $mostrarBotaoVerMais  = $produtos->total() > $produtos->perPage();
-    
+
         return view('home', compact(
             'gruposPrincipais',
             'gruposRestantes',
@@ -59,7 +59,7 @@ class HomeController extends Controller
             'mostrarBotaoVerMais'
         ));
     }
-    
+
 
 
     public function buscarSubgrupos(Request $request)
@@ -86,6 +86,7 @@ class HomeController extends Controller
     }
     public function buscarProduto(Request $request)
     {
+
         $exibirPreco = config('config.config.exibir_preco') === 'S';
         $validarEstoque = config('config.config.validar_estoque') === 'S';
         $exibirPreco = config('config.config.exibir_preco') === 'S';

@@ -40,7 +40,13 @@
 .user-button:hover {
     background-color: var(--color-gray-30);
 }
-
+#imagem {
+    width: 100%;
+    max-height: 25rem;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+}
 input.form-control:focus {
     box-shadow: 0 0 0 0.1rem var(--color-gray-30);
     outline: none;

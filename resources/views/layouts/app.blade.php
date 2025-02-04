@@ -17,6 +17,7 @@
 
 <body class="font-sans antialiased"
     data-exibir-preco="{{ config('config.config.exibir_preco') === 'S' ? 'true' : 'false' }}">
+    <div id="validar-estoque" data-validar-estoque ="{{config('config.config.validar-estoque') === 'S' ? 'true' : 'false'}}"></div>
     <div id="rota" data-id={{ Route::currentRouteName() }}></div>
     <div id="background" class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')

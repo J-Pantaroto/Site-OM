@@ -1,6 +1,8 @@
 import Swal from 'sweetalert2';
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
+var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
     window.abrirFecharDropDown = function (escopo) {
@@ -38,6 +40,7 @@ if (usuarioAutenticado) {
     }
 
     document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
+        const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
         const produto = {
             id: this.dataset.id,
             nome: document.getElementById('nome-produto').textContent,
@@ -45,7 +48,30 @@ if (usuarioAutenticado) {
             preco: exibirPreco ? parseFloat(document.querySelector('.produto-preco')?.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
             quantidade: 1
         };
-        adicionarProdutoCarrinho(produto);
+        const produtosCarrinho = carregarProdutosCarrinho();
+        const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
+        if (validarQuantidade && quantidadeDisponivel <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Produto fora de estoque!',
+                text: 'Este produto não está disponível no momento.',
+            });
+            return;
+        }
+        if (produtoExistente) {
+            if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Estoque insuficiente!',
+                    text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                });
+                return;
+            }
+            produtoExistente.quantidade += 1;
+        } else {
+            produtosCarrinho.push(produto);
+        }
+        atualizarCookiesCarrinho(produtosCarrinho);
         atualizarCarrinho();
         atualizarContagemCarrinho();
         Swal.fire({
@@ -150,7 +176,7 @@ if (usuarioAutenticado) {
             const item = button.closest('tr');
             const nomeProduto = item.querySelector('td:nth-child(2)').textContent;
             let value = parseInt(quantidadeSpan.textContent);
-
+            const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
             if (button.classList.contains('button-minus')) {
                 if (value > 1) {
                     value--;
@@ -167,6 +193,14 @@ if (usuarioAutenticado) {
             }
 
             if (button.classList.contains('button-plus')) {
+                if (validarQuantidade && value >= quantidadeDisponivel) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Estoque insuficiente!',
+                        text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                    });
+                    return;
+                }
                 value++;
                 quantidadeSpan.textContent = value;
                 atualizarProdutoQuantidade(nomeProduto, value);
@@ -197,7 +231,7 @@ if (usuarioAutenticado) {
     }
     function carregarProdutosCarrinho() {
         const produtos = JSON.parse(getCookie('carrinho')) || [];
-        if(exibirPreco){
+        if (exibirPreco) {
             return produtos.map(produto => {
                 const novoProduto = {
                     id: produto.id,
@@ -208,7 +242,7 @@ if (usuarioAutenticado) {
                 };
                 return novoProduto;
             });
-        }else{
+        } else {
             return produtos.map(produto => {
                 const novoProduto = {
                     id: produto.id,
@@ -220,7 +254,7 @@ if (usuarioAutenticado) {
             });
         }
     }
-    
+
 
     function getCookie(nome) {
         const value = `; ${decodeURIComponent(document.cookie)}`;
@@ -240,11 +274,20 @@ if (usuarioAutenticado) {
     function adicionarProdutoCarrinho(produto) {
         const produtosCarrinho = carregarProdutosCarrinho();
         const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
-    
+        const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
+
         if (produtoExistente) {
+            if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Estoque insuficiente!',
+                    text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                });
+                return;
+            }
             produtoExistente.quantidade += 1;
         } else {
-            if(exibirPreco){
+            if (exibirPreco) {
                 const novoProduto = {
                     id: produto.id,
                     nome: produto.nome,
@@ -253,7 +296,7 @@ if (usuarioAutenticado) {
                     preco: parseFloat(produto.preco)
                 };
                 produtosCarrinho.push(novoProduto);
-            }else{
+            } else {
                 const novoProduto = {
                     id: produto.id,
                     nome: produto.nome,
@@ -263,10 +306,10 @@ if (usuarioAutenticado) {
                 produtosCarrinho.push(novoProduto);
             }
         }
-    
+
         atualizarCookiesCarrinho(produtosCarrinho);
     }
-    
+
 
     function atualizarCookiesCarrinho(produtos) {
         document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
@@ -285,86 +328,86 @@ if (usuarioAutenticado) {
         cartItems.innerHTML = '';
         atualizarContagemCarrinho();
     }
-     document.addEventListener('DOMContentLoaded', () => {
-            const finalizarCompra = document.getElementById('finalizar');
-    
-            if (finalizarCompra) {
-                finalizarCompra.addEventListener('click', function () {
-                    const produtosCarrinho = carregarProdutosCarrinho();
-                    const produtosFormatados = produtosCarrinho.map(produto => ({
-                        id: produto.id,
-                        quantidade: produto.quantidade,
-                        preco: produto.preco
-                    }));
-                    fetch(`/registrar/venda`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        },
-                        body: JSON.stringify({ produtos: produtosFormatados }),
-                    })
-                        .then(response => {
-    
-                            if (response.status === 403) {
-                                return response.json().then(data => {
-                                    Swal.fire({
-                                        icon: 'warning',
-                                        title: 'Informações Incompletas',
-                                        text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
-                                        confirmButtonText: 'Ir para o perfil',
-                                    }).then(() => {
-                                        window.location.href = data.redirect_url;
-                                    });
-                                });
-                            }
-                            if (!response.ok) {
-                                return response.json().then(data => {
-                                    throw new Error(data.message || 'Erro desconhecido');
-                                });
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data && data.status === 'success') {
+    document.addEventListener('DOMContentLoaded', () => {
+        const finalizarCompra = document.getElementById('finalizar');
+
+        if (finalizarCompra) {
+            finalizarCompra.addEventListener('click', function () {
+                const produtosCarrinho = carregarProdutosCarrinho();
+                const produtosFormatados = produtosCarrinho.map(produto => ({
+                    id: produto.id,
+                    quantidade: produto.quantidade,
+                    preco: produto.preco
+                }));
+                fetch(`/registrar/venda`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                    body: JSON.stringify({ produtos: produtosFormatados }),
+                })
+                    .then(response => {
+
+                        if (response.status === 403) {
+                            return response.json().then(data => {
                                 Swal.fire({
-                                    icon: "success",
-                                    title: "Compra finalizada!",
-                                    text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
-                                    showClass: {
-                                        popup: `animate__rubberBand animate__backOutUp`,
-                                    },
-                                    hideClass: {
-                                        popup: `animate__backOutDown`,
-                                    },
+                                    icon: 'warning',
+                                    title: 'Informações Incompletas',
+                                    text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                                    confirmButtonText: 'Ir para o perfil',
+                                }).then(() => {
+                                    window.location.href = data.redirect_url;
                                 });
-                                limparCarrinho();
-                                const carrinhoModal = document.getElementById('modal-loja');
-                                if (carrinhoModal) {
-                                    carrinhoModal.classList.remove('show');
-                                    carrinhoModal.style.display = 'none';
-                                }
-    
-                                const modalBackdrop = document.querySelector('.modal-backdrop');
-                                if (modalBackdrop) modalBackdrop.remove();
-    
-                                document.body.classList.remove('modal-open');
-                                document.body.style.removeProperty('padding-right');
-                                document.body.style.removeProperty('overflow');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erro na requisição:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Erro',
-                                text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.',
                             });
+                        }
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Erro desconhecido');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.status === 'success') {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Compra finalizada!",
+                                text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+                                showClass: {
+                                    popup: `animate__rubberBand animate__backOutUp`,
+                                },
+                                hideClass: {
+                                    popup: `animate__backOutDown`,
+                                },
+                            });
+                            limparCarrinho();
+                            const carrinhoModal = document.getElementById('modal-loja');
+                            if (carrinhoModal) {
+                                carrinhoModal.classList.remove('show');
+                                carrinhoModal.style.display = 'none';
+                            }
+
+                            const modalBackdrop = document.querySelector('.modal-backdrop');
+                            if (modalBackdrop) modalBackdrop.remove();
+
+                            document.body.classList.remove('modal-open');
+                            document.body.style.removeProperty('padding-right');
+                            document.body.style.removeProperty('overflow');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro na requisição:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro',
+                            text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.',
                         });
-                });
-            }
-        });
-    
+                    });
+            });
+        }
+    });
+
 } else if (!usuarioAutenticado) {
     const addCarrinho = document.getElementById('adicionar-carrinho');
     addCarrinho.addEventListener('click', function (event) {

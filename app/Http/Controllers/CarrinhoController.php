@@ -9,17 +9,29 @@ class CarrinhoController extends Controller
 {
     function atualizarCarrinho(Request $request)
     {
+        $request->validate([
+            'produtos' => 'required|array|min:1',
+            'produtos.*.nome' => 'required|string|max:255',
+            'produtos.*.imagem' => 'required|string',
+            'produtos.*.quantidade' => 'required|integer|min:1',
+        ]);
         $produtos = $request->input('produtos');
         $produtosComId = [];
 
         foreach ($produtos as $produto) {
             $produtoExistente = Produto::where('nome', $produto['nome'])->first();
             if ($produtoExistente) {
+                if (config('config.config.validar_estoque') === 'S' && $produtoExistente->quantidade < $produto['quantidade']) {
+                    return response()->json([
+                        'status' => 'erro',
+                        'mensagem' => "Estoque insuficiente para o produto: {$produtoExistente->nome}",
+                    ], 400);
+                }
                 $produtosComId[] = [
                     'id' => $produtoExistente->id,
                     'nome' => $produto['nome'],
                     'imagem' => $produto['imagem'],
-                    'preco' => $produtoExistente->preco,
+                    'preco' => config('config.config.exibir_preco') === 'S' ? $produtoExistente->preco : null,
                     'quantidade' => $produto['quantidade']
                 ];
             }

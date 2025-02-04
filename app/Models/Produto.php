@@ -23,6 +23,23 @@ class Produto extends Model
     });
   }
 
+  public function verificarDadosParaAtualizar($campo){
+    $dadosPermitidos = config('config.config.dados_produtos_para_sincronizar');
+
+      $camposParaSincronizar = explode(',', str_replace(' ', '', $dadosPermitidos));
+
+      $camposObrigatorios = ['inativo', 'quantidade', 'grupo', 'subgrupo'];
+      if(in_array('todos',$camposParaSincronizar )){
+        return true;
+      }
+      if (in_array($campo, $camposParaSincronizar) || in_array($campo, $camposObrigatorios)) {
+          return true;
+      }
+
+      return false;
+  }
+
+
   public function imagens()
   {
     return $this->hasMany(ImagemProduto::class);

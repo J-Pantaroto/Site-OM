@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Venda;
 use App\Models\User;
 use App\Models\ItensVenda;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 
 class VendaController extends Controller
@@ -18,7 +19,7 @@ class VendaController extends Controller
                 'produtos' => 'required|array',
                 'produtos.*.id' => 'required|exists:produtos,id',
                 'produtos.*.quantidade' => 'required|integer|min:1',
-                'produtos.*.preco' => 'nullable|numeric|min:0', // Preco opcional
+                'produtos.*.preco' => 'nullable|numeric|min:0',
             ]);
 
             $produtos = $request->input('produtos');
@@ -33,26 +34,47 @@ class VendaController extends Controller
                 ], 401);
             }
             $exibirPreco = config('config.config.exibir_preco') === 'S';
+            $validarEstoque = config('config.config.validar_estoque') === 'S';
+
             $total = $exibirPreco ? array_reduce($produtos, function ($carry, $produto) {
                 return $carry + ($produto['preco'] * $produto['quantidade']);
             }, 0) : 0;
+            foreach ($produtos as $produtoData) {
+                $produto = Produto::find($produtoData['id']);
 
-            // Criar a venda com cliente_id e data atual
+                if (!$produto) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => "O produto ID {$produtoData['id']} não foi encontrado.",
+                    ], 400);
+                }
+
+                if ($validarEstoque && $produto->quantidade < $produtoData['quantidade']) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => "Estoque insuficiente para o produto: {$produto->nome}",
+                    ], 400);
+                }
+            }
             $venda = Venda::create([
                 'cliente_id' => $user->id,
                 'data_venda' => now(),
-                'total' => $total ?? 0, // Define o total como 0 se não houver preço
+                'total' => $total ?? 0,
             ]);
 
-            // Inserir os itens da venda
-            foreach ($produtos as $produto) {
+            foreach ($produtos as $produtoData) {
+                $produto = Produto::find($produtoData['id']);
                 ItensVenda::create([
                     'venda_id' => $venda->id,
-                    'produto_id' => $produto['id'],
-                    'quantidade' => $produto['quantidade'],
-                    'preco' => $exibirPreco ? $produto['preco'] : 0, // Insere o preço apenas se permitido
-                    'subtotal' => $exibirPreco ? ($produto['preco'] * $produto['quantidade']) : 0,
+                    'produto_id' => $produto->id,
+                    'quantidade' => $produtoData['quantidade'],
+                    'preco' => $exibirPreco ? $produtoData['preco'] : 0,
+                    'subtotal' => $exibirPreco ? ($produtoData['preco'] * $produtoData['quantidade']) : 0,
                 ]);
+
+                if ($validarEstoque) {
+                    $produto->decrement('quantidade', $produtoData['quantidade']);
+                }
             }
             return response()->json([
                 'status' => 'success',

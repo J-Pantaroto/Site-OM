@@ -112,3 +112,17 @@ background-color: var(--color-background) !important;
 }
 
 /* TABLE */
+
+
+
+
+.produto-inativo {
+    opacity: 0.5; 
+    pointer-events: none;  
+    background-color: #e7bec2;  
+}
+
+#inativo-icone {
+    pointer-events: all !important;
+
+}

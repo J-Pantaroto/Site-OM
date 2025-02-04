@@ -24,6 +24,9 @@
                                 @if (config('config.config.exibir_preco') === 'S')
                                     <th class="tablebackground" scope="col">Preço</th>
                                 @endif
+                                @if (config('config.config.validar_estoque') === 'S')
+                                <th class="tablebackground" scope="col">Estoque</th>
+                            @endif
                                 <th class="tablebackground" scope="col">Ação</th>
                             </tr>
                         </thead>
@@ -35,8 +38,8 @@
                             @else
                                 @foreach ($produtos as $produto)
                                     <tr>
-                                        <th scope="row">{{ $produto->id }}</th>
-                                        <td>
+                                        <th class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}" scope="row">{{ $produto->id }}</th>
+                                        <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
                                             @php
                                                 $imagemPrincipal = $produto
                                                     ->imagens()
@@ -51,10 +54,10 @@
                                                     alt="Imagem Placeholder" style="width: 8rem; height: auto;">
                                             @endif
                                         </td>
-                                        <td>
+                                        <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
                                             {{ $produto->nome }}
                                             @if ($produto->inativo === 'S')
-                                                <span class="text-danger ms-2">
+                                                <span id="inativo-icone" class="text-danger ms-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20"
                                                         height="20" fill="currentColor" class="bi bi-info-circle"
                                                         viewBox="0 0 20 20">
@@ -65,13 +68,18 @@
                                                             d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
                                                     </svg>
                                                 </span>
+                                            </td>
                                             @endif
-                                        </td>
                                         @if (config('config.config.exibir_preco') === 'S')
-                                            <td>
+                                            <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
                                                 R$ {{ $produto->preco }}
                                             </td>
                                         @endif
+                                        @if (config('config.config.validar_estoque') === 'S')
+                                        <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
+                                             Quantidade disponível: {{$produto->quantidade}}</p>
+                                        </td>
+                                    @endif
                                         <td>
                                             <a type="button" class="btn btn-outline-dark"
                                                 href="{{ route('produtos.edit', $produto->id) }}">
