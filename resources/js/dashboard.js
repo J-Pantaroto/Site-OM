@@ -58,6 +58,7 @@ async function buscar(pesquisa = '', escopo = '') {
                         <td>${item.name}</td>
                         <td>${item.email}</td>
                         <td>${item.cpf_cnpj}</td>
+                        <td>${item.admin ? 'Admnistrador' : 'Usuário'}</td>
                         <td>
                             ${isSupervisor === 'true' || isSupervisor === true ? `
                                 <a href="/profile/${item.id}/definir" class="btn btn-outline-primary">
@@ -80,12 +81,12 @@ async function buscar(pesquisa = '', escopo = '') {
                 } else if (escopo === 'produtos') {
                     const imagemProduto = item.imagem;
                     row.innerHTML = `
-                    <td class="${item.inativo === 'S' ? 'produto-inativo' : ''}">${item.id}</td>
+                    <td class="${item.inativo === 'S' ? 'produto-inativo' : ''}">${item.codigo}</td>
                     <td class="${item.inativo === 'S' ? 'produto-inativo' : ''}">
                         <img src="/storage/${item.imagem || 'produtos/placeholder.png'}" style="width: 8rem; height: auto;" alt="Imagem do Produto">
                     </td>
                     <td class="${item.inativo === 'S' ? 'produto-inativo' : ''}">${item.nome || ''}
-                    ${item.inativo ? `<span id="inativo-icone" class="text-danger ms-2">
+                    ${item.inativo=== 'S' ? `<span id="inativo-icone" class="text-danger ms-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20"
                             height="20" fill="currentColor" class="bi bi-info-circle"
                             viewBox="0 0 20 20">
@@ -99,6 +100,7 @@ async function buscar(pesquisa = '', escopo = '') {
                     </td>
                     ${exibirPreco ? `<td>${item.preco ? `R$ ${item.preco}` : ''}</td>` : ''}
                     ${!validarQuantidade ? `<td>Quantidade disponível: ${item.quantidade !== undefined && item.quantidade !== null ? item.quantidade : 'N/A'}</td>` : ''}
+                    <td> ${item.inativo}</td>
                     <td>
                         <a href="/produtos/${item.id}/edit" class="btn btn-outline-dark" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -106,15 +108,23 @@ async function buscar(pesquisa = '', escopo = '') {
                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
                             </svg>
                         </a>
-                        <form style="display:inline" action="/produtos/${item.id}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
-                            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-outline-danger" id="excluir">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark" class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"></path>
-                                </svg>
-                            </button>
-                        </form>
+                                 <form style="display:inline" action="/produtos/${item.id}" method="POST" onsubmit="return confirm('Tem certeza que deseja ${item.inativo === 'S' ? 'ativar' : 'inativar'} este produto?');">
+                <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                <input type="hidden" name="_method" value="PATCH">
+                <button type="submit" class="btn btn-outline-${item.inativo === 'S' ? 'success' : 'danger'}">
+                    ${item.inativo === 'S' ? `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                        </svg>
+                    ` : `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path d="M11.854 4.146a.5.5 0 0 1 0 .708L8.707 8l3.147 3.146a.5.5 0 0 1-.708.708L8 8.707l-3.146 3.147a.5.5 0 0 1-.708-.708L7.293 8 4.146 4.854a.5.5 0 1 1 .708-.708L8 7.293l3.146-3.147a.5.5 0 0 1 .708 0" />
+                        </svg>
+                    `}
+                </button>
+            </form>
                     </td>
                 `;
                 }

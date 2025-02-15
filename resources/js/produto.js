@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
@@ -50,7 +50,7 @@ if (usuarioAutenticado) {
         };
         const produtosCarrinho = carregarProdutosCarrinho();
         const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
-        if (validarQuantidade && quantidadeDisponivel <= 0) {
+        if (!validarQuantidade && quantidadeDisponivel <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Produto fora de estoque!',
@@ -59,7 +59,7 @@ if (usuarioAutenticado) {
             return;
         }
         if (produtoExistente) {
-            if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+            if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Estoque insuficiente!',
@@ -130,15 +130,14 @@ if (usuarioAutenticado) {
             qntProduto.appendChild(div);
             produtoCarrinho.appendChild(qntProduto);
 
-            if (exibirPreco && produto.preco) {
+            if (exibirPreco) {
                 const precoCell = document.createElement('td');
                 precoCell.textContent = `R$ ${produto.preco.toFixed(2)}`;
                 produtoCarrinho.appendChild(precoCell);
-
                 const subtotalCell = document.createElement('td');
+                subtotalCell.className = "subtotal-cell";
                 const subtotal = produto.preco * produto.quantidade;
                 subtotalCell.textContent = `R$ ${subtotal.toFixed(2)}`;
-                subtotalCell.classList.add('subtotal-cell');
                 produtoCarrinho.appendChild(subtotalCell);
 
                 total += subtotal;
@@ -193,7 +192,7 @@ if (usuarioAutenticado) {
             }
 
             if (button.classList.contains('button-plus')) {
-                if (validarQuantidade && value >= quantidadeDisponivel) {
+                if (!validarQuantidade && value >= quantidadeDisponivel) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Estoque insuficiente!',
@@ -231,28 +230,11 @@ if (usuarioAutenticado) {
     }
     function carregarProdutosCarrinho() {
         const produtos = JSON.parse(getCookie('carrinho')) || [];
-        if (exibirPreco) {
-            return produtos.map(produto => {
-                const novoProduto = {
-                    id: produto.id,
-                    nome: produto.nome || '',
-                    imagem: produto.imagem || '',
-                    quantidade: parseInt(produto.quantidade) || 1,
-                    preco: produto.preco
-                };
-                return novoProduto;
-            });
-        } else {
-            return produtos.map(produto => {
-                const novoProduto = {
-                    id: produto.id,
-                    nome: produto.nome || '',
-                    imagem: produto.imagem || '',
-                    quantidade: parseInt(produto.quantidade) || 1,
-                };
-                return novoProduto;
-            });
-        }
+        return produtos.map(produto => ({
+            ...produto,
+            preco: produto.preco ? parseFloat(produto.preco) : null,
+            quantidade: parseInt(produto.quantidade) || 0
+        }));
     }
 
 
@@ -277,7 +259,7 @@ if (usuarioAutenticado) {
         const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
 
         if (produtoExistente) {
-            if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+            if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Estoque insuficiente!',
@@ -437,7 +419,6 @@ if (usuarioAutenticado) {
         });
     });
 }
-
 // TEXT FOOTER FUNCTION
 
 function footerResponse() {

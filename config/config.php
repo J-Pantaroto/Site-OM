@@ -54,7 +54,7 @@ return [
         'email_host' => env('MAIL_HOST', 'A definir email_host'),
         'email_porta' => env('MAIL_PORT', '587'),
         'email_usuario' => env('MAIL_USERNAME', 'A definir email usuario'),
-        'email_senha' => env('MAIL_USERNAME', 'A definir email usuario'),
+        'email_senha' => env('MAIL_PASSWORD', 'A definir email usuario'),
         'email_encryption' => env('MAIL_ENCRYPTION', 'A definir email encrypton'),
         'email_remetente' => env('MAIL_FROM_ADDRESS', 'A definir remetente'),
         'instagram_url' => env('INSTAGRAM_URL', 'A definir link instagram empresa'),

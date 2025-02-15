@@ -13,7 +13,8 @@ class CarrinhoController extends Controller
             'produtos' => 'required|array|min:1',
             'produtos.*.nome' => 'required|string|max:255',
             'produtos.*.imagem' => 'required|string',
-            'produtos.*.quantidade' => 'required|integer|min:1',
+            'produtos.*.quantidade' => 'nullable|integer|min:1',
+            'produtos.*.preco' => 'nullable|numeric|min:0',
         ]);
         $produtos = $request->input('produtos');
         $produtosComId = [];

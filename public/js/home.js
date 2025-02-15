@@ -4588,7 +4588,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 var escopo = 'todos';
 var offset2 = 0;
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
-var validarQuantidade = document.getElementById('validar-estoque').dataset.validarEstoque === 'true';
+var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
 function buscarProdutos(_x) {
   return _buscarProdutos.apply(this, arguments);
@@ -4653,7 +4653,7 @@ function _buscarProdutos() {
               produtos.forEach(function (produto) {
                 var produtoDiv = document.createElement('div');
                 produtoDiv.className = 'col-md-4 col-6';
-                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                <a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"").concat(produto.id, "\">Adicionar ao carrinho</a>\n                            </div>\n                        </div>");
+                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(!validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                <a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"").concat(produto.id, "\">Adicionar ao carrinho</a>\n                            </div>\n                        </div>");
                 produtosContainer.appendChild(produtoDiv);
               });
               if (data.totalProdutos > offset2 + quantidade) {
@@ -4806,6 +4806,7 @@ if (usuarioAutenticado) {
         precoCell.textContent = "R$ ".concat(produto.preco.toFixed(2));
         produtoCarrinho.appendChild(precoCell);
         var subtotalCell = document.createElement('td');
+        subtotalCell.className = "subtotal-cell";
         var subtotal = produto.preco * produto.quantidade;
         subtotalCell.textContent = "R$ ".concat(subtotal.toFixed(2));
         produtoCarrinho.appendChild(subtotalCell);
@@ -4878,8 +4879,9 @@ if (usuarioAutenticado) {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            _context.prev = 0;
-            _context.next = 3;
+            document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
+            _context.prev = 1;
+            _context.next = 4;
             return fetch('/atualizar/carrinho', {
               method: 'POST',
               headers: {
@@ -4890,23 +4892,23 @@ if (usuarioAutenticado) {
                 produtos: produtos
               })
             });
-          case 3:
+          case 4:
             response = _context.sent;
-            _context.next = 6;
+            _context.next = 7;
             return response.json();
-          case 6:
+          case 7:
             data = _context.sent;
-            _context.next = 12;
+            _context.next = 13;
             break;
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](0);
+          case 10:
+            _context.prev = 10;
+            _context.t0 = _context["catch"](1);
             console.error('Erro ao atualizar o carrinho:', _context.t0);
-          case 12:
+          case 13:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 9]]);
+      }, _callee, null, [[1, 10]]);
     }));
     return function atualizarCookiesCarrinho(_x2) {
       return _ref2.apply(this, arguments);
@@ -4948,7 +4950,7 @@ if (usuarioAutenticado) {
     var produtos = JSON.parse(getCookie('carrinho')) || [];
     return produtos.map(function (produto) {
       return _objectSpread(_objectSpread({}, produto), {}, {
-        preco: parseFloat(produto.preco) || 0,
+        preco: produto.preco ? parseFloat(produto.preco) : null,
         quantidade: parseInt(produto.quantidade) || 0
       });
     });
@@ -4966,9 +4968,37 @@ if (usuarioAutenticado) {
   };
   document.querySelector('#produtos-container').addEventListener('click', function (event) {
     if (event.target.classList.contains('adicionar-carrinho')) {
+      var _produtoSelecionado$q;
+      var buttonPrevent = event.target;
+      if (buttonPrevent.disabled) return;
       var produtoSelecionado = event.target.closest('.card-produto');
       var nomeProduto = produtoSelecionado.querySelector('.card-title').textContent;
       var imagemProduto = produtoSelecionado.querySelector('img').src;
+      var quantidadeDisponivel = parseInt((_produtoSelecionado$q = produtoSelecionado.querySelector('.produto-quantidade')) === null || _produtoSelecionado$q === void 0 ? void 0 : _produtoSelecionado$q.textContent.replace(/\D/g, '')) || 0;
+      var quantidadeSolicitada = 1;
+      var _cartItems = document.querySelector('#cartItems');
+      var produtoExistente = Array.from(_cartItems.querySelectorAll('tr')).find(function (row) {
+        return row.querySelector('td:nth-child(2)').textContent === nomeProduto;
+      });
+      if (produtoExistente) {
+        var quantidadeAtual = parseInt(produtoExistente.querySelector('.quantity-span').textContent);
+        if (quantidadeAtual + quantidadeSolicitada > quantidadeDisponivel) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: 'error',
+            title: 'Produto fora de estoque!',
+            text: 'Este produto não está disponível no momento.'
+          });
+          return;
+        }
+      }
+      if (quantidadeSolicitada > quantidadeDisponivel) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          icon: 'error',
+          title: 'Produto fora de estoque!',
+          text: 'Este produto não está disponível no momento.'
+        });
+        return;
+      }
       var produtoParaAdicionar;
       if (exibirPreco) {
         var precoProduto = parseFloat(produtoSelecionado.querySelector('.produto-preco').textContent.replace('R$', '').trim());
@@ -4982,11 +5012,15 @@ if (usuarioAutenticado) {
         produtoParaAdicionar = {
           nome: nomeProduto,
           imagem: imagemProduto,
+          preco: null,
           quantidade: 1
         };
       }
       adicionarProdutoCarrinho(produtoParaAdicionar); // Atualiza o estado do carrinho
       verificarBotaoFinalizar();
+      setTimeout(function () {
+        buttonPrevent.disabled = false;
+      }, 500);
     }
   });
   document.addEventListener('DOMContentLoaded', function () {
@@ -5003,11 +5037,14 @@ if (usuarioAutenticado) {
     if (addCarrinho) {
       addCarrinho.addEventListener('click', function (event) {
         if (event.target.classList.contains('adicionar-carrinho')) {
-          var _produtoSelecionado$q;
+          var _produtoSelecionado$q2;
+          var buttonPrevent = event.target;
+          if (buttonPrevent.disabled) return;
+          buttonPrevent.disabled = true;
           var produtoSelecionado = event.target.closest('.card-produto');
           var nomeProduto = produtoSelecionado.querySelector('.card-title').textContent;
           var imagemProduto = produtoSelecionado.querySelector('img').src;
-          var quantidadeDisponivel = parseInt((_produtoSelecionado$q = produtoSelecionado.querySelector('.produto-quantidade')) === null || _produtoSelecionado$q === void 0 ? void 0 : _produtoSelecionado$q.textContent.replace(/\D/g, '')) || 0;
+          var quantidadeDisponivel = parseInt((_produtoSelecionado$q2 = produtoSelecionado.querySelector('.produto-quantidade')) === null || _produtoSelecionado$q2 === void 0 ? void 0 : _produtoSelecionado$q2.textContent.replace(/\D/g, '')) || 0;
           var produtoExistente = Array.from(cartItems.querySelectorAll('tr')).find(function (row) {
             return row.querySelector('td:nth-child(2)').textContent === nomeProduto;
           });
@@ -5018,7 +5055,7 @@ if (usuarioAutenticado) {
           if (produtoExistente) {
             var quantidadeSpan = produtoExistente.querySelector('.quantity-span');
             var quantidadeAtual = parseInt(quantidadeSpan.textContent);
-            if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+            if (!validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
               sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
                 icon: 'error',
                 title: 'Estoque insuficiente!',
@@ -5034,7 +5071,7 @@ if (usuarioAutenticado) {
               subtotalCell.textContent = "R$ ".concat(novoSubtotal.toFixed(2));
             }
           } else {
-            if (validarQuantidade && quantidadeDisponivel <= 0) {
+            if (!validarQuantidade && quantidadeDisponivel <= 0) {
               sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
                 icon: 'error',
                 title: 'Produto fora de estoque!',
@@ -5130,7 +5167,6 @@ if (usuarioAutenticado) {
               quantidade: 1
             };
           }
-          adicionarProdutoCarrinho(produtoParaAdicionar);
           var Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.mixin({
             toast: true,
             position: "top-end",
@@ -5236,7 +5272,7 @@ if (usuarioAutenticado) {
 
       // Botão de incremento
       if (button.classList.contains('button-plus')) {
-        if (validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
+        if (!validarQuantidade && quantidadeAtual >= quantidadeDisponivel) {
           sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
             icon: 'error',
             title: 'Estoque insuficiente!',
@@ -5285,7 +5321,7 @@ if (usuarioAutenticado) {
       removerProduto(_item, _nomeProduto); // Remove o produto
 
       var contagem = parseInt(document.getElementById("cart-count").textContent);
-      contagem++;
+      contagem--;
       document.getElementById("cart-count").textContent = contagem;
       verificarBotaoFinalizar();
       var _quantidadeTotal3 = 0;
@@ -5463,7 +5499,7 @@ function adjustLayout() {
   });
   botoesAdd.forEach(function (botaoAdd) {
     botaoAdd.classList.remove('btn-sm');
-    if (window.innerWidth < 1000) {
+    if (window.innerWidth < 1300) {
       botaoAdd.classList.add('btn-sm');
     }
   });

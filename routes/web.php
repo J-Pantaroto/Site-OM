@@ -33,6 +33,7 @@ Route::delete('usuarios/{id}', [ProfileController::class, 'destroyUser'])
     ->name('usuarios.destroy');
 
 Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy'])->middleware(['auth', 'verified', 'admin'])->name('produtos.destroy');
+Route::patch('/produtos/{id}', [ProdutoController::class, 'inative'])->middleware(['auth', 'verified', 'admin'])->name('produtos.inative');
 Route::get('/produtos/{id}/edit', [ProdutoController::class, 'edit'])->middleware(['auth', 'verified', 'admin'])->name('produtos.edit');
 Route::put('/produtos/{id}', [ProdutoController::class, 'update'])->middleware(['auth', 'verified', 'admin'])->name('produtos.update');
 Route::delete('/produtos/imagens/{imagem}', [ProdutoController::class, 'destroyImagem'])->middleware(['auth', 'verified', 'admin'])->name('produtos.imagens.destroy');

@@ -22,13 +22,14 @@
                                 <th class="tablebackground" scope="col">Nome</th>
                                 <th class="tablebackground" scope="col">Email</th>
                                 <th class="tablebackground" scope="col">CPF/CNPJ</th>
+                                <th class="tablebackground" scope="col">Perfil</th>
                                 <th class="tablebackground" scope="col">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($usuarios->isEmpty())
                                 <tr>
-                                    <td colspan="5"> Nenhum usuário cadastrado.</td>
+                                    <td colspan="6"> Nenhum usuário cadastrado.</td>
                                 </tr>
                             @else
                                 @foreach ($usuarios as $usuario)
@@ -37,6 +38,7 @@
                                         <td>{{ $usuario->name }}</td>
                                         <td>{{ $usuario->email }}</td>
                                         <td>{{ $usuario->cpf_cnpj }}</td>
+                                        <td>{{ $usuario->admin ? 'Administrador' : 'Usuário' }}</td>
                                         <td>
                                             @if (auth()->check() && auth()->user()->isSupervisor())
                                                 <a href="{{ route('profile.definir', $usuario->id) }}"

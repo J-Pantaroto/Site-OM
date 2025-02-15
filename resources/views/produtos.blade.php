@@ -18,7 +18,7 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th class="tablebackground" scope="col">ID</th>
+                                <th class="tablebackground" scope="col">Codigo</th>
                                 <th class="tablebackground" scope="col">Produto</th>
                                 <th class="tablebackground" scope="col">Nome</th>
                                 @if (config('config.config.exibir_preco') === 'S')
@@ -27,6 +27,7 @@
                                 @if (config('config.config.validar_estoque') === 'S')
                                 <th class="tablebackground" scope="col">Estoque</th>
                             @endif
+                                <th class="tablebackground" scope="col">Inativo</th>
                                 <th class="tablebackground" scope="col">Ação</th>
                             </tr>
                         </thead>
@@ -38,7 +39,7 @@
                             @else
                                 @foreach ($produtos as $produto)
                                     <tr>
-                                        <th class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}" scope="row">{{ $produto->id }}</th>
+                                        <th class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}" scope="row">{{ $produto->codigo }}</th>
                                         <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
                                             @php
                                                 $imagemPrincipal = $produto
@@ -79,7 +80,8 @@
                                         <td class="{{ $produto->inativo === 'S' ? 'produto-inativo' : '' }}">
                                              Quantidade disponível: {{$produto->quantidade}}</p>
                                         </td>
-                                    @endif
+                                        @endif
+                                        <td>{{$produto->inativo}}</td>
                                         <td>
                                             <a type="button" class="btn btn-outline-dark"
                                                 href="{{ route('produtos.edit', $produto->id) }}">
@@ -91,20 +93,26 @@
                                                         d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                                 </svg>
                                             </a>
-                                            <form style="display:inline"
-                                                action="{{ route('produtos.destroy', $produto->id) }}" method="POST"
-                                                onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                                            <form style="display:inline" action="{{ route('produtos.inative', $produto->id) }}" method="POST"
+                                                onsubmit="return confirm('Tem certeza que deseja {{ $produto->inativo === 'S' ? 'ativar' : 'inativar' }} este produto?');">
                                                 @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger" id="excluir">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                        height="16" fill="dark" class="bi bi-trash3"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
-                                                    </svg>
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-outline-danger">
+                                                    @if ($produto->inativo === 'S')
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                                      </svg>
+                                                    @else
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle"
+                                                            viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                            <path d="M11.854 4.146a.5.5 0 0 1 0 .708L8.707 8l3.147 3.146a.5.5 0 0 1-.708.708L8 8.707l-3.146 3.147a.5.5 0 0 1-.708-.708L7.293 8 4.146 4.854a.5.5 0 1 1 .708-.708L8 7.293l3.146-3.147a.5.5 0 0 1 .708 0" />
+                                                        </svg>
+                                                    @endif
                                                 </button>
                                             </form>
+                                            
                                         </td>
                                     </tr>
                                 @endforeach

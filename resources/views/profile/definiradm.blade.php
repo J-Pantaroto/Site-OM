@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 id="banner-text" class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Definir Administradores e Supervisores') }}
+            {{ __('Alteração de usuários') }}
         </h2>
     </x-slot>
 

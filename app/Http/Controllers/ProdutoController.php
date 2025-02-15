@@ -14,7 +14,7 @@ class ProdutoController extends Controller
     public function index()
     {
         $totalProdutos = 20;
-        $produtos = Produto::orderBy('ID', 'ASC')->paginate($totalProdutos);
+        $produtos = Produto::orderBy('CODIGO', 'ASC')->paginate($totalProdutos);
         $grupos = Grupo::all();
 
         return view('produtos', compact('grupos', 'produtos'));
@@ -30,7 +30,7 @@ class ProdutoController extends Controller
     {
         $pesquisa = $request->input('pesquisa');
         if ($pesquisa === '' || $pesquisa === null) {
-            $produtos = Produto::orderBy('nome', 'ASC')->paginate(20);
+            $produtos = Produto::orderBy('CODIGO', 'ASC')->paginate(20);
         } else {
             $produtos = Produto::where('nome', 'like', "%{$pesquisa}%")->paginate(20);
         }
@@ -41,10 +41,12 @@ class ProdutoController extends Controller
             'produtos' => $produtos->map(function ($produto) {
                 return [
                     'id' => $produto->id,
+                    'codigo' => $produto->codigo,
                     'imagem' => $produto->imagem,
                     'nome' => $produto->nome,
                     'preco' => $produto->preco ?? '',
                     'quantidade' => $produto->quantidade ?? '',
+                    'inativo' => $produto->inativo,
                 ];
             }),
             'links' => $produtos->links()->render()
@@ -131,6 +133,20 @@ class ProdutoController extends Controller
         return redirect()->route('produtos')->with('success', 'Produto excluído com sucesso.');
     }
 
+    public function inative($id)
+    {
+        $produto = Produto::findOrFail($id);
+        if($produto->inativo === 'N'){
+        $produto->inativo = 'S';
+        $mensagem = 'Produto inativado com sucesso.';
+        }else if($produto->inativo === 'S'){
+        $produto->inativo = 'N';
+        $mensagem = 'Produto ativado com sucesso.';
+        }
+        $produto->save();
+        return redirect()->route('produtos')->with('success', $mensagem);
+
+    }
     public function destroyImagem($id)
     {
         $imagem = ImagemProduto::findOrFail($id);

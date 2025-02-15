@@ -16,14 +16,15 @@
                 <div class="d-flex flex-column h-100">
                     <div class="card-body">
                         <h3 id="nome-produto" class="card-title text-center">{{ $prod->nome }}</h3>
-                        <p class="card-text text-center p-4">{{ $prod->descricao }}</p>
+                        <h5 class="card-text text-center p-4">{{ $prod->descricao }}</h5>
+                        <p class="card-text text-start">CÓDIGO:{{ $prod->codigo}}</p>
+                        @if (config('config.config.validar_estoque') === 'S')
+                        <p class="produto-quantidade"> Quantidade disponível: {{$prod->quantidade}}</p>
+                        @endif
+                        @if (!empty($prod->preco) && config('config.config.exibir_preco') === 'S')
+                            <h5 class="produto-preco text-end">Preço: R$ {{ $prod->preco }}</h5>
+                        @endif
                     </div>
-                    @if (!empty($prod->preco) && config('config.config.exibir_preco') === 'S')
-                        <h4 class="produto-preco">Preço: R$ {{ $prod->preco }}</h4>
-                    @endif
-                    @if (config('config.config.validar_estoque') === 'S')
-                        <p class="produto-quantidade mt-4 p-4"> Quantidade disponível: {{$prod->quantidade}}</p>
-                    @endif
                     <div class="mt-auto d-flex justify-content-end">
                         <button class="btn btn-primary button-primary" id="adicionar-carrinho"
                             data-id="{{ $prod->id }}" type="submit">

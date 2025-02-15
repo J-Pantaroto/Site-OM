@@ -223,7 +223,17 @@
     border: 0;
     background: var(--color-card-produto-background) !important;
 }
-
+@media (max-width: 1400px) {
+.card-title.produto-nome{
+    font-size: 0.8rem;
+}
+.produto-quantidade{
+    font-size: 0.6rem;
+}
+.produto-descricao{
+    font-size: 0.8rem;
+}
+}
 .card {
     position: relative;
     overflow: hidden;

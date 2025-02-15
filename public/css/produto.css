@@ -41,9 +41,9 @@
 }
 #imagem {
     width: 100%;
-    max-height: 25rem; /* Defina a altura desejada */
+    max-height: 25rem;
     -o-object-fit: contain;
-       object-fit: contain; /* Garante que a imagem seja exibida sem cortes */
+       object-fit: contain;
     display: block;
     margin: auto;
 }

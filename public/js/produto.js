@@ -4575,10 +4575,16 @@ var __webpack_exports__ = {};
   \*********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
-var validarQuantidade = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
+var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
@@ -4648,14 +4654,14 @@ if (usuarioAutenticado) {
       div.appendChild(botaoMais);
       qntProduto.appendChild(div);
       produtoCarrinho.appendChild(qntProduto);
-      if (exibirPreco && produto.preco) {
+      if (exibirPreco) {
         var precoCell = document.createElement('td');
         precoCell.textContent = "R$ ".concat(produto.preco.toFixed(2));
         produtoCarrinho.appendChild(precoCell);
         var subtotalCell = document.createElement('td');
+        subtotalCell.className = "subtotal-cell";
         var subtotal = produto.preco * produto.quantidade;
         subtotalCell.textContent = "R$ ".concat(subtotal.toFixed(2));
-        subtotalCell.classList.add('subtotal-cell');
         produtoCarrinho.appendChild(subtotalCell);
         total += subtotal;
       }
@@ -4686,28 +4692,12 @@ if (usuarioAutenticado) {
   };
   var carregarProdutosCarrinho = function carregarProdutosCarrinho() {
     var produtos = JSON.parse(getCookie('carrinho')) || [];
-    if (exibirPreco) {
-      return produtos.map(function (produto) {
-        var novoProduto = {
-          id: produto.id,
-          nome: produto.nome || '',
-          imagem: produto.imagem || '',
-          quantidade: parseInt(produto.quantidade) || 1,
-          preco: produto.preco
-        };
-        return novoProduto;
+    return produtos.map(function (produto) {
+      return _objectSpread(_objectSpread({}, produto), {}, {
+        preco: produto.preco ? parseFloat(produto.preco) : null,
+        quantidade: parseInt(produto.quantidade) || 0
       });
-    } else {
-      return produtos.map(function (produto) {
-        var novoProduto = {
-          id: produto.id,
-          nome: produto.nome || '',
-          imagem: produto.imagem || '',
-          quantidade: parseInt(produto.quantidade) || 1
-        };
-        return novoProduto;
-      });
-    }
+    });
   };
   var getCookie = function getCookie(nome) {
     var value = "; ".concat(decodeURIComponent(document.cookie));
@@ -4732,7 +4722,7 @@ if (usuarioAutenticado) {
     });
     var quantidadeDisponivel = parseInt((_document$querySelect4 = document.querySelector('.produto-quantidade')) === null || _document$querySelect4 === void 0 ? void 0 : _document$querySelect4.textContent.replace(/\D/g, '')) || 0;
     if (produtoExistente) {
-      if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+      if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
         sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
           icon: 'error',
           title: 'Estoque insuficiente!',
@@ -4786,7 +4776,7 @@ if (usuarioAutenticado) {
     var produtoExistente = produtosCarrinho.find(function (p) {
       return p.nome === produto.nome;
     });
-    if (validarQuantidade && quantidadeDisponivel <= 0) {
+    if (!validarQuantidade && quantidadeDisponivel <= 0) {
       sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
         icon: 'error',
         title: 'Produto fora de estoque!',
@@ -4795,7 +4785,7 @@ if (usuarioAutenticado) {
       return;
     }
     if (produtoExistente) {
-      if (validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+      if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
         sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
           icon: 'error',
           title: 'Estoque insuficiente!',
@@ -4852,7 +4842,7 @@ if (usuarioAutenticado) {
         atualizarContagemCarrinho();
       }
       if (button.classList.contains('button-plus')) {
-        if (validarQuantidade && value >= quantidadeDisponivel) {
+        if (!validarQuantidade && value >= quantidadeDisponivel) {
           sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
             icon: 'error',
             title: 'Estoque insuficiente!',

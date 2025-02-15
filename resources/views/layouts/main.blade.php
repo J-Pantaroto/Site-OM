@@ -24,7 +24,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100" data-exibir-preco="{{ config('config.config.exibir_preco') === 'S' ? 'true' : 'false' }}">
-    <div id="validar-estoque" data-validar-estoque ="{{config('config.config.validar-estoque') === 'S' ? 'true' : 'false'}}"></div>
+    <div id="validar-estoque" data-estoque="{{config('config.config.validar-estoque') === 'S' ? 'true' : 'false'}}"></div>
     <div id="usuario-autenticado" data-autenticado="{{ auth()->check() ? 'true' : 'false' }}"></div>
     <nav class="navbar navbar-expand-lg shadow fixed-top">
         <div class="container-fluid align-items-center">
