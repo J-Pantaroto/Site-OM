@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProdutoDisponivel;
 class HomeController extends Controller
 {
     public function index()
@@ -20,9 +21,7 @@ class HomeController extends Controller
         if ($exibirPreco) {
             $produtosQuery->whereNotNull('preco')->where('preco', '>', 0);
         }
-        if ($validarEstoque) {
-            $produtosQuery->whereNotNull('quantidade')->where('quantidade', '>', 0);
-        }
+
         $produtos = $produtosQuery->paginate(12);
         $gruposQuery = Grupo::query();
         $gruposQuery->whereExists(function ($query) use ($exibirPreco, $validarEstoque) {
@@ -32,10 +31,6 @@ class HomeController extends Controller
 
             if ($exibirPreco) {
                 $query->whereNotNull('produtos.preco')->where('produtos.preco', '>', 0);
-            }
-
-            if ($validarEstoque) {
-                $query->whereNotNull('produtos.quantidade')->where('produtos.quantidade', '>', 0);
             }
         });
 
@@ -60,7 +55,22 @@ class HomeController extends Controller
         ));
     }
 
+    public function aviseMe(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'produto_id' => 'required|exists:produtos,id'
+        ]);
 
+        // Salvar a solicitação de aviso
+        $produto = Produto::find($request->produto_id);
+        $email = $request->email;
+
+        // Simulação do envio de e-mail quando o produto estiver disponível
+        Mail::to($email)->send(new ProdutoDisponivel($produto));
+
+        return response()->json(['status' => 'sucesso', 'mensagem' => 'Você será avisado quando o produto estiver disponível.']);
+    }
 
     public function buscarSubgrupos(Request $request)
     {
@@ -103,9 +113,7 @@ class HomeController extends Controller
         if ($exibirPreco) {
             $query->whereNotNull('preco')->where('preco', '>', 0);
         }
-        if ($validarEstoque) {
-            $query->whereNotNull('quantidade')->where('quantidade', '>', 0);
-        }
+
 
         if ($grupo && $escopo != 'todos') {
             $query->where('grupo', $grupo);
@@ -136,9 +144,6 @@ class HomeController extends Controller
                     $query->whereNotNull('preco')->where('preco', '>', 0);
                 }
 
-                if ($validarEstoque) {
-                    $query->whereNotNull('quantidade')->where('quantidade', '>', 0);
-                }
             })->get(['codigo', 'descricao']);
         }
 

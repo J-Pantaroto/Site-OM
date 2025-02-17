@@ -1411,6 +1411,9 @@ select {
 .text-start {
   text-align: start;
 }
+.text-end {
+  text-align: end;
+}
 .font-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }

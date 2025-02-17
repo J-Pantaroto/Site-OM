@@ -124,6 +124,31 @@
     color: var(--color-black-90);
 }
 
+.btn.button-dark {
+    background-color: var(--color-button-dark);
+    border-color: var(--color-button-dark);
+    color: var(--color-white);
+}
+.btn.button-dark:hover {
+    background-color: var(--color-button-dark-hover);
+    border-color: var(--color-button-dark-hover);
+    color: var(--color-white);
+}
+.btn.button-dark:disabled{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-dark:focus{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-dark:active{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
 .btn.button-primary:hover {
     background-color: var(--color-button-primary-hover);
     border-color: var(--color-button-primary-hover);
@@ -142,6 +167,32 @@
 .btn.button-primary:active{
     background-color: var(--color-button-primary-hover) !important;
     border-color: var(--color-button-primary-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-success {
+    background-color: var(--color-button-success);
+    border-color: var(--color-button-success);
+    color: var(--color-black-90);
+}
+
+.btn.button-success:hover {
+    background-color: var(--color-button-success-hover);
+    border-color: var(--color-button-success-hover);
+    color: var(--color-white);
+}
+.btn.button-success:focus{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-success:disabled{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-success:active{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
     color: var(--color-black) !important;
 }
 

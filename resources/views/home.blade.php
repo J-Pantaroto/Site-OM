@@ -102,10 +102,17 @@
                                         <div class="produto-descricao">
                                             <p>{{ $produto->descricao }}</p>
                                         </div>
+                                        @if($produto->quantidade > 0)
                                         <a class="btn btn-primary d-block adicionar-carrinho button-primary" 
                                            data-id="{{ $produto->id }}">
                                             Adicionar ao carrinho
                                         </a>
+                                        @elseif($produto->quantidade <= 0)
+                                        <a class="btn btn-dark d-block avise-me button-dark" 
+                                        data-id="{{ $produto->id }}">
+                                        Avise-me quando chegar!
+                                        </a>
+                                        @endif
                                     </div>
                                 </div>
                             </a>
@@ -122,61 +129,61 @@
     </div>
 </div>
 
-    @if (Route::has('login'))
-        @auth
-            <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="modal-lojaLabel">Carrinho</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <h2 class="text-center">Carrinho de Orcamentos</h2>
-                        <div class="mt-auto d-flex justify-content-end">
-                            <button id="limpar-tudo" type="button" class="btn btn-primary mb-3 me-2 button-danger">
-                                <i class="fas fa-eraser"></i> Limpar
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container mt-5">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="tabelaCarrinho">
-                                        <thead>
-                                            <tr>
-                                                <th>Imagem</th>
-                                                <th>Produto</th>
-                                                <th>Quantidade</th>
-                                                @if (config('config.config.exibir_preco') === 'S')
-                                                    <th>Preço</th>
-                                                    <th>Subtotal</th>
-                                                @endif
-                                                <th>Ação</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="cartItems">
-                                        </tbody>
-                                    </table>
-                                    @if (config('config.config.exibir_preco') === 'S')
-                                        <h5>Total: <span id="cartTotal">R$ 0,00</span></h5>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary button-danger"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" id="finalizar" class="btn btn-primary button-primary">Solicitar
-                                orcamento</button>
+@if (config('config.config.logado_carrinho') !== 'S' || auth()->check())
+    <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modal-lojaLabel">Carrinho</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <h2 class="text-center">Carrinho de Orçamentos</h2>
+                <div class="mt-auto d-flex justify-content-end">
+                    <button id="limpar-tudo" type="button" class="btn btn-primary mb-3 me-2 button-danger">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tabelaCarrinho">
+                                <thead>
+                                    <tr>
+                                        <th>Imagem</th>
+                                        <th>Produto</th>
+                                        <th>Quantidade</th>
+                                        @if (config('config.config.exibir_preco') === 'S')
+                                            <th>Preço</th>
+                                            <th>Subtotal</th>
+                                        @endif
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartItems">
+                                </tbody>
+                            </table>
+                            @if (config('config.config.exibir_preco') === 'S')
+                                <h5>Total: <span id="cartTotal">R$ 0,00</span></h5>
+                            @endif
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary button-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="orcamento" class="btn btn-success button-success">
+                        Solicitar orçamento <i class="fa-brands fa-whatsapp"></i>
+                    </button>
+                    <button type="button" id="finalizar" class="btn btn-primary button-primary">Fazer pedido</button>
+                </div>
             </div>
-            <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <span id="cart-count">0</span>
-            </a>
-        @endauth
-    @endif
+        </div>
+    </div>
+    <a type="button" id="comprar-btn" data-bs-toggle="modal" data-bs-target="#modal-loja" class="floating-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+    </a>
+@endif
+
     <script src="{{ mix('js/home.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </x-main-layout>

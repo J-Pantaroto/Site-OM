@@ -4652,8 +4652,9 @@ function _buscarProdutos() {
             } else {
               produtos.forEach(function (produto) {
                 var produtoDiv = document.createElement('div');
+                var validarBotao = produto.quantidade > 0;
                 produtoDiv.className = 'col-md-4 col-6';
-                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(!validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                <a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"").concat(produto.id, "\">Adicionar ao carrinho</a>\n                            </div>\n                        </div>");
+                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(!validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                    ").concat(!validarQuantidade ? "<p class=\"produto-quantidade\">Quantidade em estoque: ".concat(produto.quantidade, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                ").concat(validarBotao ? "<a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"".concat(produto.id, "\">Adicionar ao carrinho</a>") : "<a class=\"btn btn-dark d-block avise-me button-dark\" data-id=\"".concat(produto.id, "\">Avise-me quando chegar</a>"), "\n                            </div>\n                        </div>");
                 produtosContainer.appendChild(produtoDiv);
               });
               if (data.totalProdutos > offset2 + quantidade) {
@@ -5734,6 +5735,54 @@ document.addEventListener('DOMContentLoaded', function () {
       toggleButton.textContent = 'Mostrar mais';
     }
   });
+});
+
+//AVISE-ME
+document.addEventListener("click", function (event) {
+  if (event.target.classList.contains("avise-me")) {
+    var produtoId = event.target.dataset.id;
+    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+      title: "Informe seu e-mail",
+      input: "email",
+      inputPlaceholder: "Digite seu e-mail para ser notificado",
+      showCancelButton: true,
+      confirmButtonText: "Cadastrar",
+      preConfirm: function preConfirm(email) {
+        if (!email) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showValidationMessage("Por favor, informe um e-mail válido.");
+        }
+        return email;
+      }
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        fetch("/notificar-produto", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+          },
+          body: JSON.stringify({
+            produto_id: produtoId,
+            email: result.value
+          })
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: "success",
+            title: "Sucesso!",
+            text: data.mensagem
+          });
+        })["catch"](function (error) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Ocorreu um erro ao cadastrar seu e-mail. Tente novamente."
+          });
+        });
+      }
+    });
+  }
 });
 })();
 

@@ -13,8 +13,7 @@ use App\Models\Produto;
 use App\Models\Grupo;
 use App\Models\SubGrupo;
 use Illuminate\Support\Str;
-use App\Models\Venda;
-use App\Models\User;
+use App\Http\Controllers\ProductNotificationController;
 
 class Sincronizar implements ShouldQueue
 {
@@ -120,7 +119,7 @@ class Sincronizar implements ShouldQueue
                         }
     
                         $produtoExistente = Produto::where('codigo', $produto['codigo'])->first();
-    
+                        $estoqueAnterior = $produtoExistente ? $produtoExistente->quantidade : 0;
                         // Se `somenteCadastrar` estiver ativado, pula atualização de produtos existentes
                         if ($somenteCadastrar && $produtoExistente) {
                             continue;
@@ -181,7 +180,7 @@ class Sincronizar implements ShouldQueue
                             }
                         }
     
-                        Produto::updateOrCreate(
+                        $produtoAtualizado = Produto::updateOrCreate(
                             ['codigo' => $produto['codigo']],
                             [
                                 'nome' => $nomeProduto,
@@ -195,6 +194,9 @@ class Sincronizar implements ShouldQueue
                                 'preco' => $precoVenda
                             ]
                         );
+                        if($estoqueAnterior <= 0 && $quantidade> 0 ){
+                            app(ProductNotificationController::class)->notifyUsers($produtoAtualizado->id);
+                        }
                     } catch (\Exception $e) {
                         Log::error("Erro ao sincronizar produto {$produto['codigo']}: " . $e->getMessage());
                     }

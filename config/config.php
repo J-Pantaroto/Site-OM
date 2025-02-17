@@ -32,7 +32,11 @@ return [
         'white_gray' => env('COLOR_WHITE_GRAY', '#DDD'),
         'black' => env('COLOR_BLACK', '#000000'),
         'button_primary' => env('COLOR_BUTTON_PRIMARY', '#ffc107'),
+        'button_dark' => env('COLOR_BUTTON_DARK', '#212529'),
         'button_primary_hover' => env('COLOR_BUTTON_PRIMARY_HOVER', '#e0a800'),
+        'button_dark_hover' => env('COLOR_BUTTON_DARK_HOVER', '#424649'),
+        'button_success' => env('COLOR_BUTTON_SUCCESS', '#25D366'),
+        'button_success_hover' => env('COLOR_BUTTON_SUCCESS_HOVER', '#129945'),
         # DASHBOARD:HEADER
         'dashboard_header_background' => env('COLOR_DASHBOARD_HEADER_BACKGROUND', null),
         'dashboard_header_user_button_background' => env('COLOR_DASHBOARD_HEADER_USER_BUTTON_BACKGROUND', null),
@@ -65,6 +69,7 @@ return [
         'validar_estoque'=> env('VALIDAR_ESTOQUE','N'),
         'somente_cadastrar_ao_sincronizar'=> env('SOMENTE_CADASTRAR_AO_SINCRONIZAR','N'),
         'dados_produtos_para_sincronizar'=> env('DADOS_PRODUTOS_PARA_SINCRONIZAR','todos'),
+        'logado_carrinho'=> env('LOGADO_CARRINHO', 'S'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),

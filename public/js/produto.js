@@ -4762,54 +4762,57 @@ if (usuarioAutenticado) {
     cartItems.innerHTML = '';
     atualizarContagemCarrinho();
   };
-  document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
-    var _document$querySelect, _document$querySelect2;
-    var quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
-    var produto = {
-      id: this.dataset.id,
-      nome: document.getElementById('nome-produto').textContent,
-      imagem: document.getElementById('imagem').src,
-      preco: exibirPreco ? parseFloat((_document$querySelect2 = document.querySelector('.produto-preco')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
-      quantidade: 1
-    };
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var produtoExistente = produtosCarrinho.find(function (p) {
-      return p.nome === produto.nome;
-    });
-    if (!validarQuantidade && quantidadeDisponivel <= 0) {
-      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-        icon: 'error',
-        title: 'Produto fora de estoque!',
-        text: 'Este produto não está disponível no momento.'
+  var addCarrinho1 = document.getElementById('adicionar-carrinho');
+  if (addCarrinho1) {
+    addCarrinho1.addEventListener('click', function (event) {
+      var _document$querySelect, _document$querySelect2;
+      var quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
+      var produto = {
+        id: this.dataset.id,
+        nome: document.getElementById('nome-produto').textContent,
+        imagem: document.getElementById('imagem').src,
+        preco: exibirPreco ? parseFloat((_document$querySelect2 = document.querySelector('.produto-preco')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
+        quantidade: 1
+      };
+      var produtosCarrinho = carregarProdutosCarrinho();
+      var produtoExistente = produtosCarrinho.find(function (p) {
+        return p.nome === produto.nome;
       });
-      return;
-    }
-    if (produtoExistente) {
-      if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+      if (!validarQuantidade && quantidadeDisponivel <= 0) {
         sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
           icon: 'error',
-          title: 'Estoque insuficiente!',
-          text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+          title: 'Produto fora de estoque!',
+          text: 'Este produto não está disponível no momento.'
         });
         return;
       }
-      produtoExistente.quantidade += 1;
-    } else {
-      produtosCarrinho.push(produto);
-    }
-    atualizarCookiesCarrinho(produtosCarrinho);
-    atualizarCarrinho();
-    atualizarContagemCarrinho();
-    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-      icon: 'success',
-      title: 'Produto adicionado ao carrinho!',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true
+      if (produtoExistente) {
+        if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: 'error',
+            title: 'Estoque insuficiente!',
+            text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+          });
+          return;
+        }
+        produtoExistente.quantidade += 1;
+      } else {
+        produtosCarrinho.push(produto);
+      }
+      atualizarCookiesCarrinho(produtosCarrinho);
+      atualizarCarrinho();
+      atualizarContagemCarrinho();
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+        icon: 'success',
+        title: 'Produto adicionado ao carrinho!',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
     });
-  });
+  }
   document.addEventListener('DOMContentLoaded', function () {
     atualizarCarrinho();
     atualizarContagemCarrinho();
@@ -4954,34 +4957,35 @@ if (usuarioAutenticado) {
   });
 } else if (!usuarioAutenticado) {
   var addCarrinho = document.getElementById('adicionar-carrinho');
-  addCarrinho.addEventListener('click', function (event) {
-    var timerInterval;
-    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-      title: "Você ainda não está logado!",
-      html: "Você será redirecionado para a página de login em <b></b> segundos.",
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: function didOpen() {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
-        var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
-        var countdown = 3;
-        timerInterval = setInterval(function () {
-          countdown--;
-          timer.textContent = countdown;
-        }, 1000);
-      },
-      willClose: function willClose() {
-        clearInterval(timerInterval);
-        window.location = "/login";
-      }
-    }).then(function (result) {
-      if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.timer) {
-        console.log("Redirecionado pelo timer");
-      }
+  if (addCarrinho) {
+    addCarrinho.addEventListener('click', function (event) {
+      var timerInterval;
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+        title: "Você ainda não está logado!",
+        html: "Você será redirecionado para a página de login em <b></b> segundos.",
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: function didOpen() {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
+          var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
+          var countdown = 3;
+          timerInterval = setInterval(function () {
+            countdown--;
+            timer.textContent = countdown;
+          }, 1000);
+        },
+        willClose: function willClose() {
+          clearInterval(timerInterval);
+          window.location = "/login";
+        }
+      }).then(function (result) {
+        if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.timer) {
+          console.log("Redirecionado pelo timer");
+        }
+      });
     });
-  });
+  }
 }
-
 // TEXT FOOTER FUNCTION
 
 function footerResponse() {
@@ -5012,6 +5016,54 @@ document.addEventListener("DOMContentLoaded", function () {
       imagemPrincipal.src = novaImagem;
     });
   });
+});
+
+//AVISE-ME
+document.addEventListener("click", function (event) {
+  if (event.target.classList.contains("avise-me")) {
+    var produtoId = event.target.dataset.id;
+    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+      title: "Informe seu e-mail",
+      input: "email",
+      inputPlaceholder: "Digite seu e-mail para ser notificado",
+      showCancelButton: true,
+      confirmButtonText: "Cadastrar",
+      preConfirm: function preConfirm(email) {
+        if (!email) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showValidationMessage("Por favor, informe um e-mail válido.");
+        }
+        return email;
+      }
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        fetch("/notificar-produto", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+          },
+          body: JSON.stringify({
+            produto_id: produtoId,
+            email: result.value
+          })
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: "success",
+            title: "Sucesso!",
+            text: data.mensagem
+          });
+        })["catch"](function (error) {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Ocorreu um erro ao cadastrar seu e-mail. Tente novamente."
+          });
+        });
+      }
+    });
+  }
 });
 })();
 

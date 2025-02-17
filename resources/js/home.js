@@ -59,6 +59,7 @@ async function buscarProdutos({ pesquisa = '', grupo = '', subgrupo = '', limite
             } else {
                 produtos.forEach(produto => {
                     const produtoDiv = document.createElement('div');
+                    const validarBotao = produto.quantidade > 0;
                     produtoDiv.className = 'col-md-4 col-6';
                     produtoDiv.innerHTML = `
                         <div class="card m-4 card-produto">
@@ -70,9 +71,10 @@ async function buscarProdutos({ pesquisa = '', grupo = '', subgrupo = '', limite
                                 <a href="/pesquisar/produto/${encodeURIComponent(produto.slug)}" class="text-decoration-none a-text">
                                     <h5 class="card-title produto-nome">${produto.nome}</h5>
                                     ${exibirPreco && produto.preco ? `<p class="produto-preco">R$ ${produto.preco}</p>` : ''}
+                                    ${!validarQuantidade ? `<p class="produto-quantidade">Quantidade em estoque: ${produto.quantidade}</p>`: ''}
                                 </a>
                                 <p class="produto-descricao">${produto.descricao}</p>
-                                <a class="btn btn-primary d-block adicionar-carrinho button-primary" data-id="${produto.id}">Adicionar ao carrinho</a>
+                                ${validarBotao ? `<a class="btn btn-primary d-block adicionar-carrinho button-primary" data-id="${produto.id}">Adicionar ao carrinho</a>` : `<a class="btn btn-dark d-block avise-me button-dark" data-id="${produto.id}">Avise-me quando chegar</a>`}
                             </div>
                         </div>`;
                     produtosContainer.appendChild(produtoDiv);
@@ -1105,4 +1107,55 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleButton.textContent = 'Mostrar mais';
         }
     });
+});
+
+
+//AVISE-ME
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("avise-me")) {
+        const produtoId = event.target.dataset.id;
+        
+        Swal.fire({
+            title: "Informe seu e-mail",
+            input: "email",
+            inputPlaceholder: "Digite seu e-mail para ser notificado",
+            showCancelButton: true,
+            confirmButtonText: "Cadastrar",
+            preConfirm: (email) => {
+                if (!email) {
+                    Swal.showValidationMessage("Por favor, informe um e-mail válido.");
+                }
+                return email;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch("/notificar-produto", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    },
+                    body: JSON.stringify({
+                        produto_id: produtoId,
+                        email: result.value,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Sucesso!",
+                        text: data.mensagem,
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro!",
+                        text: "Ocorreu um erro ao cadastrar seu e-mail. Tente novamente.",
+                    });
+                });
+            }
+        });
+    }
 });

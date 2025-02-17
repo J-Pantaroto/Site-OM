@@ -484,6 +484,34 @@ ul {
     color: var(--color-black) !important;
 }
 
+
+.btn.button-dark {
+    background-color: var(--color-button-dark);
+    border-color: var(--color-button-dark);
+    color: var(--color-white-90);
+}
+
+.btn.button-dark:hover {
+    background-color: var(--color-button-dark-hover);
+    border-color: var(--color-button-dark-hover);
+    color: var(--color-white);
+}
+.btn.button-dark:focus{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-dark:disabled{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
+.btn.button-dark:active{
+    background-color: var(--color-button-dark-hover) !important;
+    border-color: var(--color-button-dark-hover) !important;
+    color: var(--color-white) !important;
+}
+
 .btn.button-danger {
     background-color: var(--color-danger);
     border-color: var(--color-danger);
@@ -505,9 +533,39 @@ ul {
     border-color: var(--color-danger-hover) !important;
     color: var(--color-white) !important;
 }
+.btn.button-success {
+    background-color: var(--color-button-success);
+    border-color: var(--color-button-success);
+    color: var(--color-black-90);
+}
+
+.btn.button-success:hover {
+    background-color: var(--color-button-success-hover);
+    border-color: var(--color-button-success-hover);
+    color: var(--color-white);
+}
+.btn.button-success:focus{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-success:disabled{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
+    color: var(--color-black) !important;
+}
+.btn.button-success:active{
+    background-color: var(--color-button-success-hover) !important;
+    border-color: var(--color-button-success-hover) !important;
+    color: var(--color-black) !important;
+}
 
 @media (max-width: 576px) {
     #adicionar-carrinho {
+        font-size: 0.55rem;
+        padding: 0.5rem 1rem;
+    }
+    #avise-me {
         font-size: 0.55rem;
         padding: 0.5rem 1rem;
     }
@@ -518,10 +576,18 @@ ul {
         font-size: 1rem;  
         padding: 0.75rem 1.5rem; 
     }
+    #avise-me {
+        font-size: 1rem;  
+        padding: 0.75rem 1.5rem; 
+    }
 }
 
 @media (min-width: 992px) {
     #adicionar-carrinho {
+        font-size: 1.15rem;
+        padding: 1rem 2rem; 
+    }
+    #avise-me {
         font-size: 1.15rem;
         padding: 1rem 2rem; 
     }

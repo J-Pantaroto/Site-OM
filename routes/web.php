@@ -8,6 +8,7 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\ConfiguracoesController;
 use App\Http\Controllers\CitiesStatesController;
+use App\Http\Controllers\ProductNotificationController;
 use App\Http\Middleware\CheckAddressComplete;
 use App\Http\Middleware\IsAdmin;
 
@@ -70,3 +71,5 @@ require __DIR__ . '/auth.php';
 
 Route::post('/buscar-subgrupos', [HomeController::class, 'buscarSubgrupos']);
 Route::post('/buscar-produtos-por-subgrupo', [HomeController::class, 'buscarProdutosPorSubgrupo']);
+
+Route::post('/notificar-produto', [ProductNotificationController::class,'store'])->name('notificar.produto');

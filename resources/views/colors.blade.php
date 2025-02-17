@@ -48,6 +48,10 @@
         --color-black: {{ config('config.colors.black') }};
         --color-button-primary: {{ config('config.colors.button_primary') }};
         --color-button-primary-hover: {{ config('config.colors.button_primary_hover') }};
+        --color-button-success: {{ config('config.colors.button_success') }};
+        --color-button-success-hover: {{ config('config.colors.button_success_hover') }};
+        --color-button-dark: {{ config('config.colors.button_dark') }};
+        --color-button-dark-hover: {{ config('config.colors.button_dark_hover') }};
         --color-background: {{ config('config.colors.background') }};
 
         /* DASHBOARD:HEADER */

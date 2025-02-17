@@ -38,52 +38,54 @@ if (usuarioAutenticado) {
         document.getElementById("cart-count").textContent = quantidadeTotal;
         verificarBotaoFinalizar();
     }
-
-    document.getElementById('adicionar-carrinho').addEventListener('click', function (event) {
-        const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
-        const produto = {
-            id: this.dataset.id,
-            nome: document.getElementById('nome-produto').textContent,
-            imagem: document.getElementById('imagem').src,
-            preco: exibirPreco ? parseFloat(document.querySelector('.produto-preco')?.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
-            quantidade: 1
-        };
-        const produtosCarrinho = carregarProdutosCarrinho();
-        const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
-        if (!validarQuantidade && quantidadeDisponivel <= 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Produto fora de estoque!',
-                text: 'Este produto não está disponível no momento.',
-            });
-            return;
-        }
-        if (produtoExistente) {
-            if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+    const addCarrinho1 = document.getElementById('adicionar-carrinho');
+    if (addCarrinho1) {
+        addCarrinho1.addEventListener('click', function (event) {
+            const quantidadeDisponivel = parseInt(document.querySelector('.produto-quantidade')?.textContent.replace(/\D/g, '')) || 0;
+            const produto = {
+                id: this.dataset.id,
+                nome: document.getElementById('nome-produto').textContent,
+                imagem: document.getElementById('imagem').src,
+                preco: exibirPreco ? parseFloat(document.querySelector('.produto-preco')?.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
+                quantidade: 1
+            };
+            const produtosCarrinho = carregarProdutosCarrinho();
+            const produtoExistente = produtosCarrinho.find(p => p.nome === produto.nome);
+            if (!validarQuantidade && quantidadeDisponivel <= 0) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Estoque insuficiente!',
-                    text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                    title: 'Produto fora de estoque!',
+                    text: 'Este produto não está disponível no momento.',
                 });
                 return;
             }
-            produtoExistente.quantidade += 1;
-        } else {
-            produtosCarrinho.push(produto);
-        }
-        atualizarCookiesCarrinho(produtosCarrinho);
-        atualizarCarrinho();
-        atualizarContagemCarrinho();
-        Swal.fire({
-            icon: 'success',
-            title: 'Produto adicionado ao carrinho!',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true
+            if (produtoExistente) {
+                if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Estoque insuficiente!',
+                        text: `Você não pode adicionar mais do que ${quantidadeDisponivel} unidades.`,
+                    });
+                    return;
+                }
+                produtoExistente.quantidade += 1;
+            } else {
+                produtosCarrinho.push(produto);
+            }
+            atualizarCookiesCarrinho(produtosCarrinho);
+            atualizarCarrinho();
+            atualizarContagemCarrinho();
+            Swal.fire({
+                icon: 'success',
+                title: 'Produto adicionado ao carrinho!',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
         });
-    });
+    }
 
     function atualizarCarrinho() {
         const produtosCarrinho = carregarProdutosCarrinho();
@@ -392,32 +394,34 @@ if (usuarioAutenticado) {
 
 } else if (!usuarioAutenticado) {
     const addCarrinho = document.getElementById('adicionar-carrinho');
-    addCarrinho.addEventListener('click', function (event) {
-        let timerInterval;
-        Swal.fire({
-            title: "Você ainda não está logado!",
-            html: "Você será redirecionado para a página de login em <b></b> segundos.",
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                let countdown = 3;
-                timerInterval = setInterval(() => {
-                    countdown--;
-                    timer.textContent = countdown;
-                }, 1000);
-            },
-            willClose: () => {
-                clearInterval(timerInterval);
-                window.location = "/login";
-            }
-        }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-                console.log("Redirecionado pelo timer");
-            }
+    if (addCarrinho) {
+        addCarrinho.addEventListener('click', function (event) {
+            let timerInterval;
+            Swal.fire({
+                title: "Você ainda não está logado!",
+                html: "Você será redirecionado para a página de login em <b></b> segundos.",
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    let countdown = 3;
+                    timerInterval = setInterval(() => {
+                        countdown--;
+                        timer.textContent = countdown;
+                    }, 1000);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                    window.location = "/login";
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("Redirecionado pelo timer");
+                }
+            });
         });
-    });
+    }
 }
 // TEXT FOOTER FUNCTION
 
@@ -454,4 +458,54 @@ document.addEventListener("DOMContentLoaded", function () {
             imagemPrincipal.src = novaImagem;
         });
     });
+});
+
+//AVISE-ME
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("avise-me")) {
+        const produtoId = event.target.dataset.id;
+
+        Swal.fire({
+            title: "Informe seu e-mail",
+            input: "email",
+            inputPlaceholder: "Digite seu e-mail para ser notificado",
+            showCancelButton: true,
+            confirmButtonText: "Cadastrar",
+            preConfirm: (email) => {
+                if (!email) {
+                    Swal.showValidationMessage("Por favor, informe um e-mail válido.");
+                }
+                return email;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch("/notificar-produto", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    },
+                    body: JSON.stringify({
+                        produto_id: produtoId,
+                        email: result.value,
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Sucesso!",
+                            text: data.mensagem,
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro!",
+                            text: "Ocorreu um erro ao cadastrar seu e-mail. Tente novamente.",
+                        });
+                    });
+            }
+        });
+    }
 });

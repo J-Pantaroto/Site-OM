@@ -26,10 +26,24 @@
                         @endif
                     </div>
                     <div class="mt-auto d-flex justify-content-end">
-                        <button class="btn btn-primary button-primary" id="adicionar-carrinho"
+                        @if (config('config.config.validar_estoque') === 'S')
+                            @if($prod->quantidade > 0)
+                                <button class="btn btn-primary button-primary" id="adicionar-carrinho"
+                                    data-id="{{ $prod->id }}" type="submit">
+                                    <i class="fas fa-shopping-cart"></i> Adicionar ao carrinho
+                                </button>
+                            @else
+                                <button class="btn btn-dark avise-me button-dark" id="avise-me"
+                                data-id="{{ $prod->id }}" type="submit">
+                                <i class="fa-solid fa-truck-fast"></i> Avise-me quando chegar
+                                </button>
+                            @endif
+                        @else
+                            <button class="btn btn-primary button-primary" id="adicionar-carrinho"
                             data-id="{{ $prod->id }}" type="submit">
                             <i class="fas fa-shopping-cart"></i> Adicionar ao carrinho
-                        </button>
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -79,8 +93,9 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary button-danger"
                                     data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" id="finalizar" class="btn btn-primary button-primary">Solicitar
-                                    orcamento</button>
+                                    <button type="button" id="orcamento" class="btn btn-success button-success">Solicitar
+                                        orcamento <i class="fa-brands fa-whatsapp"></i></button>
+                                <button type="button" id="finalizar" class="btn btn-primary button-primary">Fazer pedido</button>
                             </div>
                         </div>
                     </div>
