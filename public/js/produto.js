@@ -4581,11 +4581,14 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.autenticado === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
 var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
-
+var logadoCarrinho = document.getElementById('logado-carrinho').dataset.carrinho === 'true';
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
   window.abrirFecharDropDown = function (escopo) {
@@ -4599,235 +4602,203 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 });
-if (usuarioAutenticado) {
-  var atualizarContagemCarrinho = function atualizarContagemCarrinho() {
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var quantidadeTotal = 0;
-    if (produtosCarrinho.length === 0) {
-      var tabela = document.getElementById("tabelaCarrinho");
-      var linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
-      for (var i = 0; i < linhas.length; i++) {
-        var quantidadeSpan = linhas[i].querySelector(".quantity-span");
-        var quantidadeProduto = parseInt(quantidadeSpan.textContent);
-        quantidadeTotal += quantidadeProduto;
-      }
-    } else {
-      quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
-        return total + produto.quantidade;
-      }, 0);
+function atualizarContagemCarrinho() {
+  if (logadoCarrinho && !usuarioAutenticado) return;
+  console.log('atualizarContagemCarrinho');
+  var produtosCarrinho = carregarProdutosCarrinho();
+  var quantidadeTotal = 0;
+  if (produtosCarrinho.length === 0) {
+    var tabela = document.getElementById("tabelaCarrinho");
+    var linhas = tabela.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    for (var i = 0; i < linhas.length; i++) {
+      var quantidadeSpan = linhas[i].querySelector(".quantity-span");
+      var quantidadeProduto = parseInt(quantidadeSpan.textContent);
+      quantidadeTotal += quantidadeProduto;
     }
-    document.getElementById("cart-count").textContent = quantidadeTotal;
-    verificarBotaoFinalizar();
-  };
-  var atualizarCarrinho = function atualizarCarrinho() {
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var cartItems = document.querySelector('#cartItems');
-    cartItems.innerHTML = '';
-    var total = 0;
-    produtosCarrinho.forEach(function (produto) {
-      var produtoCarrinho = document.createElement('tr');
-      var imagemContainer = document.createElement('td');
-      var imagem = document.createElement('img');
-      imagem.src = produto.imagem;
-      imagem.style.width = "15vh";
-      imagemContainer.appendChild(imagem);
-      produtoCarrinho.appendChild(imagemContainer);
-      var nomeContainer = document.createElement('td');
-      nomeContainer.textContent = produto.nome;
-      produtoCarrinho.appendChild(nomeContainer);
-      var qntProduto = document.createElement("td");
-      var div = document.createElement("div");
-      div.className = "input-group";
-      var botaoMenos = document.createElement("button");
-      botaoMenos.type = "button";
-      botaoMenos.className = "button-minus";
-      botaoMenos.textContent = "-";
-      var quantidadeSpan = document.createElement("span");
-      quantidadeSpan.className = "quantity-span";
-      quantidadeSpan.textContent = produto.quantidade;
-      var botaoMais = document.createElement("button");
-      botaoMais.type = "button";
-      botaoMais.className = "button-plus";
-      botaoMais.textContent = "+";
-      div.appendChild(botaoMenos);
-      div.appendChild(quantidadeSpan);
-      div.appendChild(botaoMais);
-      qntProduto.appendChild(div);
-      produtoCarrinho.appendChild(qntProduto);
-      if (exibirPreco) {
-        var precoCell = document.createElement('td');
-        precoCell.textContent = "R$ ".concat(produto.preco.toFixed(2));
-        produtoCarrinho.appendChild(precoCell);
-        var subtotalCell = document.createElement('td');
-        subtotalCell.className = "subtotal-cell";
-        var subtotal = produto.preco * produto.quantidade;
-        subtotalCell.textContent = "R$ ".concat(subtotal.toFixed(2));
-        produtoCarrinho.appendChild(subtotalCell);
-        total += subtotal;
-      }
-      var acao = document.createElement('td');
-      var botaoRemover = document.createElement('button');
-      botaoRemover.className = 'remover-item btn btn-danger';
-      botaoRemover.type = 'button';
-      var svg = document.createElement('svg');
-      svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path class="remover-item" d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path class="remover-item" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
-      botaoRemover.appendChild(svg);
-      acao.appendChild(botaoRemover);
-      produtoCarrinho.appendChild(acao);
-      cartItems.appendChild(produtoCarrinho);
-    });
-    if (exibirPreco) {
-      document.querySelector('#cartTotal').textContent = "R$ ".concat(total.toFixed(2));
-    }
-    verificarBotaoFinalizar();
-  };
-  var verificarBotaoFinalizar = function verificarBotaoFinalizar() {
-    var finalizarBotao = document.getElementById('finalizar');
-    var produtosCarrinho = carregarProdutosCarrinho();
-    if (produtosCarrinho.length === 0) {
-      finalizarBotao.disabled = true;
-    } else {
-      finalizarBotao.disabled = false;
-    }
-  };
-  var carregarProdutosCarrinho = function carregarProdutosCarrinho() {
-    var produtos = JSON.parse(getCookie('carrinho')) || [];
-    return produtos.map(function (produto) {
-      return _objectSpread(_objectSpread({}, produto), {}, {
-        preco: produto.preco ? parseFloat(produto.preco) : null,
-        quantidade: parseInt(produto.quantidade) || 0
-      });
-    });
-  };
-  var getCookie = function getCookie(nome) {
-    var value = "; ".concat(decodeURIComponent(document.cookie));
-    var parts = value.split("; ".concat(nome, "="));
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  };
-  var atualizarProdutoQuantidade = function atualizarProdutoQuantidade(nomeProduto, quantidade) {
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var produto = produtosCarrinho.find(function (p) {
-      return p.nome === nomeProduto;
-    });
-    if (produto) {
-      produto.quantidade = quantidade;
-    }
-    atualizarCookiesCarrinho(produtosCarrinho);
-  };
-  var adicionarProdutoCarrinho = function adicionarProdutoCarrinho(produto) {
-    var _document$querySelect4;
-    var produtosCarrinho = carregarProdutosCarrinho();
-    var produtoExistente = produtosCarrinho.find(function (p) {
-      return p.nome === produto.nome;
-    });
-    var quantidadeDisponivel = parseInt((_document$querySelect4 = document.querySelector('.produto-quantidade')) === null || _document$querySelect4 === void 0 ? void 0 : _document$querySelect4.textContent.replace(/\D/g, '')) || 0;
-    if (produtoExistente) {
-      if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-          icon: 'error',
-          title: 'Estoque insuficiente!',
-          text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
-        });
-        return;
-      }
-      produtoExistente.quantidade += 1;
-    } else {
-      if (exibirPreco) {
-        var novoProduto = {
-          id: produto.id,
-          nome: produto.nome,
-          imagem: produto.imagem,
-          quantidade: produto.quantidade || 1,
-          preco: parseFloat(produto.preco)
-        };
-        produtosCarrinho.push(novoProduto);
-      } else {
-        var _novoProduto = {
-          id: produto.id,
-          nome: produto.nome,
-          imagem: produto.imagem,
-          quantidade: produto.quantidade || 1
-        };
-        produtosCarrinho.push(_novoProduto);
-      }
-    }
-    atualizarCookiesCarrinho(produtosCarrinho);
-  };
-  var atualizarCookiesCarrinho = function atualizarCookiesCarrinho(produtos) {
-    document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
-  };
-  var limparCarrinho = function limparCarrinho() {
-    document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
-    var cartItems = document.querySelector('#cartItems');
-    cartItems.innerHTML = '';
-    atualizarContagemCarrinho();
-  };
-  var addCarrinho1 = document.getElementById('adicionar-carrinho');
-  if (addCarrinho1) {
-    addCarrinho1.addEventListener('click', function (event) {
-      var _document$querySelect, _document$querySelect2;
-      var quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
-      var produto = {
-        id: this.dataset.id,
-        nome: document.getElementById('nome-produto').textContent,
-        imagem: document.getElementById('imagem').src,
-        preco: exibirPreco ? parseFloat((_document$querySelect2 = document.querySelector('.produto-preco')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
-        quantidade: 1
-      };
-      var produtosCarrinho = carregarProdutosCarrinho();
-      var produtoExistente = produtosCarrinho.find(function (p) {
-        return p.nome === produto.nome;
-      });
-      if (!validarQuantidade && quantidadeDisponivel <= 0) {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-          icon: 'error',
-          title: 'Produto fora de estoque!',
-          text: 'Este produto não está disponível no momento.'
-        });
-        return;
-      }
-      if (produtoExistente) {
-        if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
-          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-            icon: 'error',
-            title: 'Estoque insuficiente!',
-            text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
-          });
-          return;
-        }
-        produtoExistente.quantidade += 1;
-      } else {
-        produtosCarrinho.push(produto);
-      }
-      atualizarCookiesCarrinho(produtosCarrinho);
-      atualizarCarrinho();
-      atualizarContagemCarrinho();
-      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-        icon: 'success',
-        title: 'Produto adicionado ao carrinho!',
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-      });
-    });
+  } else {
+    quantidadeTotal = produtosCarrinho.reduce(function (total, produto) {
+      return total + produto.quantidade;
+    }, 0);
   }
-  document.addEventListener('DOMContentLoaded', function () {
-    atualizarCarrinho();
-    atualizarContagemCarrinho();
+  document.getElementById("cart-count").textContent = quantidadeTotal;
+  verificarBotaoFinalizar();
+}
+var addCarrinho1 = document.getElementById('adicionar-carrinho');
+if (addCarrinho1) {
+  addCarrinho1.addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+      var timerInterval, produto, produtosCarrinho, produtoExistente, _document$querySelect, quantidadeDisponivel;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            if (!(logadoCarrinho && !usuarioAutenticado)) {
+              _context.next = 3;
+              break;
+            }
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              title: "Você ainda não está logado!",
+              html: "Você será redirecionado para a página de login em <b></b> segundos.",
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: function didOpen() {
+                sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
+                var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
+                var countdown = 3;
+                timerInterval = setInterval(function () {
+                  countdown--;
+                  timer.textContent = countdown;
+                }, 1000);
+              },
+              willClose: function willClose() {
+                clearInterval(timerInterval);
+                window.location = "/login";
+              }
+            });
+            return _context.abrupt("return");
+          case 3:
+            console.log('addCarrinho');
+            produto = {
+              id: this.dataset.id,
+              nome: document.getElementById('nome-produto').textContent,
+              imagem: document.getElementById('imagem').src,
+              preco: exibirPreco ? parseFloat(document.querySelector('.produto-preco').textContent.replace('Preço: R$', '').trim()) || 0 : undefined,
+              quantidade: 1
+            };
+            produtosCarrinho = carregarProdutosCarrinho();
+            produtoExistente = produtosCarrinho.find(function (p) {
+              return p.nome === produto.nome;
+            });
+            if (!produtoExistente) {
+              _context.next = 15;
+              break;
+            }
+            quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
+            if (!(validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel)) {
+              _context.next = 12;
+              break;
+            }
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              icon: 'error',
+              title: 'Estoque insuficiente!',
+              text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+            });
+            return _context.abrupt("return");
+          case 12:
+            produtoExistente.quantidade += 1;
+            _context.next = 16;
+            break;
+          case 15:
+            produtosCarrinho.push(produto);
+          case 16:
+            console.log('ProdutosCarrinho no addCarrinho:', produtosCarrinho);
+            _context.next = 19;
+            return atualizarCookiesCarrinho(produtosCarrinho);
+          case 19:
+            atualizarCarrinho();
+            atualizarContagemCarrinho();
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              icon: 'success',
+              title: 'Produto adicionado ao carrinho!',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true
+            });
+          case 22:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee, this);
+    }));
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+}
+function atualizarCarrinho() {
+  if (logadoCarrinho && !usuarioAutenticado) return;
+  console.log('atualizarCarrinho');
+  var produtosCarrinho = carregarProdutosCarrinho();
+  console.log('ProdutosCarrinho no atualizarCarrinho:', produtosCarrinho);
+  var cartItems = document.querySelector('#cartItems');
+  cartItems.innerHTML = '';
+  var total = 0;
+  produtosCarrinho.forEach(function (produto) {
+    var produtoCarrinho = document.createElement('tr');
+    var imagemContainer = document.createElement('td');
+    var imagem = document.createElement('img');
+    imagem.src = produto.imagem;
+    imagem.style.width = "15vh";
+    imagemContainer.appendChild(imagem);
+    produtoCarrinho.appendChild(imagemContainer);
+    var nomeContainer = document.createElement('td');
+    nomeContainer.textContent = produto.nome;
+    produtoCarrinho.appendChild(nomeContainer);
+    var qntProduto = document.createElement("td");
+    var div = document.createElement("div");
+    div.className = "input-group";
+    var botaoMenos = document.createElement("button");
+    botaoMenos.type = "button";
+    botaoMenos.className = "button-minus";
+    botaoMenos.textContent = "-";
+    var quantidadeSpan = document.createElement("span");
+    quantidadeSpan.className = "quantity-span";
+    quantidadeSpan.textContent = produto.quantidade;
+    var botaoMais = document.createElement("button");
+    botaoMais.type = "button";
+    botaoMais.className = "button-plus";
+    botaoMais.textContent = "+";
+    div.appendChild(botaoMenos);
+    div.appendChild(quantidadeSpan);
+    div.appendChild(botaoMais);
+    qntProduto.appendChild(div);
+    produtoCarrinho.appendChild(qntProduto);
+    if (exibirPreco) {
+      var precoCell = document.createElement('td');
+      precoCell.textContent = "R$ ".concat(produto.preco.toFixed(2));
+      produtoCarrinho.appendChild(precoCell);
+      var subtotalCell = document.createElement('td');
+      subtotalCell.className = "subtotal-cell";
+      var subtotal = produto.preco * produto.quantidade;
+      subtotalCell.textContent = "R$ ".concat(subtotal.toFixed(2));
+      produtoCarrinho.appendChild(subtotalCell);
+      total += subtotal;
+    }
+    var acao = document.createElement('td');
+    var botaoRemover = document.createElement('button');
+    botaoRemover.className = 'remover-item btn btn-danger';
+    botaoRemover.type = 'button';
+    var svg = document.createElement('svg');
+    svg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="remover-item bi bi-trash" viewBox="0 0 16 16"><path class="remover-item" d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path class="remover-item" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>';
+    botaoRemover.appendChild(svg);
+    acao.appendChild(botaoRemover);
+    produtoCarrinho.appendChild(acao);
+    cartItems.appendChild(produtoCarrinho);
   });
-  var cartItems = document.getElementById('cartItems');
+  if (exibirPreco) {
+    document.querySelector('#cartTotal').textContent = "R$ ".concat(total.toFixed(2));
+  }
+  verificarBotaoFinalizar();
+}
+document.addEventListener('DOMContentLoaded', function () {
+  if (logadoCarrinho && !usuarioAutenticado) return;
+  atualizarCarrinho();
+  atualizarContagemCarrinho();
+});
+var cartItems = document.getElementById('cartItems');
+if (cartItems) {
+  console.log('cartItems');
   cartItems.addEventListener('click', function (event) {
     var button = event.target;
     var inputGrupo = button.closest('.input-group');
     if (inputGrupo) {
-      var _document$querySelect3;
+      var _document$querySelect2;
       var quantidadeSpan = inputGrupo.querySelector('.quantity-span');
       var item = button.closest('tr');
       var nomeProduto = item.querySelector('td:nth-child(2)').textContent;
       var value = parseInt(quantidadeSpan.textContent);
-      var quantidadeDisponivel = parseInt((_document$querySelect3 = document.querySelector('.produto-quantidade')) === null || _document$querySelect3 === void 0 ? void 0 : _document$querySelect3.textContent.replace(/\D/g, '')) || 0;
+      var quantidadeDisponivel = parseInt((_document$querySelect2 = document.querySelector('.produto-quantidade')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.textContent.replace(/\D/g, '')) || 0;
       if (button.classList.contains('button-minus')) {
         if (value > 1) {
           value--;
@@ -4873,119 +4844,257 @@ if (usuarioAutenticado) {
       atualizarContagemCarrinho();
     }
   });
-  var limpaBotao = document.getElementById('limpar-tudo');
+}
+function verificarBotaoFinalizar() {
+  if (logadoCarrinho && !usuarioAutenticado) return;
+  var finalizarBotao = document.getElementById('finalizar');
+  var produtosCarrinho = carregarProdutosCarrinho();
+  if (produtosCarrinho.length === 0) {
+    finalizarBotao.disabled = true;
+  } else {
+    finalizarBotao.disabled = false;
+  }
+}
+function carregarProdutosCarrinho() {
+  var carrinhoCookie = getCookie('carrinho');
+  console.log('carrinhoCookie:', carrinhoCookie);
+  if (!carrinhoCookie) {
+    return [];
+  }
+  try {
+    var produtos = JSON.parse(carrinhoCookie);
+    return produtos.map(function (produto) {
+      return _objectSpread(_objectSpread({}, produto), {}, {
+        preco: produto.preco ? parseFloat(produto.preco) : null,
+        quantidade: parseInt(produto.quantidade) || 0
+      });
+    });
+  } catch (error) {
+    console.error("Erro ao carregar carrinho: Cookie inválido!", error);
+    return [];
+  }
+}
+function getCookie(nome) {
+  var value = "; ".concat(decodeURIComponent(document.cookie));
+  var parts = value.split("; ".concat(nome, "="));
+  if (parts.length === 2) {
+    return parts.pop().split(';').shift();
+  }
+  return null;
+}
+function atualizarProdutoQuantidade(nomeProduto, quantidade) {
+  var produtosCarrinho = carregarProdutosCarrinho();
+  var produto = produtosCarrinho.find(function (p) {
+    return p.nome === nomeProduto;
+  });
+  if (produto) {
+    produto.quantidade = quantidade;
+  }
+  atualizarCookiesCarrinho(produtosCarrinho);
+}
+function adicionarProdutoCarrinho(produto) {
+  var _document$querySelect3;
+  var produtosCarrinho = carregarProdutosCarrinho();
+  var produtoExistente = produtosCarrinho.find(function (p) {
+    return p.nome === produto.nome;
+  });
+  var quantidadeDisponivel = parseInt((_document$querySelect3 = document.querySelector('.produto-quantidade')) === null || _document$querySelect3 === void 0 ? void 0 : _document$querySelect3.textContent.replace(/\D/g, '')) || 0;
+  if (produtoExistente) {
+    if (!validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel) {
+      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+        icon: 'error',
+        title: 'Estoque insuficiente!',
+        text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
+      });
+      return;
+    }
+    produtoExistente.quantidade += 1;
+  } else {
+    if (exibirPreco) {
+      var novoProduto = {
+        id: produto.id,
+        nome: produto.nome,
+        imagem: produto.imagem,
+        quantidade: produto.quantidade || 1,
+        preco: parseFloat(produto.preco)
+      };
+      produtosCarrinho.push(novoProduto);
+    } else {
+      var _novoProduto = {
+        id: produto.id,
+        nome: produto.nome,
+        imagem: produto.imagem,
+        quantidade: produto.quantidade || 1
+      };
+      produtosCarrinho.push(_novoProduto);
+    }
+  }
+  atualizarCookiesCarrinho(produtosCarrinho);
+}
+function atualizarCookiesCarrinho(_x2) {
+  return _atualizarCookiesCarrinho.apply(this, arguments);
+}
+function _atualizarCookiesCarrinho() {
+  _atualizarCookiesCarrinho = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(produtos) {
+    var response, data;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          console.log('atualizarCookiesCarrinho');
+          document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
+          _context2.prev = 2;
+          _context2.next = 5;
+          return fetch('/atualizar/carrinho', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              produtos: produtos
+            })
+          });
+        case 5:
+          response = _context2.sent;
+          _context2.next = 8;
+          return response.json();
+        case 8:
+          data = _context2.sent;
+          _context2.next = 14;
+          break;
+        case 11:
+          _context2.prev = 11;
+          _context2.t0 = _context2["catch"](2);
+          console.error('Erro ao atualizar o carrinho:', _context2.t0);
+        case 14:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[2, 11]]);
+  }));
+  return _atualizarCookiesCarrinho.apply(this, arguments);
+}
+var limpaBotao = document.getElementById('limpar-tudo');
+if (limpaBotao) {
   limpaBotao.addEventListener('click', function () {
     document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
     atualizarCarrinho();
     atualizarContagemCarrinho();
   });
-  document.addEventListener('DOMContentLoaded', function () {
-    var finalizarCompra = document.getElementById('finalizar');
-    if (finalizarCompra) {
-      finalizarCompra.addEventListener('click', function () {
-        var produtosCarrinho = carregarProdutosCarrinho();
-        var produtosFormatados = produtosCarrinho.map(function (produto) {
-          return {
-            id: produto.id,
-            quantidade: produto.quantidade,
-            preco: produto.preco
-          };
-        });
-        fetch("/registrar/venda", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+}
+function limparCarrinho() {
+  document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify([])) + "; path=/;";
+  var cartItems = document.querySelector('#cartItems');
+  cartItems.innerHTML = '';
+  atualizarContagemCarrinho();
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var finalizarCompra = document.getElementById('finalizar');
+  if (finalizarCompra) {
+    finalizarCompra.addEventListener('click', function () {
+      if (!usuarioAutenticado) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          title: "Você está deslogado!",
+          text: "Você pode solicitar um orçamento pelo WhatsApp ou criar uma conta.",
+          icon: "info",
+          showCancelButton: true,
+          showCloseButton: true,
+          confirmButtonText: 'Solicitar orçamento <i class="fa-brands fa-whatsapp"></i>',
+          cancelButtonText: "Criar conta",
+          customClass: {
+            confirmButton: 'btn btn-success button-success',
+            cancelButton: 'btn btn-primary button-primary'
           },
-          body: JSON.stringify({
-            produtos: produtosFormatados
-          })
-        }).then(function (response) {
-          if (response.status === 403) {
-            return response.json().then(function (data) {
-              sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-                icon: 'warning',
-                title: 'Informações Incompletas',
-                text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
-                confirmButtonText: 'Ir para o perfil'
-              }).then(function () {
-                window.location.href = data.redirect_url;
-              });
+          allowOutsideClick: false
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            var _produtosCarrinho2 = carregarProdutosCarrinho() || [];
+            var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
+            _produtosCarrinho2.forEach(function (produto) {
+              mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
             });
+            var numeroWhatsApp = "5567996228134";
+            var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+            window.open(urlWhatsApp, '_blank');
+          } else if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.cancel) {
+            window.location.href = "/register";
           }
-          if (!response.ok) {
-            return response.json().then(function (data) {
-              throw new Error(data.message || 'Erro desconhecido');
-            });
-          }
-          return response.json();
-        }).then(function (data) {
-          if (data && data.status === 'success') {
-            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-              icon: "success",
-              title: "Compra finalizada!",
-              text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
-              showClass: {
-                popup: "animate__rubberBand animate__backOutUp"
-              },
-              hideClass: {
-                popup: "animate__backOutDown"
-              }
-            });
-            limparCarrinho();
-            var carrinhoModal = document.getElementById('modal-loja');
-            if (carrinhoModal) {
-              carrinhoModal.classList.remove('show');
-              carrinhoModal.style.display = 'none';
-            }
-            var modalBackdrop = document.querySelector('.modal-backdrop');
-            if (modalBackdrop) modalBackdrop.remove();
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('padding-right');
-            document.body.style.removeProperty('overflow');
-          }
-        })["catch"](function (error) {
-          console.error('Erro na requisição:', error);
-          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.'
-          });
         });
+        return;
+      }
+      var produtosCarrinho = carregarProdutosCarrinho();
+      var produtosFormatados = produtosCarrinho.map(function (produto) {
+        return {
+          id: produto.id,
+          quantidade: produto.quantidade,
+          preco: exibirPreco ? produto.preco : 0
+        };
       });
-    }
-  });
-} else if (!usuarioAutenticado) {
-  var addCarrinho = document.getElementById('adicionar-carrinho');
-  if (addCarrinho) {
-    addCarrinho.addEventListener('click', function (event) {
-      var timerInterval;
-      sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-        title: "Você ainda não está logado!",
-        html: "Você será redirecionado para a página de login em <b></b> segundos.",
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: function didOpen() {
-          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.showLoading();
-          var timer = sweetalert2__WEBPACK_IMPORTED_MODULE_0__.getPopup().querySelector("b");
-          var countdown = 3;
-          timerInterval = setInterval(function () {
-            countdown--;
-            timer.textContent = countdown;
-          }, 1000);
+      fetch("/registrar/venda", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        willClose: function willClose() {
-          clearInterval(timerInterval);
-          window.location = "/login";
+        body: JSON.stringify({
+          produtos: produtosFormatados
+        })
+      }).then(function (response) {
+        if (response.status === 403) {
+          return response.json().then(function (data) {
+            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+              icon: 'warning',
+              title: 'Informações Incompletas',
+              text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+              confirmButtonText: 'Ir para o perfil'
+            }).then(function () {
+              window.location.href = data.redirect_url;
+            });
+          });
         }
-      }).then(function (result) {
-        if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.timer) {
-          console.log("Redirecionado pelo timer");
+        if (!response.ok) {
+          return response.json().then(function (data) {
+            throw new Error(data.message || 'Erro desconhecido');
+          });
         }
+        return response.json();
+      }).then(function (data) {
+        if (data && data.status === 'success') {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+            icon: "success",
+            title: "Compra finalizada!",
+            text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+            showClass: {
+              popup: "animate__rubberBand animate__backOutUp"
+            },
+            hideClass: {
+              popup: "animate__backOutDown"
+            }
+          });
+          limparCarrinho();
+          var carrinhoModal = document.getElementById('modal-loja');
+          if (carrinhoModal) {
+            carrinhoModal.classList.remove('show');
+            carrinhoModal.style.display = 'none';
+          }
+          var modalBackdrop = document.querySelector('.modal-backdrop');
+          if (modalBackdrop) modalBackdrop.remove();
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('padding-right');
+          document.body.style.removeProperty('overflow');
+        }
+      })["catch"](function (error) {
+        console.error('Erro na requisição:', error);
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.'
+        });
       });
     });
   }
-}
+});
+
 // TEXT FOOTER FUNCTION
 
 function footerResponse() {
@@ -5065,6 +5174,30 @@ document.addEventListener("click", function (event) {
     });
   }
 });
+function enviarOrcamentoWhatsApp() {
+  var produtosCarrinho = carregarProdutosCarrinho() || [];
+  if (produtosCarrinho.length === 0) {
+    sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+      icon: 'warning',
+      title: 'Carrinho vazio',
+      text: 'Adicione produtos antes de solicitar um orçamento!'
+    });
+    return;
+  }
+  var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
+  produtosCarrinho.forEach(function (produto) {
+    mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
+  });
+  var numeroWhatsApp = "5567996228134";
+  var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+  window.open(urlWhatsApp, '_blank');
+}
+var zap = document.getElementById('orcamento');
+if (zap) {
+  zap.addEventListener('click', function (event) {
+    enviarOrcamentoWhatsApp();
+  });
+}
 })();
 
 /******/ })()

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -32,7 +33,9 @@ class AuthenticatedSessionController extends Controller
         }
         // Regenera a sessão e define o cookie do carrinho
         $request->session()->regenerate();
-        setcookie('carrinho', json_encode([]), time() + 86400, '/');
+        $carrinhoAnonimo = json_decode(Cookie::get('carrinho', '[]'), true);
+
+        Cookie::queue('carrinho', json_encode($carrinhoAnonimo), 60 * 24);
     
         // Redireciona para a home ou rota desejada
         return redirect()->intended(route('home'));
@@ -48,8 +51,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        setcookie('carrinho', '', time() - 3600, '/');
-
+        Cookie::queue(Cookie::forget('carrinho'));
         return redirect('/');
     }
 }

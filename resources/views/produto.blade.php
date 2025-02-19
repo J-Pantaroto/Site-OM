@@ -22,7 +22,7 @@
                         <p class="produto-quantidade"> Quantidade disponível: {{$prod->quantidade}}</p>
                         @endif
                         @if (!empty($prod->preco) && config('config.config.exibir_preco') === 'S')
-                            <h5 class="produto-preco text-end">Preço: R$ {{ $prod->preco }}</h5>
+                            <h5 class="produto-preco text-end">Preço: R$ {{ number_format($prod->preco, 2, ',', '.') }}</h5>
                         @endif
                     </div>
                     <div class="mt-auto d-flex justify-content-end">
@@ -49,8 +49,7 @@
             </div>
         </div>
 
-        @if (Route::has('login'))
-            @auth
+        @if (config('config.config.logado_carrinho') !== 'S' || auth()->check())
                 <div class="modal fade" id="modal-loja" tabindex="-1" aria-labelledby="modal-lojaLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -105,7 +104,6 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-count">0</span>
                 </a>
-            @endauth
         @endif
         <script src="{{ mix('js/produto.js') }}"></script>
 </x-main-layout>

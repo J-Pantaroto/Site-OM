@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 use Illuminate\Support\Facades\View;
-
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 use App\View\Components\MainLayout;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (!Cookie::has('carrinho')) {
+            Cookie::queue('carrinho', json_encode([]), 60 * 24); // 24h de duração
+        }
         Produto::observe(ProdutoObserver::class);
         View::addNamespace('mail', resource_path('views/vendor/mail/html'));
 

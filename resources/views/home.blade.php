@@ -94,7 +94,7 @@
                                     <div class="card-body text-center">
                                         <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
                                         @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
-                                        <p class="produto-preco">R$ {{ $produto->preco }}</p>
+                                        <p class="produto-preco">R$  {{ number_format($produto->preco, 2, ',', '.') }}</p>
                                         @endif
                                         @if(config('config.config.validar_estoque') === 'S')
                                         <p class= "produto-quantidade ">Quantidade em estoque: {{$produto->quantidade}}</p>

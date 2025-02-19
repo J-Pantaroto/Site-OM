@@ -117,14 +117,19 @@ class Sincronizar implements ShouldQueue
                         if ($produto['inativo'] === 'S') {
                             continue;
                         }
-    
+
+                        if ((int)$produto['codigo'] < 0100001) {
+                            continue;
+                        }
                         $produtoExistente = Produto::where('codigo', $produto['codigo'])->first();
                         $estoqueAnterior = $produtoExistente ? $produtoExistente->quantidade : 0;
                         // Se `somenteCadastrar` estiver ativado, pula atualização de produtos existentes
                         if ($somenteCadastrar && $produtoExistente) {
                             continue;
                         }
-    
+                        $inativoSite = $produtoExistente ? (bool) $produtoExistente->inativo_site : false;
+                        $inativo = $inativoSite ? 'S' : $produto['inativo'];
+
                         // Dados básicos do produto
                         $nomeProduto = $produto['descricao'] ?? 'Produto Sem Nome';
                         $descricaoProduto = $produto['descricao'] ?? 'Produto Sem Descrição';
@@ -179,14 +184,14 @@ class Sincronizar implements ShouldQueue
                                 continue;
                             }
                         }
-    
+
                         $produtoAtualizado = Produto::updateOrCreate(
                             ['codigo' => $produto['codigo']],
                             [
                                 'nome' => $nomeProduto,
                                 'descricao' => $descricaoProduto,
                                 'slug' => $slug,
-                                'inativo' => $produto['inativo'],
+                                'inativo' => $inativo,
                                 'grupo' => $produto['grupo'],
                                 'subgrupo' => $produto['subgrupo'],
                                 'imagem' => $imagem,

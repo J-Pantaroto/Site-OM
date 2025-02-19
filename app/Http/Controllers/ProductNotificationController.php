@@ -16,7 +16,15 @@ class ProductNotificationController extends Controller
             'produto_id' => 'required|exists:produtos,id',
             'email' => 'required|email',
         ]);
-
+        $produto_id = $request->produto_id;
+        $email = $request->email;
+        if (ProductNotification::where('produto_id', $produto_id)
+                ->where('email', $email)
+                ->exists()) {
+            return response()->json([
+                'mensagem' => 'Você já está cadastrado para receber notificações deste produto.'
+            ]);
+        }
         ProductNotification::create($request->only('produto_id', 'email'));
 
         return response()->json(['status' => 'sucesso', 'mensagem' => 'Você será avisado quando o produto estiver disponível.']);

@@ -11,7 +11,7 @@ class Produto extends Model
 {
   protected $table = 'produtos';
   use HasFactory;
-  protected $fillable = ['nome', 'descricao', 'imagem', 'codigo', 'inativo', 'grupo', 'subgrupo', 'slug', 'quantidade','preco'];
+  protected $fillable = ['nome', 'descricao', 'imagem', 'codigo', 'inativo', 'grupo', 'subgrupo', 'slug', 'quantidade','preco','inativo_site'];
 
 //gerar slug para url
   protected static function boot()
@@ -54,20 +54,10 @@ class Produto extends Model
   }
   public function preco(): Attribute
   {
-    return Attribute::make(
-      get: function ($value) {
-        if ($value !== null && is_numeric($value)) {
-          return number_format((float) $value, 2, ',', '.');
-        }
-        return $value;
-      },
-      set: function ($value) {
-        if ($value !== null) {
-          $value = str_replace(',', '.', $value);
-          return floatval($value);
-        }
-        return $value;
-      }
-    );
+      return Attribute::make(
+          get: fn ($value) => $value !== null ? (float) $value : null, // Retorna float puro, sem formatação
+          set: fn ($value) => $value !== null ? (float) str_replace(',', '.', $value) : null
+      );
   }
+  
 }

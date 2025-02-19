@@ -138,9 +138,11 @@ class ProdutoController extends Controller
         $produto = Produto::findOrFail($id);
         if($produto->inativo === 'N'){
         $produto->inativo = 'S';
+        $produto->inativo_site = true;
         $mensagem = 'Produto inativado com sucesso.';
         }else if($produto->inativo === 'S'){
         $produto->inativo = 'N';
+        $produto->inativo_site = false;
         $mensagem = 'Produto ativado com sucesso.';
         }
         $produto->save();
