@@ -4589,6 +4589,7 @@ var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
 var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 var logadoCarrinho = document.getElementById('logado-carrinho').dataset.carrinho === 'true';
+var whatsOrca = document.getElementById('whats-orcamento').dataset.whats;
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
   window.abrirFecharDropDown = function (escopo) {
@@ -4604,7 +4605,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 function atualizarContagemCarrinho() {
   if (logadoCarrinho && !usuarioAutenticado) return;
-  console.log('atualizarContagemCarrinho');
   var produtosCarrinho = carregarProdutosCarrinho();
   var quantidadeTotal = 0;
   if (produtosCarrinho.length === 0) {
@@ -4656,7 +4656,6 @@ if (addCarrinho1) {
             });
             return _context.abrupt("return");
           case 3:
-            console.log('addCarrinho');
             produto = {
               id: this.dataset.id,
               nome: document.getElementById('nome-produto').textContent,
@@ -4669,12 +4668,12 @@ if (addCarrinho1) {
               return p.nome === produto.nome;
             });
             if (!produtoExistente) {
-              _context.next = 15;
+              _context.next = 14;
               break;
             }
             quantidadeDisponivel = parseInt((_document$querySelect = document.querySelector('.produto-quantidade')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.textContent.replace(/\D/g, '')) || 0;
             if (!(validarQuantidade && produtoExistente.quantidade >= quantidadeDisponivel)) {
-              _context.next = 12;
+              _context.next = 11;
               break;
             }
             sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
@@ -4683,17 +4682,16 @@ if (addCarrinho1) {
               text: "Voc\xEA n\xE3o pode adicionar mais do que ".concat(quantidadeDisponivel, " unidades.")
             });
             return _context.abrupt("return");
-          case 12:
+          case 11:
             produtoExistente.quantidade += 1;
-            _context.next = 16;
+            _context.next = 15;
             break;
-          case 15:
+          case 14:
             produtosCarrinho.push(produto);
-          case 16:
-            console.log('ProdutosCarrinho no addCarrinho:', produtosCarrinho);
-            _context.next = 19;
+          case 15:
+            _context.next = 17;
             return atualizarCookiesCarrinho(produtosCarrinho);
-          case 19:
+          case 17:
             atualizarCarrinho();
             atualizarContagemCarrinho();
             sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
@@ -4705,7 +4703,7 @@ if (addCarrinho1) {
               timer: 2000,
               timerProgressBar: true
             });
-          case 22:
+          case 20:
           case "end":
             return _context.stop();
         }
@@ -4718,9 +4716,7 @@ if (addCarrinho1) {
 }
 function atualizarCarrinho() {
   if (logadoCarrinho && !usuarioAutenticado) return;
-  console.log('atualizarCarrinho');
   var produtosCarrinho = carregarProdutosCarrinho();
-  console.log('ProdutosCarrinho no atualizarCarrinho:', produtosCarrinho);
   var cartItems = document.querySelector('#cartItems');
   cartItems.innerHTML = '';
   var total = 0;
@@ -4788,7 +4784,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 var cartItems = document.getElementById('cartItems');
 if (cartItems) {
-  console.log('cartItems');
   cartItems.addEventListener('click', function (event) {
     var button = event.target;
     var inputGrupo = button.closest('.input-group');
@@ -4857,7 +4852,6 @@ function verificarBotaoFinalizar() {
 }
 function carregarProdutosCarrinho() {
   var carrinhoCookie = getCookie('carrinho');
-  console.log('carrinhoCookie:', carrinhoCookie);
   if (!carrinhoCookie) {
     return [];
   }
@@ -4935,15 +4929,14 @@ function atualizarCookiesCarrinho(_x2) {
   return _atualizarCookiesCarrinho.apply(this, arguments);
 }
 function _atualizarCookiesCarrinho() {
-  _atualizarCookiesCarrinho = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(produtos) {
-    var response, data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
+  _atualizarCookiesCarrinho = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(produtos) {
+    var _response, data;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
         case 0:
-          console.log('atualizarCookiesCarrinho');
           document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
-          _context2.prev = 2;
-          _context2.next = 5;
+          _context3.prev = 1;
+          _context3.next = 4;
           return fetch('/atualizar/carrinho', {
             method: 'POST',
             headers: {
@@ -4954,23 +4947,23 @@ function _atualizarCookiesCarrinho() {
               produtos: produtos
             })
           });
-        case 5:
-          response = _context2.sent;
-          _context2.next = 8;
-          return response.json();
-        case 8:
-          data = _context2.sent;
-          _context2.next = 14;
+        case 4:
+          _response = _context3.sent;
+          _context3.next = 7;
+          return _response.json();
+        case 7:
+          data = _context3.sent;
+          _context3.next = 13;
           break;
-        case 11:
-          _context2.prev = 11;
-          _context2.t0 = _context2["catch"](2);
-          console.error('Erro ao atualizar o carrinho:', _context2.t0);
-        case 14:
+        case 10:
+          _context3.prev = 10;
+          _context3.t0 = _context3["catch"](1);
+          console.error('Erro ao atualizar o carrinho:', _context3.t0);
+        case 13:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
-    }, _callee2, null, [[2, 11]]);
+    }, _callee3, null, [[1, 10]]);
   }));
   return _atualizarCookiesCarrinho.apply(this, arguments);
 }
@@ -5011,10 +5004,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var _produtosCarrinho2 = carregarProdutosCarrinho() || [];
             var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
             _produtosCarrinho2.forEach(function (produto) {
-              mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
+              mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x  R$(").concat(produto.preco.toFixed(2), ")\n");
             });
-            var numeroWhatsApp = "5567996228134";
-            var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+            var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(whatsOrca, "&text=").concat(encodeURIComponent(mensagem));
             window.open(urlWhatsApp, '_blank');
           } else if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.cancel) {
             window.location.href = "/register";
@@ -5026,40 +5018,82 @@ document.addEventListener('DOMContentLoaded', function () {
       var produtosFormatados = produtosCarrinho.map(function (produto) {
         return {
           id: produto.id,
-          quantidade: produto.quantidade,
-          preco: exibirPreco ? produto.preco : 0
+          quantidade: produto.quantidade
         };
       });
-      fetch("/registrar/venda", {
+      console.log(produtosFormatados);
+      fetch('/registrar/venda', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
           produtos: produtosFormatados
         })
-      }).then(function (response) {
-        if (response.status === 403) {
-          return response.json().then(function (data) {
-            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-              icon: 'warning',
-              title: 'Informações Incompletas',
-              text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
-              confirmButtonText: 'Ir para o perfil'
-            }).then(function () {
-              window.location.href = data.redirect_url;
-            });
-          });
-        }
-        if (!response.ok) {
-          return response.json().then(function (data) {
-            throw new Error(data.message || 'Erro desconhecido');
-          });
-        }
-        return response.json();
-      }).then(function (data) {
-        if (data && data.status === 'success') {
+      }).then(/*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(response) {
+          var data, _data, mensagens, text;
+          return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+            while (1) switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(response.status === 403)) {
+                  _context2.next = 6;
+                  break;
+                }
+                _context2.next = 3;
+                return response.json();
+              case 3:
+                data = _context2.sent;
+                sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                  icon: 'warning',
+                  title: 'Informações Incompletas',
+                  text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                  confirmButtonText: 'Ir para o perfil'
+                }).then(function () {
+                  window.location.href = data.redirect_url;
+                });
+                return _context2.abrupt("return");
+              case 6:
+                if (!(response.status === 422)) {
+                  _context2.next = 13;
+                  break;
+                }
+                _context2.next = 9;
+                return response.json();
+              case 9:
+                _data = _context2.sent;
+                mensagens = Object.values(_data.errors || {}).flat().join('\n');
+                sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                  icon: 'warning',
+                  title: 'Dados inválidos',
+                  text: mensagens || _data.message || 'Verifique os campos e tente novamente.'
+                });
+                return _context2.abrupt("return");
+              case 13:
+                if (response.ok) {
+                  _context2.next = 18;
+                  break;
+                }
+                _context2.next = 16;
+                return response.text();
+              case 16:
+                text = _context2.sent;
+                throw new Error(text);
+              case 18:
+                return _context2.abrupt("return", response.json());
+              case 19:
+              case "end":
+                return _context2.stop();
+            }
+          }, _callee2);
+        }));
+        return function (_x3) {
+          return _ref2.apply(this, arguments);
+        };
+      }()).then(function (data) {
+        if (data && data.status === 'success' || response.status === 201) {
           sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
             icon: "success",
             title: "Compra finalizada!",
@@ -5072,6 +5106,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           });
           limparCarrinho();
+          if (document.getElementById("cartTotal")) {
+            document.getElementById("cartTotal").textContent = "R$ 0,00";
+          }
+          if (document.getElementById("cart-count")) {
+            document.getElementById("cart-count").textContent = "0";
+          }
           var carrinhoModal = document.getElementById('modal-loja');
           if (carrinhoModal) {
             carrinhoModal.classList.remove('show');
@@ -5088,7 +5128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
           icon: 'error',
           title: 'Erro',
-          text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.'
+          text: 'Ocorreu um problema ao processar sua solicitação. Tente novamente.'
         });
       });
     });
@@ -5186,10 +5226,9 @@ function enviarOrcamentoWhatsApp() {
   }
   var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
   produtosCarrinho.forEach(function (produto) {
-    mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
+    mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x  R$(").concat(produto.preco.toFixed(2), ")\n");
   });
-  var numeroWhatsApp = "5567996228134";
-  var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+  var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(whatsOrca, "&text=").concat(encodeURIComponent(mensagem));
   window.open(urlWhatsApp, '_blank');
 }
 var zap = document.getElementById('orcamento');

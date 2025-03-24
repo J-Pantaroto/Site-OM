@@ -51,7 +51,6 @@ Route::get('/dashboard', [VendaController::class, 'listarComprasCliente'])
     ->middleware(['auth', 'verified','user.approved'])
     ->name('dashboard');
 
-
 Route::middleware(['auth', 'user.approved'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -73,3 +72,5 @@ Route::post('/buscar-subgrupos', [HomeController::class, 'buscarSubgrupos']);
 Route::post('/buscar-produtos-por-subgrupo', [HomeController::class, 'buscarProdutosPorSubgrupo']);
 
 Route::post('/notificar-produto', [ProductNotificationController::class,'store'])->name('notificar.produto');
+
+

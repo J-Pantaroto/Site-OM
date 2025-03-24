@@ -70,6 +70,7 @@ return [
         'somente_cadastrar_ao_sincronizar'=> env('SOMENTE_CADASTRAR_AO_SINCRONIZAR','N'),
         'dados_produtos_para_sincronizar'=> env('DADOS_PRODUTOS_PARA_SINCRONIZAR','todos'),
         'logado_carrinho'=> env('LOGADO_CARRINHO', 'S'),
+        'whats_orcamento'=> env('WHATS_ORCAMENTO', '67999999999'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),

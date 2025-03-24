@@ -4591,23 +4591,24 @@ var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.
 var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 var logadoCarrinho = document.getElementById('logado-carrinho').dataset.carrinho === 'true';
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
+var whatsOrca = document.getElementById('whats-orcamento').dataset.whats;
 function buscarProdutos(_x) {
   return _buscarProdutos.apply(this, arguments);
 } //PESQUISA
 function _buscarProdutos() {
-  _buscarProdutos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(_ref) {
+  _buscarProdutos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(_ref) {
     var _ref$pesquisa, pesquisa, _ref$grupo, grupo, _ref$subgrupo, subgrupo, _ref$limite, limite, _ref$tipo_chamada, tipo_chamada, _ref$escopo, escopo, resposta, data, produtosContainer, botaoVerMais, subgruposList, produtos, quantidade;
-    return _regeneratorRuntime().wrap(function _callee$(_context) {
-      while (1) switch (_context.prev = _context.next) {
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _ref$pesquisa = _ref.pesquisa, pesquisa = _ref$pesquisa === void 0 ? '' : _ref$pesquisa, _ref$grupo = _ref.grupo, grupo = _ref$grupo === void 0 ? '' : _ref$grupo, _ref$subgrupo = _ref.subgrupo, subgrupo = _ref$subgrupo === void 0 ? '' : _ref$subgrupo, _ref$limite = _ref.limite, limite = _ref$limite === void 0 ? 12 : _ref$limite, _ref$tipo_chamada = _ref.tipo_chamada, tipo_chamada = _ref$tipo_chamada === void 0 ? 'nova_busca' : _ref$tipo_chamada, _ref$escopo = _ref.escopo, escopo = _ref$escopo === void 0 ? 'todos' : _ref$escopo;
-          _context.prev = 1;
+          _context2.prev = 1;
           if (tipo_chamada === "mais_produto") {
             offset2 += parseInt(limite);
           } else {
             offset2 = 0;
           }
-          _context.next = 5;
+          _context2.next = 5;
           return fetch("/buscar", {
             method: 'POST',
             headers: {
@@ -4624,11 +4625,11 @@ function _buscarProdutos() {
             })
           });
         case 5:
-          resposta = _context.sent;
-          _context.next = 8;
+          resposta = _context2.sent;
+          _context2.next = 8;
           return resposta.json();
         case 8:
-          data = _context.sent;
+          data = _context2.sent;
           produtosContainer = document.getElementById('produtos-container');
           botaoVerMais = document.getElementById("verMais");
           subgruposList = document.getElementById("subgrupos-".concat(grupo));
@@ -4655,7 +4656,7 @@ function _buscarProdutos() {
                 var produtoDiv = document.createElement('div');
                 var validarBotao = produto.quantidade > 0;
                 produtoDiv.className = 'col-md-4 col-6';
-                produtoDiv.innerHTML = "\n                        <div class=\"card m-4 card-produto\">\n                            ".concat(!validarQuantidade && produto.quantidade ? "<p class= \"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                            </a>\n                            <div class=\"card-body text-center\">\n                                <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                    <h5 class=\"card-title produto-nome\">").concat(produto.nome, "</h5>\n                                    ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                    ").concat(!validarQuantidade ? "<p class=\"produto-quantidade\">Quantidade em estoque: ".concat(produto.quantidade, "</p>") : '', "\n                                </a>\n                                <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                                ").concat(validarBotao ? "<a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"".concat(produto.id, "\">Adicionar ao carrinho</a>") : "<a class=\"btn btn-dark d-block avise-me button-dark\" data-id=\"".concat(produto.id, "\">Avise-me quando chegar</a>"), "\n                            </div>\n                        </div>");
+                produtoDiv.innerHTML = "\n                    <div class=\"card m-4 card-produto\">\n                        ".concat(!validarQuantidade && produto.quantidade ? "<p class=\"produto-quantidade d-none\">".concat(produto.quantidade, "</p>") : '', "\n                        <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                            <img src=\"").concat(produto.imagem, "\" class=\"card-img-top img-fluid\" alt=\"").concat(produto.nome, "\">\n                        </a>\n                        <div class=\"card-body text-center\">\n                            <a href=\"/pesquisar/produto/").concat(encodeURIComponent(produto.slug), "\" class=\"text-decoration-none a-text\">\n                                <h5 class=\"card-title produto-nome nome-limitado\" \n                                    title=\"").concat(produto.nome.replace(/"/g, '&quot;'), "\">\n                                    ").concat(produto.nome.length > 25 ? produto.nome.slice(0, 25) + '...' : produto.nome, "\n                                </h5>\n                                ").concat(exibirPreco && produto.preco ? "<p class=\"produto-preco\">R$ ".concat(produto.preco, "</p>") : '', "\n                                ").concat(!validarQuantidade ? "<p class=\"produto-quantidade\">Quantidade em estoque: ".concat(produto.quantidade, "</p>") : '', "\n                            </a>\n                            <p class=\"produto-descricao\">").concat(produto.descricao, "</p>\n                            ").concat(validarBotao ? "<a class=\"btn btn-primary d-block adicionar-carrinho button-primary\" data-id=\"".concat(produto.id, "\">Adicionar ao carrinho</a>") : "<a class=\"btn btn-dark d-block avise-me button-dark\" data-id=\"".concat(produto.id, "\">Avise-me quando chegar</a>"), "\n                        </div>\n                    </div>");
                 produtosContainer.appendChild(produtoDiv);
               });
               if (data.totalProdutos > offset2 + quantidade) {
@@ -4667,17 +4668,17 @@ function _buscarProdutos() {
           } else {
             console.error('Erro:', data.mensagem);
           }
-          _context.next = 18;
+          _context2.next = 18;
           break;
         case 15:
-          _context.prev = 15;
-          _context.t0 = _context["catch"](1);
-          console.error('Erro:', _context.t0);
+          _context2.prev = 15;
+          _context2.t0 = _context2["catch"](1);
+          console.error('Erro:', _context2.t0);
         case 18:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
-    }, _callee, null, [[1, 15]]);
+    }, _callee2, null, [[1, 15]]);
   }));
   return _buscarProdutos.apply(this, arguments);
 }
@@ -5322,14 +5323,14 @@ function atualizarCookiesCarrinho(_x2) {
   return _atualizarCookiesCarrinho.apply(this, arguments);
 }
 function _atualizarCookiesCarrinho() {
-  _atualizarCookiesCarrinho = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(produtos) {
+  _atualizarCookiesCarrinho = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(produtos) {
     var response, data;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
         case 0:
           document.cookie = "carrinho=" + encodeURIComponent(JSON.stringify(produtos)) + "; path=/;";
-          _context2.prev = 1;
-          _context2.next = 4;
+          _context3.prev = 1;
+          _context3.next = 4;
           return fetch('/atualizar/carrinho', {
             method: 'POST',
             headers: {
@@ -5341,22 +5342,22 @@ function _atualizarCookiesCarrinho() {
             })
           });
         case 4:
-          response = _context2.sent;
-          _context2.next = 7;
+          response = _context3.sent;
+          _context3.next = 7;
           return response.json();
         case 7:
-          data = _context2.sent;
-          _context2.next = 13;
+          data = _context3.sent;
+          _context3.next = 13;
           break;
         case 10:
-          _context2.prev = 10;
-          _context2.t0 = _context2["catch"](1);
-          console.error('Erro ao atualizar o carrinho:', _context2.t0);
+          _context3.prev = 10;
+          _context3.t0 = _context3["catch"](1);
+          console.error('Erro ao atualizar o carrinho:', _context3.t0);
         case 13:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
-    }, _callee2, null, [[1, 10]]);
+    }, _callee3, null, [[1, 10]]);
   }));
   return _atualizarCookiesCarrinho.apply(this, arguments);
 }
@@ -5442,10 +5443,9 @@ document.addEventListener('DOMContentLoaded', function () {
             var _produtosCarrinho = carregarProdutosCarrinho() || [];
             var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
             _produtosCarrinho.forEach(function (produto) {
-              mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
+              mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x  R$(").concat(produto.preco.toFixed(2), ")\n");
             });
-            var numeroWhatsApp = "5567996228134";
-            var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+            var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(whatsOrca, "&text=").concat(encodeURIComponent(mensagem));
             window.open(urlWhatsApp, '_blank');
           } else if (result.dismiss === sweetalert2__WEBPACK_IMPORTED_MODULE_0__.DismissReason.cancel) {
             window.location.href = "/register";
@@ -5457,39 +5457,80 @@ document.addEventListener('DOMContentLoaded', function () {
       var produtosFormatados = produtosCarrinho.map(function (produto) {
         return {
           id: produto.id,
-          quantidade: produto.quantidade,
-          preco: exibirPreco ? produto.preco : 0
+          quantidade: produto.quantidade
         };
       });
-      fetch("/registrar/venda", {
+      fetch('/registrar/venda', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
           produtos: produtosFormatados
         })
-      }).then(function (response) {
-        if (response.status === 403) {
-          return response.json().then(function (data) {
-            sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
-              icon: 'warning',
-              title: 'Informações Incompletas',
-              text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
-              confirmButtonText: 'Ir para o perfil'
-            }).then(function () {
-              window.location.href = data.redirect_url;
-            });
-          });
-        }
-        if (!response.ok) {
-          return response.json().then(function (data) {
-            throw new Error(data.message || 'Erro desconhecido');
-          });
-        }
-        return response.json();
-      }).then(function (data) {
+      }).then(/*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(response) {
+          var data, _data, mensagens, text;
+          return _regeneratorRuntime().wrap(function _callee$(_context) {
+            while (1) switch (_context.prev = _context.next) {
+              case 0:
+                if (!(response.status === 403)) {
+                  _context.next = 6;
+                  break;
+                }
+                _context.next = 3;
+                return response.json();
+              case 3:
+                data = _context.sent;
+                sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                  icon: 'warning',
+                  title: 'Informações Incompletas',
+                  text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                  confirmButtonText: 'Ir para o perfil'
+                }).then(function () {
+                  window.location.href = data.redirect_url;
+                });
+                return _context.abrupt("return");
+              case 6:
+                if (!(response.status === 422)) {
+                  _context.next = 13;
+                  break;
+                }
+                _context.next = 9;
+                return response.json();
+              case 9:
+                _data = _context.sent;
+                mensagens = Object.values(_data.errors || {}).flat().join('\n');
+                sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
+                  icon: 'warning',
+                  title: 'Dados inválidos',
+                  text: mensagens || _data.message || 'Verifique os campos e tente novamente.'
+                });
+                return _context.abrupt("return");
+              case 13:
+                if (response.ok) {
+                  _context.next = 18;
+                  break;
+                }
+                _context.next = 16;
+                return response.text();
+              case 16:
+                text = _context.sent;
+                throw new Error(text);
+              case 18:
+                return _context.abrupt("return", response.json());
+              case 19:
+              case "end":
+                return _context.stop();
+            }
+          }, _callee);
+        }));
+        return function (_x3) {
+          return _ref2.apply(this, arguments);
+        };
+      }()).then(function (data) {
         if (data && data.status === 'success') {
           sweetalert2__WEBPACK_IMPORTED_MODULE_0__.fire({
             icon: "success",
@@ -5503,6 +5544,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           });
           limparCarrinho();
+
+          // Resetar total e contador visualmente
+          if (document.getElementById("cartTotal")) {
+            document.getElementById("cartTotal").textContent = "R$ 0,00";
+          }
+          if (document.getElementById("cart-count")) {
+            document.getElementById("cart-count").textContent = "0";
+          }
+
+          // Fechar modal e limpar overlay
           var carrinhoModal = document.getElementById('modal-loja');
           if (carrinhoModal) {
             carrinhoModal.classList.remove('show');
@@ -5625,21 +5676,21 @@ grupoTodos.addEventListener('click', function (event) {
     grupoId: 'todos'
   });
 });
-function atualizarGruposOuSubgrupos(_x3) {
+function atualizarGruposOuSubgrupos(_x4) {
   return _atualizarGruposOuSubgrupos.apply(this, arguments);
 }
 function _atualizarGruposOuSubgrupos() {
-  _atualizarGruposOuSubgrupos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(_ref2) {
-    var _ref2$grupoId, grupoId, _ref2$subgrupoId, subgrupoId, produtosContainer, subgruposList, grupoAtivo, subgrupoAtivoAnterior, _document$querySelect2, _subgrupoAtivoAnterior, response, data, _document$querySelect3, _subgrupoAtivoAnterior2, subgrupoAtivo;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+  _atualizarGruposOuSubgrupos = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(_ref3) {
+    var _ref3$grupoId, grupoId, _ref3$subgrupoId, subgrupoId, produtosContainer, subgruposList, grupoAtivo, subgrupoAtivoAnterior, _document$querySelect2, _subgrupoAtivoAnterior, response, data, _document$querySelect3, _subgrupoAtivoAnterior2, subgrupoAtivo;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
         case 0:
-          _ref2$grupoId = _ref2.grupoId, grupoId = _ref2$grupoId === void 0 ? '' : _ref2$grupoId, _ref2$subgrupoId = _ref2.subgrupoId, subgrupoId = _ref2$subgrupoId === void 0 ? '' : _ref2$subgrupoId;
+          _ref3$grupoId = _ref3.grupoId, grupoId = _ref3$grupoId === void 0 ? '' : _ref3$grupoId, _ref3$subgrupoId = _ref3.subgrupoId, subgrupoId = _ref3$subgrupoId === void 0 ? '' : _ref3$subgrupoId;
           produtosContainer = document.getElementById('produtos-container');
           subgruposList = grupoId ? document.getElementById("subgrupos-".concat(grupoId)) : null;
           grupoAtivo = document.querySelector('.list-group-item.active');
           if (!(grupoAtivo && grupoAtivo.getAttribute('data-grupo-id') === grupoId && !subgrupoId)) {
-            _context3.next = 12;
+            _context4.next = 12;
             break;
           }
           grupoAtivo.classList.remove('active');
@@ -5659,7 +5710,7 @@ function _atualizarGruposOuSubgrupos() {
             escopo: 'todos'
           });
           document.querySelector('[data-grupo-id="todos"]').classList.add('active');
-          return _context3.abrupt("return");
+          return _context4.abrupt("return");
         case 12:
           if (!subgrupoId) {
             document.querySelectorAll('.grupo-item').forEach(function (item) {
@@ -5673,7 +5724,7 @@ function _atualizarGruposOuSubgrupos() {
             }
           });
           if (!(grupoId && !subgrupoId)) {
-            _context3.next = 38;
+            _context4.next = 38;
             break;
           }
           _subgrupoAtivoAnterior = document.querySelector('.subgrupo-item.active');
@@ -5681,7 +5732,7 @@ function _atualizarGruposOuSubgrupos() {
             _subgrupoAtivoAnterior.classList.remove('active');
           }
           if (!(grupoId === 'todos')) {
-            _context3.next = 20;
+            _context4.next = 20;
             break;
           }
           buscarProdutos({
@@ -5692,16 +5743,16 @@ function _atualizarGruposOuSubgrupos() {
             tipo_chamada: 'nova_busca',
             escopo: 'todos'
           });
-          return _context3.abrupt("return");
+          return _context4.abrupt("return");
         case 20:
           if (!subgruposList) {
-            _context3.next = 37;
+            _context4.next = 37;
             break;
           }
           subgruposList.classList.remove('d-none');
           subgruposList.innerHTML = '<li class="list-group-item m-0">Carregando...</li>';
-          _context3.prev = 23;
-          _context3.next = 26;
+          _context4.prev = 23;
+          _context4.next = 26;
           return fetch("/buscar-subgrupos", {
             method: 'POST',
             headers: {
@@ -5713,11 +5764,11 @@ function _atualizarGruposOuSubgrupos() {
             })
           });
         case 26:
-          response = _context3.sent;
-          _context3.next = 29;
+          response = _context4.sent;
+          _context4.next = 29;
           return response.json();
         case 29:
-          data = _context3.sent;
+          data = _context4.sent;
           if (data.status === 'sucesso' && Array.isArray(data.subgrupos)) {
             subgruposList.innerHTML = data.subgrupos.map(function (subgrupo) {
               return "\n                            <a href=\"\" class=\" ml-3 list-group-item list-group-item-action subgrupo-item\" data-subgrupo-id=\"".concat(subgrupo.codigo, "\">\n                                ").concat(subgrupo.descricao, "\n                            </a>\n                        ");
@@ -5725,12 +5776,12 @@ function _atualizarGruposOuSubgrupos() {
           } else {
             subgruposList.innerHTML = '<li class="list-group-item">Nenhum subgrupo encontrado</li>';
           }
-          _context3.next = 37;
+          _context4.next = 37;
           break;
         case 33:
-          _context3.prev = 33;
-          _context3.t0 = _context3["catch"](23);
-          console.error('Erro ao buscar subgrupos:', _context3.t0);
+          _context4.prev = 33;
+          _context4.t0 = _context4["catch"](23);
+          console.error('Erro ao buscar subgrupos:', _context4.t0);
           subgruposList.innerHTML = '<li class="list-group-item">Erro ao carregar subgrupos</li>';
         case 37:
           buscarProdutos({
@@ -5765,9 +5816,9 @@ function _atualizarGruposOuSubgrupos() {
           }
         case 39:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
-    }, _callee3, null, [[23, 33]]);
+    }, _callee4, null, [[23, 33]]);
   }));
   return _atualizarGruposOuSubgrupos.apply(this, arguments);
 }
@@ -5873,10 +5924,9 @@ function enviarOrcamentoWhatsApp() {
   }
   var mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
   produtosCarrinho.forEach(function (produto) {
-    mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x (").concat(produto.preco, ")\n");
+    mensagem += "\uD83D\uDCE6 ".concat(produto.nome, " - ").concat(produto.quantidade, "x  R$(").concat(produto.preco.toFixed(2), ")\n");
   });
-  var numeroWhatsApp = "5567996228134";
-  var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(numeroWhatsApp, "&text=").concat(encodeURIComponent(mensagem));
+  var urlWhatsApp = "https://api.whatsapp.com/send?phone=".concat(whatsOrca, "&text=").concat(encodeURIComponent(mensagem));
   window.open(urlWhatsApp, '_blank');
 }
 var zap = document.getElementById('orcamento');

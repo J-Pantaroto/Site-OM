@@ -92,7 +92,7 @@
                                     <img src="{{ asset('storage/' . $produto->imagem) }}" 
                                     class="card-img-top img-fluid" alt="...">
                                     <div class="card-body text-center">
-                                        <h5 class="card-title produto-nome">{{ $produto->nome }}</h5>
+                                        <h5 class="card-title produto-nome" title="{{$produto->nome}}">{{ \Illuminate\Support\Str::limit($produto->nome, 15) }}</h5>
                                         @if (!empty($produto->preco) && config('config.config.exibir_preco') === 'S')
                                         <p class="produto-preco">R$  {{ number_format($produto->preco, 2, ',', '.') }}</p>
                                         @endif

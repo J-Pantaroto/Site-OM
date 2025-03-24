@@ -3,6 +3,7 @@ var usuarioAutenticado = document.getElementById('usuario-autenticado').dataset.
 var exibirPreco = document.body.dataset.exibirPreco === 'true';
 var validarQuantidade = document.getElementById('validar-estoque').dataset.estoque === 'true';
 var logadoCarrinho = document.getElementById('logado-carrinho').dataset.carrinho === 'true';
+var whatsOrca = document.getElementById('whats-orcamento').dataset.whats;
 //dropdown
 document.addEventListener('DOMContentLoaded', function () {
     window.abrirFecharDropDown = function (escopo) {
@@ -385,12 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const produtosCarrinho = carregarProdutosCarrinho() || [];
                         let mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
                         produtosCarrinho.forEach(produto => {
-                            mensagem += `📦 ${produto.nome} - ${produto.quantidade}x (${produto.preco})\n`;
+                            mensagem += `📦 ${produto.nome} - ${produto.quantidade}x  R$(${produto.preco.toFixed(2)})\n`;
                         });
-
-                        const numeroWhatsApp = "5567996228134";
-                        const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
-
+    
+                        const urlWhatsApp = `https://api.whatsapp.com/send?phone=${whatsOrca}&text=${encodeURIComponent(mensagem)}`;
                         window.open(urlWhatsApp, '_blank');
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         window.location.href = "/register";
@@ -398,77 +397,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return;
             }
+    
             const produtosCarrinho = carregarProdutosCarrinho();
             const produtosFormatados = produtosCarrinho.map(produto => ({
                 id: produto.id,
-                quantidade: produto.quantidade,
-                preco: exibirPreco ? produto.preco : 0
+                quantidade: produto.quantidade
             }));
-            fetch(`/registrar/venda`, {
+            console.log(produtosFormatados);
+            fetch('/registrar/venda', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({ produtos: produtosFormatados }),
             })
-                .then(response => {
-
-                    if (response.status === 403) {
-                        return response.json().then(data => {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Informações Incompletas',
-                                text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
-                                confirmButtonText: 'Ir para o perfil',
-                            }).then(() => {
-                                window.location.href = data.redirect_url;
-                            });
-                        });
-                    }
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.message || 'Erro desconhecido');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.status === 'success') {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Compra finalizada!",
-                            text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
-                            showClass: {
-                                popup: `animate__rubberBand animate__backOutUp`,
-                            },
-                            hideClass: {
-                                popup: `animate__backOutDown`,
-                            },
-                        });
-                        limparCarrinho();
-                        const carrinhoModal = document.getElementById('modal-loja');
-                        if (carrinhoModal) {
-                            carrinhoModal.classList.remove('show');
-                            carrinhoModal.style.display = 'none';
-                        }
-
-                        const modalBackdrop = document.querySelector('.modal-backdrop');
-                        if (modalBackdrop) modalBackdrop.remove();
-
-                        document.body.classList.remove('modal-open');
-                        document.body.style.removeProperty('padding-right');
-                        document.body.style.removeProperty('overflow');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro na requisição:', error);
+            .then(async response => {
+                if (response.status === 403) {
+                    const data = await response.json();
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Erro',
-                        text: error.message || 'Não foi possível processar sua solicitação. Tente novamente.',
+                        icon: 'warning',
+                        title: 'Informações Incompletas',
+                        text: data.message || 'Você precisa completar seu endereço antes de finalizar a compra.',
+                        confirmButtonText: 'Ir para o perfil',
+                    }).then(() => {
+                        window.location.href = data.redirect_url;
                     });
+                    return;
+                }
+            
+                if (response.status === 422) {
+                    const data = await response.json();
+                    const mensagens = Object.values(data.errors || {}).flat().join('\n');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Dados inválidos',
+                        text: mensagens || data.message || 'Verifique os campos e tente novamente.'
+                    });
+                    return;
+                }
+            
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+            
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.status === 'success' || response.status === 201) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Compra finalizada!",
+                        text: "Seu pedido já foi enviado, logo um dos nossos colaboradores entrará em contato com você!",
+                        showClass: {
+                            popup: `animate__rubberBand animate__backOutUp`,
+                        },
+                        hideClass: {
+                            popup: `animate__backOutDown`,
+                        },
+                    });
+                    limparCarrinho();
+                    if (document.getElementById("cartTotal")) {
+                        document.getElementById("cartTotal").textContent = "R$ 0,00"; 
+                    }
+                
+                    if (document.getElementById("cart-count")) {
+                        document.getElementById("cart-count").textContent = "0";
+                    }
+                    const carrinhoModal = document.getElementById('modal-loja');
+                    if (carrinhoModal) {
+                        carrinhoModal.classList.remove('show');
+                        carrinhoModal.style.display = 'none';
+                    }
+                    const modalBackdrop = document.querySelector('.modal-backdrop');
+                    if (modalBackdrop) modalBackdrop.remove();
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('padding-right');
+                    document.body.style.removeProperty('overflow');
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Ocorreu um problema ao processar sua solicitação. Tente novamente.',
                 });
+            });
+            
         });
     }
 });
@@ -573,11 +591,11 @@ function enviarOrcamentoWhatsApp() {
 
     let mensagem = "Olá, gostaria de solicitar um orçamento para os seguintes produtos:\n\n";
     produtosCarrinho.forEach(produto => {
-        mensagem += `📦 ${produto.nome} - ${produto.quantidade}x (${produto.preco})\n`;
+        mensagem += `📦 ${produto.nome} - ${produto.quantidade}x  R$(${produto.preco.toFixed(2)})\n`;
     });
 
-    const numeroWhatsApp = "5567996228134";
-    const urlWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+   
+    const urlWhatsApp = `https://api.whatsapp.com/send?phone=${whatsOrca}&text=${encodeURIComponent(mensagem)}`;
 
     window.open(urlWhatsApp, '_blank');
 }

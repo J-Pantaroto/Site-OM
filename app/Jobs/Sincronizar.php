@@ -7,10 +7,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Produto;
 use App\Models\Grupo;
+use App\Models\ImagemProduto;
 use App\Models\SubGrupo;
 use Illuminate\Support\Str;
 use App\Http\Controllers\ProductNotificationController;
@@ -19,17 +21,10 @@ class Sincronizar implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct()
     {
-        //
-    }
 
-    /**
-     * Execute the job.
-     */
+    }
 
     public function atualizarGrupos()
     {
@@ -92,115 +87,103 @@ class Sincronizar implements ShouldQueue
             }
         } while ($nextPageUrl);
     }
+
+    public function salvarImagemBase64($base64String)
+    {
+        try {
+            if (!preg_match('/^data:image\/(\w+);base64,/', $base64String)) {
+                $base64String = 'data:image/jpeg;base64,' . $base64String;
+            }
+
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64String, $matches)) {
+                $imageType = strtolower($matches[1]);
+                $base64String = preg_replace('/^data:image\/\w+;base64,/', '', $base64String);
+            } else {
+                $imageType = 'jpg';
+            }
+
+            $imageData = base64_decode($base64String);
+            if ($imageData === false) {
+                throw new \Exception('Base64 inválido ou corrompido');
+            }
+
+            $imageName = 'produtos/' . Str::random(40) . '.' . $imageType;
+
+            Storage::disk('public')->put($imageName, $imageData);
+
+            return $imageName;
+        } catch (\Exception $e) {
+            \Log::error("Erro ao salvar imagem base64: " . $e->getMessage());
+            return 'produtos/placeholder.png';
+        }
+    }
+
+    public function salvarImagemProduto($produto, $imagensBase64)
+    {
+        if (!empty($imagensBase64) && is_array($imagensBase64)) {
+            foreach ($imagensBase64 as $index => $imagemBase64) {
+                try {
+                    $imageName = $this->salvarImagemBase64($imagemBase64);
+                    $temPrincipal = ImagemProduto::where('produto_id', $produto->id)->where('principal', true)->exists();
+                    $ehPrincipal = (!$temPrincipal && $index === 0);
+
+                    $insercao = ImagemProduto::create([
+                        'produto_id' => $produto->id,
+                        'imagem' => $imageName,
+                        'principal' => $ehPrincipal,
+                    ]);
+
+                    if ($ehPrincipal) {
+                        $produto->update(['imagem' => $imageName]);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error("Erro ao salvar imagem do produto {$produto->codigo}: " . $e->getMessage());
+                }
+            }
+        }
+    }
+
     public function atualizarProdutos()
     {
-        $somenteCadastrar = config('config.config.somente_cadastrar_ao_atualizar') === 'S';
-        $camposParaAtualizar = config('config.config.dados_produtos_para_sincronizar', 'todos');
-        $permitidos = $camposParaAtualizar === 'todos' ? ['todos'] : explode(',', str_replace(' ', '', $camposParaAtualizar));
-        $camposObrigatorios = ['inativo', 'quantidade', 'grupo', 'subgrupo'];
-    
         $currentPage = 1;
-    
         do {
-            $response = Http::get('http://192.168.1.50:22288/api/sales/produtos', [
+            $response = Http::get('http://192.168.1.50:22288/api/sales/produtos/imagens', [
                 'quantidadeMaximaRegistros' => 500,
                 'page' => $currentPage,
+                'codigoMinimo' => 000100001,
             ]);
-    
+
             if ($response->ok()) {
                 $data = $response->json();
                 $produtos = $data['data'] ?? [];
                 $nextPageUrl = $data['next_page_url'];
-    
+
                 foreach ($produtos as $produto) {
+                    if (empty($produto['descricao2'])) {
+                        $nome = $produto['descricao'];
+                        $descricao = $produto['descricao'];
+                    } else {
+                        $nome = $produto['descricao2'];
+                        $descricao = $produto['descricao'];
+                    }
                     try {
-                        if ($produto['inativo'] === 'S') {
-                            continue;
-                        }
-
-                        if ((int)$produto['codigo'] < 0100001) {
-                            continue;
-                        }
-                        $produtoExistente = Produto::where('codigo', $produto['codigo'])->first();
-                        $estoqueAnterior = $produtoExistente ? $produtoExistente->quantidade : 0;
-                        // Se `somenteCadastrar` estiver ativado, pula atualização de produtos existentes
-                        if ($somenteCadastrar && $produtoExistente) {
-                            continue;
-                        }
-                        $inativoSite = $produtoExistente ? (bool) $produtoExistente->inativo_site : false;
-                        $inativo = $inativoSite ? 'S' : $produto['inativo'];
-
-                        // Dados básicos do produto
-                        $nomeProduto = $produto['descricao'] ?? 'Produto Sem Nome';
-                        $descricaoProduto = $produto['descricao'] ?? 'Produto Sem Descrição';
-                        $dadosProduto = $produto['dados'] ?? [];
-                        $quantidade = $dadosProduto['quantidade'] ?? 0;
-                        $precoVenda = $dadosProduto['precoVenda'] ?? 0;
-                        $imagem = $produto['A_IMAG'] ?? 'produtos/placeholder.png';
-                        $slugBase = Str::slug($nomeProduto);
-                        $slug = $slugBase;
-                        $contador = 1;
-    
-                        // Se o produto já existir, verifica quais campos podem ser atualizados
-                        if ($produtoExistente) {
-                            $podeAtualizar = false;
-    
-                            if (in_array('todos', $permitidos) || $produtoExistente->verificarDadosParaAtualizar('nome')) {
-                                $podeAtualizar = true;
-                            } else {
-                                $nomeProduto = $produtoExistente->nome;
-                            }
-    
-                            if (in_array('todos', $permitidos) || $produtoExistente->verificarDadosParaAtualizar('descricao')) {
-                                $podeAtualizar = true;
-                            } else {
-                                $descricaoProduto = $produtoExistente->descricao;
-                            }
-    
-                            if (in_array('todos', $permitidos) || $produtoExistente->verificarDadosParaAtualizar('preco')) {
-                                $podeAtualizar = true;
-                            } else {
-                                $precoVenda = $produtoExistente->preco;
-                            }
-    
-                            if (in_array('todos', $permitidos) || $produtoExistente->verificarDadosParaAtualizar('imagem')) {
-                                $podeAtualizar = true;
-                            } else {
-                                $imagem = $produtoExistente->imagem;
-                            }
-    
-                            // 🔹 Mantém o slug se o nome não for atualizado
-                            if ($produtoExistente->nome !== $nomeProduto) {
-                                while (Produto::where('slug', $slug)->exists()) {
-                                    $slug = "{$slugBase}-{$contador}";
-                                    $contador++;
-                                }
-                            } else {
-                                $slug = $produtoExistente->slug;
-                            }
-    
-                            // Se **nenhum campo** puder ser atualizado, ignoramos este produto
-                            if (!$podeAtualizar) {
-                                continue;
-                            }
-                        }
-
                         $produtoAtualizado = Produto::updateOrCreate(
                             ['codigo' => $produto['codigo']],
                             [
-                                'nome' => $nomeProduto,
-                                'descricao' => $descricaoProduto,
-                                'slug' => $slug,
-                                'inativo' => $inativo,
+                                'nome' => $nome,
+                                'descricao' => $descricao,
+                                'slug' => Str::slug($produto['descricao'] ?? 'produto'),
+                                'inativo' => $produto['inativo'],
                                 'grupo' => $produto['grupo'],
                                 'subgrupo' => $produto['subgrupo'],
-                                'imagem' => $imagem,
-                                'quantidade' => $quantidade,
-                                'preco' => $precoVenda
+                                'imagem' => 'produtos/placeholder.png',
+                                'quantidade' => $produto['dados']['quantidade'] ?? 0,
+                                'preco' => $produto['dados']['precoVenda'] ?? 0,
                             ]
                         );
-                        if($estoqueAnterior <= 0 && $quantidade> 0 ){
-                            app(ProductNotificationController::class)->notifyUsers($produtoAtualizado->id);
+
+                        if (!empty($produto['imagens'])) {
+                            $this->salvarImagemProduto($produtoAtualizado, $produto['imagens']);
                         }
                     } catch (\Exception $e) {
                         Log::error("Erro ao sincronizar produto {$produto['codigo']}: " . $e->getMessage());
@@ -213,7 +196,7 @@ class Sincronizar implements ShouldQueue
             }
         } while ($nextPageUrl);
     }
-    
+
     public function handle()
     {
         $this->atualizarGrupos();

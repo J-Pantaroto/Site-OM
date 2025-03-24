@@ -11,7 +11,7 @@ class Venda extends Model
 {
     protected $table = 'vendas';
     use HasFactory;
-    protected $fillable = ['data_venda', 'cliente_id','total'];
+    protected $fillable = ['data_venda', 'cliente_id','total','A_SITU','codigo'];
     public function itensVenda(){
         return $this->hasMany(ItensVenda::class, 'venda_id');
     }
