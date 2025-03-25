@@ -13,6 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('produtos', function (Blueprint $table) {
+            $table->dropForeign(['grupo']);
             // Alterar o tipo da coluna grupo sem problemas com valores nulos
             $table->string('grupo', 2)->nullable()->change();
         });
