@@ -6,8 +6,8 @@
 <x-main-layout>
     <div class="banner">
         <div class="banner-content">
-            <h1 class="banner-text">Bem vindo a nossa loja</h1>
-            <p class="banner-text">Confira nossas mercadorias abaixo</p>
+            <h1 class="banner-text">{{config('config.config.mensagem_boas_vindas')}}</h1>
+            <p class="banner-text">{{config('config.config.mensagem_boas_vindas_paragrafo')}}</p>
             <a href="#produtos-container" class="btn btn-primary mt-3 button-primary">Ver Produtos</a>
         </div>
     </div>

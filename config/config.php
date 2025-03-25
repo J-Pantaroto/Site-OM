@@ -71,6 +71,8 @@ return [
         'dados_produtos_para_sincronizar'=> env('DADOS_PRODUTOS_PARA_SINCRONIZAR','todos'),
         'logado_carrinho'=> env('LOGADO_CARRINHO', 'S'),
         'whats_orcamento'=> env('WHATS_ORCAMENTO', '67999999999'),
+        'mensagem_boas_vindas' => env('MENSAGEM_BOAS_VINDAS', 'Bem vindo a nossa loja'),
+        'mensagem_boas_vindas_paragrafo' => env('MENSAGEM_BOAS_VINDAS_PARAGRAFO', 'Confira nossas mercadorias abaixo'),
     ],
     'imgs' => [
         'app_logo_path' => env('IMG_APP_LOGO_PATH', 'DEFINIR NO CONFIG APP_LOGO_PATH'),
