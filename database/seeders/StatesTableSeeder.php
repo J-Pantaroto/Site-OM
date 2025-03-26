@@ -39,6 +39,6 @@ class StatesTableSeeder extends Seeder
             ['name' => 'Tocantins', 'abbreviation' => 'TO'],
         ];
 
-        DB::table('states')->insert($states);
+        DB::table('states')->insertOrIgnore($states);
     }
 }

@@ -45,7 +45,7 @@ class CitiesTableSeeder extends Seeder
 
         $chunks = array_chunk($cities, 500);
         foreach ($chunks as $chunk) {
-            DB::table('cities')->insert($chunk);
+            DB::table('cities')->insertOrIgnore($chunk);
         }
     }
 }
